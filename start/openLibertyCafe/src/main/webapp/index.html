@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Open Liberty Cafe</title>
+        <script type="text/javascript" src="js/index.js"></script>
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="css/toast.css">
+    </head>
+    <body>
+        <section id="appIntro">
+            <div id="titleSection">
+                <h1 id="appTitle">Open Liberty Cafe</p>
+                <div class="line"></div>
+				<div class="headerImage"></div>
+            </div>
+            <div id="usersContainer" class="hFlexContainer">
+                <div id="orderRequest" class="vFlexContainer">
+                    <strong class="flexSelfCenter">New order request</strong>
+                    <form id="orderForm">
+                        <div class="vFlexContainer inputLine">
+                            <label for="tableId">Table Id</label>
+                            <input type="text" id="tableId" class="textBox" name="tableId">
+                        </div>
+    
+                        <div class="vFlexContainer inputLine">
+                            <label for="foodList">Food orders</label>
+                            <textarea for="foodList" id="foodList" class="textBox" rows="5" cols="40"></textarea>
+                        </div>
+
+                        <div class="vFlexContainer inputLine">
+                            <label for="beverageList">Beverage orders</label>
+                            <textarea for="beverageList" id="beverageList" class="textBox" rows="5" cols="40"></textarea>
+                        </div>
+    
+                        <button class="buttons" onclick="sendOrderRequest(event)">Submit order</button>
+                    </form>
+                </div>
+                <div id="table" class="vFlexContainer">
+                    <strong class="flexSelfCenter">Orders</strong>
+                    <table id="orderTable" class="vFlexContainer">
+                        <thead>
+                            <tr>
+                                <th>Order Id</th>
+                                <th>Table Id</th>
+                                <th>Type</th>
+                                <th>Item</th>
+                                <th>Status</th>
+                                <th>Mark as Complete</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </body>
+    <footer class="bodyFooter">
+		<div class="bodyFooterLink">
+			<a id="licenseLink" href="https://github.com/OpenLiberty/open-liberty/blob/master/LICENSE">License</a>
+			<a href="https://twitter.com/OpenLibertyIO">Twitter</a>
+			<a href="https://github.com/OpenLiberty">GitHub</a>
+			<a href="https://openliberty.io/">openliberty.io</a>
+		</div>
+		<p id="footer_text">an IBM open source project</p>
+		<p id="footer_copyright">&copy;Copyright IBM Corp. 2020</p>
+	</footer>
+	<div id="toast">
+    <script>
+        getStatuses();
+    </script>
+</html>

@@ -1,0 +1,279 @@
+//  Copyright (c) 2020 IBM Corporation and others.
+// Licensed under Creative Commons Attribution-NoDerivatives
+// 4.0 International (CC BY-ND 4.0)
+//   https://creativecommons.org/licenses/by-nd/4.0/
+//
+// Contributors:
+//     IBM Corporation
+//
+:projectid: microprofile-reactive-messaging-sse
+:page-layout: guide-multipane
+:page-duration: 30 minutes
+:page-releasedate: 2020-04-13
+:page-guide-category: microprofile
+:page-essential: false
+:page-description: Learn how to push Server-Sent Events from a reactive messaging application to a frontend appliation
+:guide-author: Open Liberty
+:page-tags: ['MicroProfile', 'Jakarta EE', 'Microservices']
+:page-related-guides: ['containerize']
+:page-permalink: /guides/{projectid}
+:imagesdir: /img/guide/{projectid}
+:page-seo-title: Sending Server-Sent Events with JAX-RS 2.1 and MicroProfile Reactive Messaging
+:page-seo-description: Learn how to push Server-Sent Events from a reactive messaging application to a frontend appliation
+:common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/dev
+:source-highlighter: prettify
+= Sending Server-Sent Events with JAX-RS 2.1 and MicroProfile Reactive Messaging
+
+[.hidden]
+NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].   
+
+Learn how to produce server-sent events (SSE) from a reactive messaging application and consume them from a frontend application.
+
+== What you'll learn
+
+You will modify the Backend for Frontend (BFF) of a reactive messaging application to consume messages from a Kafka topic and push them to a frontend application via Server-Sent Events (SSE).
+
+=== What is Microprofile Reactive Messaging?
+
+The MicroProfile Reactive Messaging specification utilizes a message-driven architecture by providing an
+easy way to send, receive, and process messages. The base application featured in this guide uses the `OpenLibertyCafe`
+application that mimics a cafe. To learn more about Microprofile Reactive Messaging and how the application works, check out the
+https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating asynchronous reactive microservices using MicroProfile Reactive Messaging^]
+guide.
+
+=== What are Server-Sent Events (SSE)?
+
+Server-Sent Events (SSE) is a specificiation introduced in HTML5 which allows clients to subscribe to events that are pushed from a server. Firstly, the client needs to make a connection with the server over HTTP. The connection is kept-alive and the server is able to continuously push events to the client as long as the connection persists. This differs from traditional HTTP requests as they use one request for one response, while SSE uses one request for a stream of responses. SSE also differs from Web Sockets as SSE is unidirectional from the server to the client and Web Sockets allow for bidirectional communication.
+
+// =================================================================================================
+// Prerequisites
+// =================================================================================================
+== Additional prerequisites
+
+You will now build and run the  microservices in Docker containers. You can learn more about containerizing microservices with Docker in the https://openliberty.io/guides/containerize.html[Containerizing microservices^] guide.
+
+Install Docker by following the instructions on the official https://docs.docker.com/engine/installation[Docker documentation^]. Start your Docker environment.
+
+// =================================================================================================
+// Getting started
+// =================================================================================================
+[role='command']
+include::{common-includes}/gitclone.adoc[]
+
+== Configuring the server
+
+Navigate to the `start` directory.
+
+To get the service running, the Open Liberty server for the BFF microservice needs to be updated to enable the MicroProfile Reactive Messaging feature. Fortunately, Server-Sent Events are apart of the JAX-RS 2.1 feature so no updates are needed to enable SSE.
+
+Configure the `OpenLibertyCafe` BFF server to enable MicroProfile Reactive Messaging by adding [hotspot=featureMP file=0]`mpReactiveMessaging-1.0` feature element to the [hotspot file=0]`server.xml`.
+
+[role="code_command hotspot file=0", subs="quotes"]
+----
+#Replace the `OpenLibertyCafe` server configuration file.#
+`openLibertyCafe/src/main/liberty/config/server.xml`
+----
+server.xml
+[source,xml,linenums,role="code_column"]
+----
+include::finish/openLibertyCafe/src/main/liberty/config/server.xml[]
+----
+
+== Configuring the Kafka connector
+
+In order for our application to receive data, the Kafka connector must be set up.
+
+[role="code_command hotspot file=0", subs="quotes"]
+----
+#Create the `microprofile-config.properties` file.#
+`openLibertyCafe/src/main/resources/META-INF/microprofile-config.properties`
+----
+microprofile-config.properties
+[source,xml,linenums,role="code_column"]
+----
+include::finish/openLibertyCafe/src/main/resources/META-INF/microprofile-config.properties[]
+----
+
+The [hotspot=kafkaConfig file=0]`mp.messaging.connector.liberty-kafka.bootstrap.servers` property defines the Kafka connector for the Open Liberty runtime. The `OpenLibertyCafe` will listen to an incoming stream [hotspot=orderStream file=0]`order` to receive messages from the [hotspot=topic file=0]`statusTopic` in Kafka. The [hotspot=keyDeserializer file=0]`key.deserializer` and [hotspot=valueDeserializer file=0]`value.deserializer` defines how to deserialze the messages from Kafka. The [hotspot=connector file=0]`connector` used for this stream is the `liberty-kafka` connector, a pre-built connector provided by Open Liberty. The [hotspot=groupId file=0]`group.id` defines a unique name for the consumer group. All these properties are required by the https://kafka.apache.org/documentation/#api[Apache Kafka client API^].
+
+== Creating the SSE API
+
+In this section, you will create a REST API for SSE in the `OpenLibertyCafe` microservice which will allow clients to subscribe to events. Additionally, the server will read the messages from the `order` incoming stream and push them to the subscribers via SSE.
+
+[role="code_command hotspot file=0", subs="quotes"]
+----
+#Create the `OpenLibertyCafeSSEResource` class.#
+`openLibertyCafe/src/main/java/io/openliberty/guides/openlibertycafe/OpenLibertyCafeSSEResource.java`
+----
+OpenLibertyCafeSSEResource.java
+[source,java,linenums,role="code_column"]
+----
+include::finish/openLibertyCafe/src/main/java/io/openliberty/guides/openlibertycafe/OpenLibertyCafeSSEResource.java[]
+----
+
+microprofile-config.properties
+[source,xml,linenums,role="code_column"]
+----
+include::finish/openLibertyCafe/src/main/resources/META-INF/microprofile-config.properties[]
+----
+
+=== Creating the SSE API endpoint
+
+The [hotspot=subscribeToOrders file=0]`subscribeToOrders()` function allows clients to subscribe to events via an HTTP request to [hotspot=path file=0]`GET api/sse`. It is required that the endpoint sets the content-type of the response as [hotspot=sseMimeType file=0]`text/event-stream` as the client request will have a header of `Accept: text/event-stream`. Additionally, the function's parameters takes in an [hotspot=sseEventSinkParam file=0]`SseEventSink` and an [hotspot=sseParam file=0]`Sse` which are injected using the `@Context` annotation. Firstly, the function checks if the [hotspot=sse file=0]`sse` and [hotspot=broadcaster file=0]`broadcaster` instance variables have been assigned. If not, they will be assigned. This check and assignment is done using the [hotspot=sseAndBroadcaster file=0]`Optional` class with the [hotspot=broadcaster file=0]`broadcaster` being obtained using [hotspot=getBroadcaster file=0]`Sse#newBroadcaster` method. Then, the [hotspot=sseEventSinkParam file=0]`SseEventSink` is [hotspot=registerSink file=0]`registered` to the [hotspot=broadcaster file=0]`SseBroadcaster` to subscribe to events.
+
+=== Reading from the reactive messaging channel
+
+The [hotspot=reactiveMessagingStream file=0]`receiveOrder()` function subscribes to the [hotspot=incoming file=0]`order` incoming stream which was configured to read from the [hotspot=topic file=1]`statusTopic` topic in Kafka. This function is called whenever one of the other microservices produces a new message to the [hotspot=topic file=1]`statusTopic` topic. When the message is received, which is an Order object, it creates the event and broadcasts it to all subscribers.
+
+=== Broadcasting events
+
+Broadcasting events is handled in the [hotspot=reactiveMessagingStream file=0]`receiveOrder()` function. Firstly, the function checks if the [hotspot=broadcaster file=0]`broadcaster` has an instance of the `SseBroadcaster`. If it has been set, then there is at least one subscriber, otherwise there is no client to send the event to. If the [hotspot=broadcaster file=0]`broadcaster` has been set, an `OutboundSseEvent` needs to be created. An instance of the `OutboundSseEvent.Builder` is obtained by using the [hotspot=newEventBuilder file=0]`Sse#newEventBuilder` method which will help create the `OutboundSseEvent`. Methods from the builder can be chained to set the [hotspot=setEventValues file=0]`id, data, name, reconnect delay, comment, and media type`. Then, the [hotspot=build file=0]`OutboundSseEvent.Builder#build` method is called to return the [hotspot=createEvent file=0]`OutboundSseEvent` instance. The `OutboundSseEvent` is broadcasted, or sent to all registered sinks, by invoking the [hotspot=broadcastEvent file=0]`SseBroadcaster#broadcast` method.
+
+== Creating the frontend application
+
+In this section, you will create a frontend application which will connect to the `OpenLibertyCafe` server's SSE API and consumes the events when they are pushed. Most of the application has been created except for the JavaScript file which contains the application logic.
+
+[role="code_command hotspot file=0", subs="quotes"]
+----
+#Replace the `index.js` file.#
+`openLibertyCafe/src/main/webapp/js/index.js`
+----
+index.js
+[source,javascript,linenums,role="code_column"]
+----
+include::finish/openLibertyCafe/src/main/webapp/js/index.js[]
+----
+
+OpenLibertyCafeSSEResource.java
+[source,java,linenums,role="code_column"]
+----
+include::finish/openLibertyCafe/src/main/java/io/openliberty/guides/openlibertycafe/OpenLibertyCafeSSEResource.java[]
+----
+
+=== Subscribing to Server-Sent Events
+
+The frontend application subscribes to the SSE by creating a new instance of [hotspot=eventSource file=0]`EventSource` and specifying `api/sse` endpoint in the parameter. The [hotspot=eventSource file=0]`EventSource` will send a GET request to the `api/sse` endpoint created in the previous section with a header of `Accept: text/event-stream` to connect to the server.
+
+=== Consuming the Server-Sent Events
+
+To consume the events sent from the server, invoke the [hotspot=consumeNamedEvent file=0]`EventSource#addEventListener` method and supply the name of the event this listener should listen for in the first argument and the function to be called when the named event is received in the second argument. In this application, the added listener will respond to events with the name of [hotspot=orderEvent file=0]`order` as specified when creating the [hotspot=name file=1]`OutboundSseEvent`. The function that will run when the event is received will be passed an event object and parses the event's [hotspot=parse file=0]`data`, which is an [hotspot=data file=1]`Order`, from a JSON string to an object. The object will be passed to a function called [hotspot=updateTable file=0]`updateTable` to update the table displaying all the orders on the HTML page.
+
+== Building the application
+
+You will build and run the `Bar`, `Kitchen`, `OpenLibertyCafe`, `Order`, `ServingWindow`, and `Status` microservices in Docker containers.
+
+Start your Docker environment.
+
+To build the application, run the Maven `install` and `package` goals from the command line in the `start` directory:
+
+[role='command']
+```
+mvn -pl models install
+mvn package
+```
+
+Run the following command to download or update the `open-liberty` docker image to latest.
+[role='command']
+```
+docker pull open-liberty
+```
+
+Run the following commands to containerize the microservices:
+
+[role='command']
+```
+docker build -t bar:1.0-SNAPSHOT bar/.
+docker build -t kitchen:1.0-SNAPSHOT kitchen/.
+docker build -t openlibertycafe:1.0-SNAPSHOT openLibertyCafe/.
+docker build -t order:1.0-SNAPSHOT order/.
+docker build -t servingwindow:1.0-SNAPSHOT servingWindow/.
+docker build -t status:1.0-SNAPSHOT status/.
+```
+
+Next, use the provided script to start the application in Docker containers. The script creates a network for the containers to communicate with each other. It also creates containers for Kafka, Zookeeper, and all of the microservices in the project.
+
+include::{common-includes}/os-tabs.adoc[]
+
+[.tab_content.mac_section.linux_section]
+--
+[role='command']
+```
+./scripts/startContainers.sh
+```
+--
+
+[.tab_content.windows_section]
+--
+[role='command']
+```
+.\scripts\startContainers.bat
+```
+--
+
+== Trying the application
+
+Once the application is up and running, open your browser and checkout the service that your created at the `http://localhost:9080` URL. Note: The latest version of most modern web browsers should have support for Server-Sent Events with the exception of Internet Explorer.
+
+Begin by filling in the `New order request` form. Sample data is provided to test the application:
+
+Table Id:
+[source, role="command"]
+----
+1
+----
+
+Food orders:
+[source, role="command"]
+----
+pizza, burger, fries
+----
+
+Beverage orders:
+[source, role="command"]
+----
+coke, water
+----
+
+Now, press the `Submit order` button.
+
+The `Orders` table should begin to populate its rows with the information pertinent to the orders you have requested. The most notable column to look for is the `Status` column which should go from `NEW` to `IN_PROGRESS` to `READY`.
+
+Once the order is `READY`, a button appears to its right labelled `Complete`. Press the `Complete` button to complete the order. The Status will go from `READY` to `COMPLETE`.
+
+== Tearing down the environment
+
+Finally, use the following script to stop the application:
+
+include::{common-includes}/os-tabs.adoc[]
+
+[.tab_content.mac_section.linux_section]
+--
+[role='command']
+```
+./scripts/stopContainers.sh
+```
+--
+
+[.tab_content.windows_section]
+--
+[role='command']
+```
+.\scripts\stopContainers.bat
+```
+--
+
+== Great work! You're done!
+
+You have just developed an application using MicroProfile Reactive Messaging, Open Liberty and Kakfa.
+
+== Related Links
+
+Learn more about MicroProfile.
+
+https://microprofile.io/[See the MicroProfile specs^]
+
+https://openliberty.io/docs/ref/microprofile[View the MicroProfile API^]
+
+https://download.eclipse.org/microprofile/microprofile-reactive-messaging-1.0/microprofile-reactive-messaging-spec.html#_microprofile_reactive_messaging[View the MicroProfile Reactive Messaging Specification^]
+
+include::{common-includes}/attribution.adoc[subs="attributes"]

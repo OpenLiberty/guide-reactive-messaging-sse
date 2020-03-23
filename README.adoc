@@ -125,7 +125,7 @@ include::finish/openLibertyCafe/src/main/resources/META-INF/microprofile-config.
 
 === Creating the SSE API endpoint
 
-The [hotspot=subscribeToOrders file=0]`subscribeToOrders()` function allows clients to subscribe to events via an HTTP request to [hotspot=get file=0]`GET` [hotspot=path1 file=1]`api`[hotspot=path2 file=0]`/sse`[hotspot=path3 file=0]`/`. It is required that the endpoint sets the content-type of the response as [hotspot=sseMimeType file=0]`text/event-stream` as the client request will have a header of `Accept: text/event-stream`. Additionally, the function's parameters takes in an [hotspot=sseEventSinkParam file=0]`SseEventSink` and an [hotspot=sseParam file=0]`Sse` which are injected using the `@Context` annotation. Firstly, the function checks if the [hotspot=sse file=0]`sse` and [hotspot=broadcaster file=0]`broadcaster` instance variables have been assigned. If not, they will be assigned. This check and assignment is done using the [hotspot=sseAndBroadcaster file=0]`Optional` class with the [hotspot=broadcaster file=0]`broadcaster` being obtained using [hotspot=getBroadcaster file=0]`Sse#newBroadcaster` method. Then, the [hotspot=sseEventSinkParam file=0]`SseEventSink` is [hotspot=registerSink file=0]`registered` to the [hotspot=broadcaster file=0]`SseBroadcaster` to subscribe to events.
+The [hotspot=subscribeToOrders file=0]`subscribeToOrders()` function allows clients to subscribe to events via an HTTP request to [hotspot=get file=0]`GET` [hotspot=path1 file=1]`/api` [hotspot=path2 file=0]`/sse` [hotspot=path3 file=0]`/`. It is required that the endpoint sets the content-type of the response as [hotspot=sseMimeType file=0]`text/event-stream` as the client request will have a header of `Accept: text/event-stream`. Additionally, the function's parameters takes in an [hotspot=sseEventSinkParam file=0]`SseEventSink` and an [hotspot=sseParam file=0]`Sse` which are injected using the `@Context` annotation. Firstly, the function checks if the [hotspot=sse file=0]`sse` and [hotspot=broadcaster file=0]`broadcaster` instance variables have been assigned. If not, they will be assigned. This check and assignment is done using the [hotspot=sseAndBroadcaster file=0]`Optional` class with the [hotspot=broadcaster file=0]`broadcaster` being obtained using [hotspot=getBroadcaster file=0]`Sse#newBroadcaster` method. Then, the [hotspot=sseEventSinkParam file=0]`SseEventSink` is [hotspot=registerSink file=0]`registered` to the [hotspot=broadcaster file=0]`SseBroadcaster` to subscribe to events.
 
 === Reading from the reactive messaging channel
 
@@ -136,6 +136,12 @@ The [hotspot=reactiveMessagingStream file=0]`receiveOrder()` function subscribes
 Broadcasting events is handled in the [hotspot=reactiveMessagingStream file=0]`receiveOrder()` function. Firstly, the function checks if the [hotspot=broadcaster file=0]`broadcaster` has an instance of the `SseBroadcaster`. If it has been set, then there is at least one subscriber, otherwise there is no client to send the event to. If the [hotspot=broadcaster file=0]`broadcaster` has been set, an [hotspot=createEvent file=0]`OutboundSseEvent` needs to be created. An instance of the `OutboundSseEvent.Builder` is obtained by using the [hotspot=newEventBuilder file=0]`Sse#newEventBuilder` method which will help create the [hotspot=createEvent file=0]`OutboundSseEvent`. Methods from the builder can be chained to set the [hotspot=setEventValues file=0]`id, data, name, reconnect delay, comment, and media type`. Then, the [hotspot=build file=0]`OutboundSseEvent.Builder#build` method is called to return the [hotspot=createEvent file=0]`OutboundSseEvent` instance. The [hotspot=createEvent file=0]`OutboundSseEvent` is broadcasted, or sent to all registered sinks, by invoking the [hotspot=broadcastEvent file=0]`SseBroadcaster#broadcast` method.
 
 == Creating the frontend application
+
+OpenLibertyCafeSSEResource.java
+[source,java,linenums,role="code_column"]
+----
+include::finish/openLibertyCafe/src/main/java/io/openliberty/guides/openlibertycafe/OpenLibertyCafeSSEResource.java[]
+----
 
 In this section, you will create a frontend application which will connect to the `OpenLibertyCafe` microservice through the [hotspot=subscribeToOrders file=0]`SSE REST API` and consumes the events when they are pushed. Most of the application has been created except for the JavaScript file which contains the application logic.
 
@@ -148,12 +154,6 @@ index.js
 [source,javascript,linenums,role="code_column"]
 ----
 include::finish/openLibertyCafe/src/main/webapp/js/index.js[]
-----
-
-OpenLibertyCafeSSEResource.java
-[source,java,linenums,role="code_column"]
-----
-include::finish/openLibertyCafe/src/main/java/io/openliberty/guides/openlibertycafe/OpenLibertyCafeSSEResource.java[]
 ----
 
 === Subscribing to Server-Sent Events

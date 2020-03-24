@@ -16,7 +16,9 @@ package io.openliberty.guides.openlibertycafe;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
+// tag::path1[]
 @ApplicationPath("api")
+// end::path1[]
 public class OpenLibertyCafeApplication extends Application {
 
 }

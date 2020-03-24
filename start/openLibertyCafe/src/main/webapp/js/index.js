@@ -1,8 +1,10 @@
-function updateTable(order) {
-    const { orderId } = order;
+function initSSE() {
     
-    const orderRowNode = createTableRow(order);
-    const orderRow = document.getElementById(`order${orderId}`);
+}
+
+function updateTable(order) {
+    var orderRowNode = createTableRow(order);
+    var orderRow = document.getElementById('order' + order.orderId);
 
     if (orderRow) {
         orderRow.replaceWith(orderRowNode);
@@ -10,92 +12,100 @@ function updateTable(order) {
         document.getElementById('orderTableBody').appendChild(orderRowNode);
     }
 }
-// end::updateTable[]
-
-async function getStatuses() {
-    const res = await fetch('/api/status');
-    const orders = await res.json();
-
-    orders.forEach(order => updateTable(order));
-}
 
 function createTableRow(order) {
-    const { orderId, tableId, type, item, status } = order;   
+    var tableRow = document.createElement('tr');
 
-    const tableRow = document.createElement('tr');
-
-    tableRow.id = `order${orderId}`;
-    tableRow.innerHTML = `
-        <td>${orderId}</td>
-        <td>${tableId}</td>
-        <td>${type}</td>
-        <td>${item}</td>
-        <td>${status}</td>
-        <td>
-            <button
-                class="completeButton"
-                ${status === 'READY' ? undefined : "disabled"}
-                onclick="completeOrder('${orderId}')"
-            >Complete</button>
-        </td>
-    `;
+    tableRow.id = 'order' + order.orderId;
+    tableRow.innerHTML = 
+        '<td>' + order.orderId + '</td>' +
+        '<td>' + order.tableId + '</td>' +
+        '<td>' + order.type + '</td>' +
+        '<td>' + order.item + '</td>' +
+        '<td>' + order.status + '</td>' +
+        '<td>' + 
+            '<button ' +
+                'class=\"completeButton\"' +
+                (order.status === 'READY' ? '' : 'disabled ') + 
+                'onclick=\"completeOrder(\'' + order.orderId + '\')\"' + 
+            '>Complete</button>' +
+        '</td>';
 
     return tableRow;
 }
 
-function completeOrder(orderId) {
-    fetch(`/api/servingWindow/${orderId}`, {
-        method: 'POST'
-    });
+function getPreviousOrders() {
+    var request = new XMLHttpRequest();
+
+    request.onload = function() {
+        if (this.status === 200) {
+            var orders = JSON.parse(this.response);
+
+            orders.forEach(function(order) {
+                updateTable(order);
+            });
+        }
+
+        initSSE();
+    };
+
+    request.open('GET', '/api/status');
+    request.send();
 }
 
-async function sendOrderRequest(event) {
+function completeOrder(orderId) {
+    var request = new XMLHttpRequest();
+
+    request.open('POST', '/api/servingWindow/' + orderId);
+    request.send();
+}
+
+function sendOrderRequest(event) {
     event.preventDefault();
 
-    try {
-        const orderForm = document.getElementById('orderForm');
+    var orderForm = document.getElementById('orderForm');
 
-        const tableId = orderForm.elements.item(0).value;
-        const foodList = orderForm.elements.item(1).value;
-        const beverageList = orderForm.elements.item(2).value;
+    var tableId = orderForm.elements.item(0).value;
+    var foodList = orderForm.elements.item(1).value;
+    var beverageList = orderForm.elements.item(2).value;
 
-        const res = await fetch('/api/orders', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                tableId,
-                foodList: foodList ? foodList.split(',').map(food => food.trim()) : [],
-                beverageList: beverageList ? 
-                                    beverageList.split(',').map(beverage => beverage.trim()) : [],
-            })
-        });
+    var request = new XMLHttpRequest();
 
-        if (res.ok) {
+    request.onload = function() {
+        if (this.status === 200) {
             document.getElementById('orderForm').reset();
         } else {
-            const errors = await res.json();
-            
-            for (let i = 0; i < errors.length; i++) {
+            var errors = JSON.parse(this.response);
+
+            for (var i = 0; i < errors.length; i++) {
                 toast(errors[i], i);
             }
         }
-    } catch(err) {
-        console.log(err);
-    }
-};
+    };
+
+    request.open('POST', '/api/orders');
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.send(JSON.stringify({
+        tableId: tableId,
+        foodList: foodList ? 
+                    foodList.split(',').map(function(food) { return food.trim(); }) :
+                    [],
+        beverageList: beverageList ?
+                        beverageList.split(',').map(function(beverage) { return beverage.trim(); }) :
+                        [],
+    }));
+}
 
 function toast(message, index) {
-    const length = 3000;
-    const toast = document.getElementById('toast');
+    var length = 3000;
+    var toast = document.getElementById('toast');
 
-    setTimeout(() => {
+    setTimeout(function() {
         toast.innerText = message;
         toast.className = 'show'; 
     }, length * index);
 
-    setTimeout(() => {
+    setTimeout(function() {
         toast.className = toast.className.replace('show', '');
     }, length + length * index);
 }

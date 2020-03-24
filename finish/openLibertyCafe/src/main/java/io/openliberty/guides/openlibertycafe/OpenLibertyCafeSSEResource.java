@@ -18,7 +18,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 @ApplicationScoped
+// tag::path2[]
 @Path("/sse")
+// end::path2[]
 public class OpenLibertyCafeSSEResource {
 
     private final long RECONNECT_DELAY = 5 * 1000;
@@ -34,10 +36,12 @@ public class OpenLibertyCafeSSEResource {
     // end::broadcaster[]
 
     // tag::subscribeToOrders[]
-    // tag::path[]
+    // tag::get[]
     @GET
+    // end::get[]
+    // tag::path3[]
     @Path("/")
-    // end::path[]
+    // end::path3[]
     // tag::sseMimeType[]
     @Produces(MediaType.SERVER_SENT_EVENTS)
     // end::sseMimeType[]
@@ -79,22 +83,28 @@ public class OpenLibertyCafeSSEResource {
                         // tag::newEventBuilder[]
                         sse.newEventBuilder()
                         // end::newEventBuilder[]
-                        // tag::setEventValues[]
-                       .id(String.valueOf(counter.incrementAndGet()))
-                       // tag::data[]
-                       .data(Order.class, order)
-                       // end::data[]
-                       // tag::name[]
-                       .name("order")
-                       // end::name[]
-                       .reconnectDelay(RECONNECT_DELAY)
-                       .comment("Order " + order.getOrderId() 
+                        // tag::id[]
+                        .id(String.valueOf(counter.incrementAndGet()))
+                        // tag::id[]
+                        // tag::data[]
+                        .data(Order.class, order)
+                        // end::data[]
+                        // tag::name[]
+                        .name("order")
+                        // end::name[]
+                        // tag::delay[]
+                        .reconnectDelay(RECONNECT_DELAY)
+                        // end::delay[]
+                        // tag::comment[]
+                        .comment("Order " + order.getOrderId() 
                                 + " has a status of " + order.getStatus())
-                       .mediaType(MediaType.APPLICATION_JSON_TYPE)
-                       // end::setEventValues[]
-                       // tag::build[]
-                       .build();
-                       // end::build[]
+                        // end::comment[]
+                        // tag::mediaType[]
+                        .mediaType(MediaType.APPLICATION_JSON_TYPE)
+                        // end::mediaType[]
+                        // tag::build[]
+                        .build();
+                        // end::build[]
             // end::createEvent[]
 
             logger.info("Broadcast new SSE - type: order - data: " + order.toString());

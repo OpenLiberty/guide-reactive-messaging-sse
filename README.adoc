@@ -6,7 +6,7 @@
 // Contributors:
 //     IBM Corporation
 //
-:projectid: microprofile-reactive-messaging-sse
+:projectid: reactive-messaging-sse
 :page-layout: guide-multipane
 :page-duration: 30 minutes
 :page-releasedate: 2020-04-13
@@ -41,9 +41,9 @@ application that mimics a cafe. To learn more about Microprofile Reactive Messag
 https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating asynchronous reactive microservices using MicroProfile Reactive Messaging^]
 guide.
 
-=== What are Server-Sent Events (SSE)?
+=== What are Server-Sent Events?
 
-Server-Sent Events (SSE) is a specificiation introduced in HTML5 which allows clients to subscribe to events that are pushed from a server. Firstly, the client needs to make a connection with the server over HTTP. The connection is kept-alive and the server is able to continuously push events to the client as long as the connection persists. This differs from traditional HTTP requests as they use one request for one response, while SSE uses one request for a stream of responses. SSE also differs from Web Sockets as SSE is unidirectional from the server to the client and Web Sockets allow for bidirectional communication.
+Server-Sent Events (SSE) is a specification introduced in HTML5 which allows clients to subscribe to events that are pushed from a server. Firstly, the client needs to make a connection with the server over HTTP. The connection is kept-alive and the server is able to continuously push events to the client as long as the connection persists. This differs from traditional HTTP requests as they use one request for one response, while SSE uses one request for a stream of responses. SSE also differs from Web Sockets as SSE is unidirectional from the server to the client and Web Sockets allow for bidirectional communication.
 
 // =================================================================================================
 // Prerequisites
@@ -96,7 +96,7 @@ include::finish/openLibertyCafe/src/main/resources/META-INF/microprofile-config.
 
 The [hotspot=kafkaConfig file=0]`mp.messaging.connector.liberty-kafka.bootstrap.servers` property defines the Kafka connector for the Open Liberty runtime. The `OpenLibertyCafe` will listen to an incoming stream [hotspot=orderStream file=0]`order` to receive messages from the [hotspot=topic file=0]`statusTopic` in Kafka. The [hotspot=keyDeserializer file=0]`key.deserializer` and [hotspot=valueDeserializer file=0]`value.deserializer` defines how to deserialze the messages from Kafka. The [hotspot=connector file=0]`connector` used for this stream is the `liberty-kafka` connector, a pre-built connector provided by Open Liberty. The [hotspot=groupId file=0]`group.id` defines a unique name for the consumer group. All these properties are required by the https://kafka.apache.org/documentation/#api[Apache Kafka client API^].
 
-== Creating the SSE API
+== Creating the SSE REST API
 
 In this section, you will create a REST API for SSE in the `OpenLibertyCafe` microservice which will allow clients to subscribe to events. Additionally, the server will read the messages from the `order` incoming stream and push them to the subscribers via SSE.
 
@@ -111,6 +111,12 @@ OpenLibertyCafeSSEResource.java
 include::finish/openLibertyCafe/src/main/java/io/openliberty/guides/openlibertycafe/OpenLibertyCafeSSEResource.java[]
 ----
 
+OpenLibertyCafeApplication.java
+[source,java,linenums,role="code_column"]
+----
+include::finish/openLibertyCafe/src/main/java/io/openliberty/guides/openlibertycafe/OpenLibertyCafeApplication.java[]
+----
+
 microprofile-config.properties
 [source,xml,linenums,role="code_column"]
 ----
@@ -119,23 +125,29 @@ include::finish/openLibertyCafe/src/main/resources/META-INF/microprofile-config.
 
 === Creating the SSE API endpoint
 
-The [hotspot=subscribeToOrders file=0]`subscribeToOrders()` function allows clients to subscribe to events via an HTTP request to [hotspot=path file=0]`GET api/sse`. It is required that the endpoint sets the content-type of the response as [hotspot=sseMimeType file=0]`text/event-stream` as the client request will have a header of `Accept: text/event-stream`. Additionally, the function's parameters takes in an [hotspot=sseEventSinkParam file=0]`SseEventSink` and an [hotspot=sseParam file=0]`Sse` which are injected using the `@Context` annotation. Firstly, the function checks if the [hotspot=sse file=0]`sse` and [hotspot=broadcaster file=0]`broadcaster` instance variables have been assigned. If not, they will be assigned. This check and assignment is done using the [hotspot=sseAndBroadcaster file=0]`Optional` class with the [hotspot=broadcaster file=0]`broadcaster` being obtained using [hotspot=getBroadcaster file=0]`Sse#newBroadcaster` method. Then, the [hotspot=sseEventSinkParam file=0]`SseEventSink` is [hotspot=registerSink file=0]`registered` to the [hotspot=broadcaster file=0]`SseBroadcaster` to subscribe to events.
+The [hotspot=subscribeToOrders file=0]`subscribeToOrders()` function allows clients to subscribe to events via an HTTP request to [hotspot=get file=0]`GET` [hotspot=path1 file=1]`/api` [hotspot=path2 file=0]`/sse` [hotspot=path3 file=0]`/`. It is required that the endpoint sets the content-type of the response as [hotspot=sseMimeType file=0]`text/event-stream` as the client request will have a header of `Accept: text/event-stream`. Additionally, the function's parameters takes in an [hotspot=sseEventSinkParam file=0]`SseEventSink` and an [hotspot=sseParam file=0]`Sse` which are injected using the `@Context` annotation. Firstly, the function checks if the [hotspot=sse file=0]`sse` and [hotspot=broadcaster file=0]`broadcaster` instance variables have been assigned. If not, they will be assigned. This check and assignment is done using the [hotspot=sseAndBroadcaster file=0]`Optional` class with the [hotspot=broadcaster file=0]`broadcaster` being obtained using [hotspot=getBroadcaster file=0]`Sse#newBroadcaster` method. Then, the [hotspot=sseEventSinkParam file=0]`SseEventSink` is [hotspot=registerSink file=0]`registered` to the [hotspot=broadcaster file=0]`SseBroadcaster` to subscribe to events.
 
 === Reading from the reactive messaging channel
 
-The [hotspot=reactiveMessagingStream file=0]`receiveOrder()` function subscribes to the [hotspot=incoming file=0]`order` incoming stream which was configured to read from the [hotspot=topic file=1]`statusTopic` topic in Kafka. This function is called whenever one of the other microservices produces a new message to the [hotspot=topic file=1]`statusTopic` topic. When the message is received, which is an Order object, it creates the event and broadcasts it to all subscribers.
+The [hotspot=reactiveMessagingStream file=0]`receiveOrder()` function subscribes to the [hotspot=incoming file=0]`order` incoming stream which was configured to read from the [hotspot=topic file=2]`statusTopic` topic in Kafka. This function is called whenever one of the other microservices produces a new message to the [hotspot=topic file=2]`statusTopic` topic. When the message is received, which is an Order object, it creates the event and broadcasts it to all subscribers.
 
 === Broadcasting events
 
-Broadcasting events is handled in the [hotspot=reactiveMessagingStream file=0]`receiveOrder()` function. Firstly, the function checks if the [hotspot=broadcaster file=0]`broadcaster` has an instance of the `SseBroadcaster`. If it has been set, then there is at least one subscriber, otherwise there is no client to send the event to. If the [hotspot=broadcaster file=0]`broadcaster` has been set, an `OutboundSseEvent` needs to be created. An instance of the `OutboundSseEvent.Builder` is obtained by using the [hotspot=newEventBuilder file=0]`Sse#newEventBuilder` method which will help create the `OutboundSseEvent`. Methods from the builder can be chained to set the [hotspot=setEventValues file=0]`id, data, name, reconnect delay, comment, and media type`. Then, the [hotspot=build file=0]`OutboundSseEvent.Builder#build` method is called to return the [hotspot=createEvent file=0]`OutboundSseEvent` instance. The `OutboundSseEvent` is broadcasted, or sent to all registered sinks, by invoking the [hotspot=broadcastEvent file=0]`SseBroadcaster#broadcast` method.
+Broadcasting events is handled in the [hotspot=reactiveMessagingStream file=0]`receiveOrder()` function. Firstly, the function checks if the [hotspot=broadcaster file=0]`broadcaster` has an instance of the `SseBroadcaster`. If it has been set, then there is at least one subscriber, otherwise there is no client to send the event to. If the [hotspot=broadcaster file=0]`broadcaster` has been set, an [hotspot=createEvent file=0]`OutboundSseEvent` needs to be created. An instance of the `OutboundSseEvent.Builder` is obtained by using the [hotspot=newEventBuilder file=0]`Sse#newEventBuilder` method which will help create the [hotspot=createEvent file=0]`OutboundSseEvent`. Methods from the builder can be chained to set the [hotspot=id file=0]`id`, [hotspot=data file=0]`data`, [hotspot=name file=0]`name`, [hotspot=delay file=0]`reconnect delay`, [hotspot=comment file=0]`comment`, and [hotspot=mediaType file=0]`media type`. Then, the [hotspot=build file=0]`OutboundSseEvent.Builder#build` method is called to return the [hotspot=createEvent file=0]`OutboundSseEvent` instance. The [hotspot=createEvent file=0]`OutboundSseEvent` is broadcasted, or sent to all registered sinks, by invoking the [hotspot=broadcastEvent file=0]`SseBroadcaster#broadcast` method.
 
 == Creating the frontend application
 
-In this section, you will create a frontend application which will connect to the `OpenLibertyCafe` server's SSE API and consumes the events when they are pushed. Most of the application has been created except for the JavaScript file which contains the application logic.
+OpenLibertyCafeSSEResource.java
+[source,java,linenums,role="code_column"]
+----
+include::finish/openLibertyCafe/src/main/java/io/openliberty/guides/openlibertycafe/OpenLibertyCafeSSEResource.java[]
+----
+
+In this section, you will create a frontend application which will connect to the `OpenLibertyCafe` microservice through the [hotspot=subscribeToOrders file=0]`SSE REST API` and consumes the events when they are pushed. Most of the application has been created except for the JavaScript file which contains the application logic. The frontend UI contains a form to submit new orders which contains a textfield for the table id, a textarea for food orders, and a textarea for beverage orders. Use comma separated values to submit multiple orders in one textarea (i.e, Type `burger, pizza` in the food orders textarea if you wanted to order a burger and a pizza). When the orders are received from the `OpenLibertyCafe` microservice, they are displayed in a table which has columns for the order id, table id, order type, item, and status. There is an additional column with a button to complete an order which appears if the order's status is `READY`.
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
-#Replace the `index.js` file.#
+#Replace the `index.js` JavaScript file.#
 `openLibertyCafe/src/main/webapp/js/index.js`
 ----
 index.js
@@ -144,19 +156,13 @@ index.js
 include::finish/openLibertyCafe/src/main/webapp/js/index.js[]
 ----
 
-OpenLibertyCafeSSEResource.java
-[source,java,linenums,role="code_column"]
-----
-include::finish/openLibertyCafe/src/main/java/io/openliberty/guides/openlibertycafe/OpenLibertyCafeSSEResource.java[]
-----
-
 === Subscribing to Server-Sent Events
 
-The frontend application subscribes to the SSE by creating a new instance of [hotspot=eventSource file=0]`EventSource` and specifying `api/sse` endpoint in the parameter. The [hotspot=eventSource file=0]`EventSource` will send a GET request to the `api/sse` endpoint created in the previous section with a header of `Accept: text/event-stream` to connect to the server.
+The frontend application subscribes to the SSE by creating a new instance of [hotspot=eventSource file=1]`EventSource` and specifying `/api/sse` endpoint in the parameter. The [hotspot=eventSource file=1]`EventSource` will send a GET request to the `/api/sse` endpoint created in the previous section with a header of `Accept: text/event-stream` to connect to the server.
 
 === Consuming the Server-Sent Events
 
-To consume the events sent from the server, invoke the [hotspot=consumeNamedEvent file=0]`EventSource#addEventListener` method and supply the name of the event this listener should listen for in the first argument and the function to be called when the named event is received in the second argument. In this application, the added listener will respond to events with the name of [hotspot=orderEvent file=0]`order` as specified when creating the [hotspot=name file=1]`OutboundSseEvent`. The function that will run when the event is received will be passed an event object and parses the event's [hotspot=parse file=0]`data`, which is an [hotspot=data file=1]`Order`, from a JSON string to an object. The object will be passed to a function called [hotspot=updateTable file=0]`updateTable` to update the table displaying all the orders on the HTML page.
+To consume the events sent from the server, call the [hotspot=consumeNamedEvent file=1]`EventSource#addEventListener` method to add an event listener. This event listener will listen for events with the name of [hotspot=orderEvent file=1]`order` as specified when creating the [hotspot=name file=0]`OutboundSseEvent`. When the event is received, a [hotspot=eventHandler file=1]`function` is run to handle the event. The [hotspot=eventHandler file=1]`function` will be passed an [hotspot=eventObject file=1]`event` object and [hotspot=parse file=1]`parses` the event's data property, which is an [hotspot=data file=0]`Order`, from a JSON string to a JavaScript object. The [hotspot=callUpdateTable hotspot=updateTable file=1]`updateTable()` function is called to update the table using information contained in the JavaScript object.
 
 == Building the application
 
@@ -275,5 +281,9 @@ https://microprofile.io/[See the MicroProfile specs^]
 https://openliberty.io/docs/ref/microprofile[View the MicroProfile API^]
 
 https://download.eclipse.org/microprofile/microprofile-reactive-messaging-1.0/microprofile-reactive-messaging-spec.html#_microprofile_reactive_messaging[View the MicroProfile Reactive Messaging Specification^]
+
+https://openliberty.io/docs/ref/javaee/8/#package=javax/ws/rs/sse/package-frame.html&class=javax/ws/rs/sse/package-summary.html[View the JAX-RS Server Sent Events API^]
+
+https://html.spec.whatwg.org/multipage/server-sent-events.html[View the Server-Sent Events HTML Specification^]
 
 include::{common-includes}/attribution.adoc[subs="attributes"]

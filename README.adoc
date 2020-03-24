@@ -162,7 +162,7 @@ The frontend application subscribes to the SSE by creating a new instance of [ho
 
 === Consuming the Server-Sent Events
 
-To consume the events sent from the server, call the [hotspot=consumeNamedEvent file=1]`EventSource#addEventListener` method to add an event listener. This event listener will listen for events with the name of [hotspot=orderEvent file=1]`order` as specified when creating the [hotspot=name file=0]`OutboundSseEvent`. When the event is received, a [hotspot=eventHandler file=1]`function` is run to handle the event. The [hotspot=eventHandler file=1]`function` will be passed an [hotspot=eventObject file=1]`event` object and [hotspot=parse file=1]`parses` the event's data property, which is an [hotspot=data file=0]`Order`, from a JSON string to a JavaScript object. The [hotspot=updateTable file=1]`updateTable()` function is [hotspot=callUpdateTable file=1]`called` to update the table with the JavaScript object.
+To consume the events sent from the server, call the [hotspot=consumeNamedEvent file=1]`EventSource#addEventListener` method to add an event listener. This event listener will listen for events with the name of [hotspot=orderEvent file=1]`order` as specified when creating the [hotspot=name file=0]`OutboundSseEvent`. When the event is received, a [hotspot=eventHandler file=1]`function` is run to handle the event. The [hotspot=eventHandler file=1]`function` will be passed an [hotspot=eventObject file=1]`event` object and [hotspot=parse file=1]`parses` the event's data property, which is an [hotspot=data file=0]`Order`, from a JSON string to a JavaScript object. The [hotspot=updateTable file=1]`updateTable()` function is called to update the table with the JavaScript object.
 
 == Building the application
 

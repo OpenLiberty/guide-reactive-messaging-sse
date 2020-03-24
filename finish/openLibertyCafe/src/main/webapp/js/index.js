@@ -16,9 +16,9 @@ function initSSE() {
             var order = JSON.parse(event.data);
             // end::parse[]
 
-            // tag::callUpdateTable[]
+            // tag::updateTable[]
             updateTable(order);
-            // end::callUpdateTable[]
+            // end::updateTable[]
         }
         // end::eventHandler[]
     );

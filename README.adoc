@@ -158,11 +158,11 @@ include::finish/openLibertyCafe/src/main/webapp/js/index.js[]
 
 === Subscribing to Server-Sent Events
 
-The frontend application subscribes to the SSE by creating a new instance of [hotspot=eventSource file=0]`EventSource` and specifying `api/sse` endpoint in the parameter. The [hotspot=eventSource file=0]`EventSource` will send a GET request to the `api/sse` endpoint created in the previous section with a header of `Accept: text/event-stream` to connect to the server.
+The frontend application subscribes to the SSE by creating a new instance of [hotspot=eventSource file=1]`EventSource` and specifying `/api/sse` endpoint in the parameter. The [hotspot=eventSource file=1]`EventSource` will send a GET request to the `/api/sse` endpoint created in the previous section with a header of `Accept: text/event-stream` to connect to the server.
 
 === Consuming the Server-Sent Events
 
-To consume the events sent from the server, call the [hotspot=consumeNamedEvent file=0]`EventSource#addEventListener` method to add an event listener. This event listener will listen for events with the name of [hotspot=orderEvent file=0]`order` as specified when creating the [hotspot=name file=1]`OutboundSseEvent`. When the event is received, a [hotspot=eventHandler file=0]`function` is run to handle the event. The [hotspot=eventHandler file=0]`function` will be passed an [hotspot=eventObject file=0]`event` object and [hotspot=parse file=0]`parses` the event's data property, which is an [hotspot=data file=1]`Order`, from a JSON string to a JavaScript object. The [hotspot=callUpdateTable file=0]`updateTable()` function is [hotspot=callUpdateTable file=0]`called` to update the table with the JavaScript object.
+To consume the events sent from the server, call the [hotspot=consumeNamedEvent file=1]`EventSource#addEventListener` method to add an event listener. This event listener will listen for events with the name of [hotspot=orderEvent file=0]`order` as specified when creating the [hotspot=name file=0]`OutboundSseEvent`. When the event is received, a [hotspot=eventHandler file=1]`function` is run to handle the event. The [hotspot=eventHandler file=1]`function` will be passed an [hotspot=eventObject file=1]`event` object and [hotspot=parse file=1]`parses` the event's data property, which is an [hotspot=data file=0]`Order`, from a JSON string to a JavaScript object. The [hotspot=callUpdateTable file=1]`updateTable()` function is [hotspot=callUpdateTable file=1]`called` to update the table with the JavaScript object.
 
 == Building the application
 

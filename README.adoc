@@ -165,7 +165,7 @@ Most of the application has been created except for the JavaScript file containi
 `openLibertyCafe/src/main/webapp/js/index.js`
 ----
 index.js
-[source,javascript,linenums,role="code_column hide_tags=copyright"]
+[source,javascript,linenums,role="code_column"]
 ----
 include::finish/openLibertyCafe/src/main/webapp/js/index.js[]
 ----

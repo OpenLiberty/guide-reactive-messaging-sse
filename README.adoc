@@ -123,38 +123,32 @@ OpenLibertyCafeApplication.java
 include::finish/openLibertyCafe/src/main/java/io/openliberty/guides/openlibertycafe/OpenLibertyCafeApplication.java[]
 ----
 
-microprofile-config.properties
-[source,xml,linenums,role="code_column"]
-----
-include::finish/openLibertyCafe/src/main/resources/META-INF/microprofile-config.properties[]
-----
-
 === Creating the SSE API endpoint
 
-The [hotspot=subscribeToOrders file=0]`subscribeToOrders()` function allows clients to subscribe to events via an HTTP request to [hotspot=get file=0]`GET` [hotspot=path1 file=1]`/api` [hotspot=path2 file=0]`/sse` [hotspot=path3 file=0]`/`. It is required that the endpoint sets the `Content-Type` of the response as [hotspot=sseMimeType file=0]`text/event-stream` as the client request will have an `Accept` header of `text/event-stream`. Additionally, the function's parameters takes in an [hotspot=sseEventSinkParam file=0]`SseEventSink` and an [hotspot=sseParam file=0]`Sse` which are injected using the `@Context` annotation. Firstly, the function checks if the [hotspot=sse file=0]`sse` and [hotspot=broadcaster file=0]`broadcaster` instance variables have been assigned. If not, they will be assigned. This check and assignment is done using the [hotspot=sseAndBroadcaster file=0]`Optional` class with the [hotspot=broadcaster file=0]`broadcaster` being obtained using [hotspot=getBroadcaster file=0]`Sse#newBroadcaster` method. Then, the [hotspot=sseEventSinkParam file=0]`SseEventSink` is [hotspot=registerSink file=0]`registered` to the [hotspot=broadcaster file=0]`SseBroadcaster` to subscribe to events.
+The [hotspot=subscribeToOrders file=1]`subscribeToOrders()` function allows clients to subscribe to events via an HTTP request to [hotspot=get file=1]`GET` [hotspot=path1 file=2]`/api` [hotspot=path2 file=1]`/sse` [hotspot=path3 file=1]`/`. It is required that the endpoint sets the `Content-Type` of the response as [hotspot=sseMimeType file=1]`text/event-stream` as the client request will have an `Accept` header of `text/event-stream`. Additionally, the function's parameters takes in an [hotspot=sseEventSinkParam file=1]`SseEventSink` and an [hotspot=sseParam file=1]`Sse` which are injected using the `@Context` annotation. Firstly, the function checks if the [hotspot=sse file=1]`sse` and [hotspot=broadcaster file=1]`broadcaster` instance variables have been assigned. If not, they will be assigned. This check and assignment is done using the [hotspot=sseAndBroadcaster file=1]`Optional` class with the [hotspot=sse]`sse` being obtained from the [hotspot=sseParam file=1]`@Content` injection and the [hotspot=broadcaster file=1]`broadcaster` being obtained using [hotspot=getBroadcaster file=1]`Sse#newBroadcaster` method. Then, the [hotspot=sseEventSinkParam file=1]`SseEventSink` is [hotspot=registerSink file=1]`registered` to the [hotspot=broadcaster file=1]`SseBroadcaster` to subscribe to events.
 
 For more information about the interfaces used for SSE see the Javadocs for https://openliberty.io/docs/ref/javadocs/liberty-javaee8-javadoc/javax/ws/rs/sse/Sse.html[Sse^], https://openliberty.io/docs/ref/javadocs/liberty-javaee8-javadoc/javax/ws/rs/sse/SseEventSink.html[SseEventSink^], and https://openliberty.io/docs/ref/javadocs/liberty-javaee8-javadoc/javax/ws/rs/sse/SseBroadcaster.html[SseBroadcaster^].
 
 === Reading from the reactive messaging channel
 
-The [hotspot=reactiveMessagingStream file=0]`receiveOrder()` function subscribes to the [hotspot=incoming file=0]`order` incoming stream which was configured to read from the [hotspot=topic file=2]`statusTopic` topic in Kafka. This function is called whenever one of the other microservices produces a new message to the [hotspot=topic file=2]`statusTopic` topic. When the message is received, which is an Order object, it creates the event and broadcasts it to all subscribers.
+The [hotspot=reactiveMessagingStream file=1]`receiveOrder()` function subscribes to the [hotspot=incoming file=1]`order` incoming stream which was configured to read from the [hotspot=topic file=1]`statusTopic` topic in Kafka. This function is called whenever one of the other microservices produces a new message to the [hotspot=topic file=1]`statusTopic` topic. When the message is received, which is an Order object, it creates the event and broadcasts it to all subscribers.
 
 === Broadcasting events
 
-Broadcasting events is handled in the [hotspot=reactiveMessagingStream file=0]`receiveOrder()` function. Firstly, it gets the value of the [hotspot=broadcaster file=0]`broadcaster` wrapped in an [hotspot=getBroadcasterOptional file=0]`Optional`. Then, it checks if the broadcaster is [hotspot=isBroadcasterPresent file=0]`present`, meaning that the [hotspot=broadcaster file=0]`broadcaster` is not null. If it is not null, then there is at least one subscriber, otherwise there is no client to send the event to. If the [hotspot=broadcaster file=0]`broadcaster` has been set, an [hotspot=createEvent file=0]`OutboundSseEvent` needs to be created. An instance of the `OutboundSseEvent.Builder` is obtained by using the [hotspot=newEventBuilder file=0]`Sse#newEventBuilder` method which will help create the [hotspot=createEvent file=0]`OutboundSseEvent`. Methods from the builder can be chained to set the [hotspot=id file=0]`id`, [hotspot=data file=0]`data`, [hotspot=name file=0]`name`, [hotspot=delay file=0]`reconnect delay`, [hotspot=comment file=0]`comment`, and [hotspot=mediaType file=0]`media type`. Then, the [hotspot=build file=0]`OutboundSseEvent.Builder#build` method is called to return the [hotspot=createEvent file=0]`OutboundSseEvent` instance. The [hotspot=createEvent file=0]`OutboundSseEvent` is broadcasted, or sent to all registered sinks, by returning the [hotspot=broadcaster]`broadcaster` from the [hotspot=optionalGet file=0]`Optional` and invoking the [hotspot=broadcastEvent file=0]`SseBroadcaster#broadcast` method.
+Broadcasting events is handled in the [hotspot=reactiveMessagingStream file=1]`receiveOrder()` function. Firstly, it gets the value of the [hotspot=broadcaster file=1]`broadcaster` wrapped in an [hotspot=getBroadcasterOptional file=1]`Optional`. Then, it checks if the broadcaster is [hotspot=isBroadcasterPresent file=1]`present`, meaning that the [hotspot=broadcaster file=1]`broadcaster` is not null. If it is not null, then there is at least one subscriber, otherwise there is no client to send the event to. If the [hotspot=broadcaster file=1]`broadcaster` has been set, an [hotspot=createEvent file=1]`OutboundSseEvent` needs to be created. An instance of the `OutboundSseEvent.Builder` is obtained by using the [hotspot=newEventBuilder file=1]`Sse#newEventBuilder` method which will help create the [hotspot=createEvent file=1]`OutboundSseEvent`. Methods from the builder can be chained to set the [hotspot=id file=1]`id`, [hotspot=data file=1]`data`, [hotspot=name file=1]`name`, [hotspot=delay file=1]`reconnect delay`, [hotspot=comment file=1]`comment`, and [hotspot=mediaType file=1]`media type`. Then, the [hotspot=build file=1]`OutboundSseEvent.Builder#build` method is called to return the [hotspot=createEvent file=1]`OutboundSseEvent` instance. The [hotspot=createEvent file=1]`OutboundSseEvent` is broadcasted, or sent to all registered sinks, by returning the [hotspot=broadcaster]`broadcaster` from the [hotspot=optionalGet file=1]`Optional` and invoking the [hotspot=broadcastEvent file=1]`SseBroadcaster#broadcast` method.
 
 For more information about these interfaces see the Javadocs for https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent.html&package=allclasses-frame.html[OutboundSseEvent^] and https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent.Builder.html&package=allclasses-frame.html[OutboundSseEvent.Builder^].
 
 == Creating the frontend application
 
 OpenLibertyCafeSSEResource.java
-[source,java,linenums,role="code_column"]
+[source,java,linenums,role="code_column hide_tags=copyright"]
 ----
 include::finish/openLibertyCafe/src/main/java/io/openliberty/guides/openlibertycafe/OpenLibertyCafeSSEResource.java[]
 ----
 
 index.html
-[source,javascript,linenums,role="code_column"]
+[source,javascript,linenums,role="code_column hide_tags=copyright"]
 ----
 include::finish/openLibertyCafe/src/main/webapp/index.html[]
 ----
@@ -169,7 +163,7 @@ image::frontend.png[OpenLibertyCafe frontend,align="center"]
 `openLibertyCafe/src/main/webapp/js/index.js`
 ----
 index.js
-[source,javascript,linenums,role="code_column"]
+[source,javascript,linenums,role="code_column hide_tags=copyright"]
 ----
 include::finish/openLibertyCafe/src/main/webapp/js/index.js[]
 ----

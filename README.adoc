@@ -22,7 +22,7 @@
 :page-seo-description: Learn how to push Server-Sent Events from a reactive messaging application to a frontend appliation
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/dev
 :source-highlighter: prettify
-= Sending Server-Sent Events with JAX-RS 2.1 and MicroProfile Reactive Messaging
+= Sending Server-Sent Events with JAX-RS and MicroProfile Reactive Messaging
 
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].   

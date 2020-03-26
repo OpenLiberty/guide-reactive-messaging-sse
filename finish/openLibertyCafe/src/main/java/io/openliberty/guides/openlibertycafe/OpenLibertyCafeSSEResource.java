@@ -1,3 +1,15 @@
+// tag::copyright[]
+/*******************************************************************************
+ * Copyright (c) 2020 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - Initial implementation
+ *******************************************************************************/
+// end::copyright[]
 package io.openliberty.guides.openlibertycafe;
 
 import io.openliberty.guides.models.Order;
@@ -55,7 +67,10 @@ public class OpenLibertyCafeSSEResource {
         ) {
 
         // tag::sseAndBroadcaster[]
-        this.sse = Optional.ofNullable(this.sse).orElse(sse);
+        this.sse = Optional.ofNullable(this.sse)
+                            // tag::assignSse[]
+                            .orElse(sse);
+                            // end::assignSse[]
         this.broadcaster = Optional.ofNullable(this.broadcaster)
                                     // tag::getBroadcaster[]
                                     .orElse(sse.newBroadcaster());
@@ -77,7 +92,13 @@ public class OpenLibertyCafeSSEResource {
     public void receiveOrder(Order order)  {
         logger.info("New order received from Kafka " + order.toString());
 
-        if (Optional.ofNullable(broadcaster).isPresent()) {
+        // tag::getBroadcasterOptional[]
+        Optional<SseBroadcaster> broadcaster = Optional.ofNullable(this.broadcaster);
+        // end::getBroadcasterOptional[]
+
+        // tag::isBroadcasterPresent[]
+        if (broadcaster.isPresent()) {
+        // end::isBroadcasterPresent[]
             // tag::createEvent[]
            OutboundSseEvent event = 
                         // tag::newEventBuilder[]
@@ -109,12 +130,17 @@ public class OpenLibertyCafeSSEResource {
 
             logger.info("Broadcast new SSE - type: order - data: " + order.toString());
 
-            // tag::broadcastEvent[]
-            broadcaster.broadcast(event);
-            // end::broadcastEvent[]
+            // tag::optionalGet[]
+            broadcaster.get()
+            // end::optionalGet[]
+                        // tag::broadcastEvent[]
+                        .broadcast(event);
+                        // end::broadcastEvent[]
+        // tag::noBroadcaster[]
         } else {
             logger.info("Unable to send SSE. Broadcaster context is not set up");
         }
+        // end::noBroadcaster[]
     }
     // end::reactiveMessagingStream[]
 }

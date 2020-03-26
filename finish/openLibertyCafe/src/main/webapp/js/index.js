@@ -91,8 +91,8 @@ function sendOrderRequest(event) {
     var orderForm = document.getElementById('orderForm');
 
     var tableId = orderForm.elements.item(0).value;
-    var foodList = orderForm.elements.item(1).value;
-    var beverageList = orderForm.elements.item(2).value;
+    var foodOrders = orderForm.elements.item(1).value;
+    var beverageOrders = orderForm.elements.item(2).value;
 
     var request = new XMLHttpRequest();
 
@@ -112,12 +112,12 @@ function sendOrderRequest(event) {
     request.setRequestHeader('Content-Type', 'application/json');
     request.send(JSON.stringify({
         tableId: tableId,
-        foodList: foodList ? 
-                    foodList.split(',').map(function(food) { return food.trim(); }) :
-                    [],
-        beverageList: beverageList ?
-                        beverageList.split(',').map(function(beverage) { return beverage.trim(); }) :
-                        [],
+        foodList: foodOrders
+                    ? foodOrders.split(',').map(function(food) { return food.trim(); })
+                    : [],
+        beverageList: beverageOrders
+                        ? beverageOrders.split(',').map(function(beverage) { return beverage.trim(); })
+                        : [],
     }));
 }
 

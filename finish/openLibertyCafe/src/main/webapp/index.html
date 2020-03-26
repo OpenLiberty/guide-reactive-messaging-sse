@@ -17,40 +17,68 @@
             <div id="usersContainer" class="hFlexContainer">
                 <div id="orderRequest" class="vFlexContainer">
                     <strong class="flexSelfCenter">New order request</strong>
+                    <!-- tag::form[] -->
                     <form id="orderForm">
                         <div class="vFlexContainer inputLine">
+                            <!-- tag::tableIdLabel[] -->
                             <label for="tableId">Table Id</label>
-                            <input type="text" id="tableId" class="textBox" name="tableId">
+                            <!-- end::tableIdLabel[] -->
+                            <!-- tag::tableIdField[] -->
+                            <input for="tableId" type="text" id="tableId" class="textBox" name="tableId">
+                            <!-- end::tableIdField[] -->
                         </div>
     
                         <div class="vFlexContainer inputLine">
-                            <label for="foodList">Food orders</label>
-                            <textarea for="foodList" id="foodList" class="textBox" rows="5" cols="40"></textarea>
+                            <!-- tag::foodOrdersLabel[] -->
+                            <label for="foodOrders">Food orders</label>
+                            <!-- end::foodOrdersLabel[] -->
+                            <!-- tag::foodOrdersField[] -->
+                            <textarea for="foodOrders" id="foodOrders" class="textBox" rows="5" cols="40"></textarea>
+                            <!-- end::foodOrdersField[] -->
                         </div>
 
                         <div class="vFlexContainer inputLine">
-                            <label for="beverageList">Beverage orders</label>
-                            <textarea for="beverageList" id="beverageList" class="textBox" rows="5" cols="40"></textarea>
+                            <!-- tag::beverageOrdersLabel[] -->
+                            <label for="beverageOrders">Beverage orders</label>
+                            <!-- end::beverageOrdersLabel[] -->
+                            <!-- tag::beverageOrdersField[] -->
+                            <textarea for="beverageOrders" id="beverageOrders" class="textBox" rows="5" cols="40"></textarea>
+                            <!-- end::beverageOrdersField[] -->
                         </div>
     
                         <button class="buttons" onclick="sendOrderRequest(event)">Submit order</button>
                     </form>
+                    <!-- end::form[] -->
                 </div>
                 <div id="table" class="vFlexContainer">
                     <strong class="flexSelfCenter">Orders</strong>
+                    <!-- tag::table[] -->
                     <table id="orderTable" class="vFlexContainer">
                         <thead>
                             <tr>
+                                <!-- tag::orderId[] -->
                                 <th>Order Id</th>
+                                <!-- end::orderId[] -->
+                                <!-- tag::tableId[] -->
                                 <th>Table Id</th>
+                                <!-- end::tableId[] -->
+                                <!-- tag::type[] -->
                                 <th>Type</th>
+                                <!-- end::type[] -->
+                                <!-- tag::item[] -->
                                 <th>Item</th>
+                                <!-- end::item[] -->
+                                <!-- tag::status[] -->
                                 <th>Status</th>
+                                <!-- end::status[] -->
+                                <!-- tag::complete[] -->
                                 <th>Mark as Complete</th>
+                                <!-- end::complete[] -->
                             </tr>
                         </thead>
                         <tbody id="orderTableBody"></tbody>
                     </table>
+                    <!-- end::table[] -->
                 </div>
             </div>
         </section>

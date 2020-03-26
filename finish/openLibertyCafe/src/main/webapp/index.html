@@ -12,7 +12,7 @@
             <div id="titleSection">
                 <h1 id="appTitle">Open Liberty Cafe</p>
                 <div class="line"></div>
-				<div class="headerImage"></div>
+                <div class="headerImage"></div>
             </div>
             <div id="usersContainer" class="hFlexContainer">
                 <div id="orderRequest" class="vFlexContainer">
@@ -64,7 +64,9 @@
                             <!-- end::beverageOrdersField[] -->
                         </div>
     
-                        <button class="buttons" onclick="sendOrderRequest(event)">Submit order</button>
+                        <button class="buttons" onclick="sendOrderRequest(event)">
+                            Submit order
+                        </button>
                     </form>
                     <!-- end::form[] -->
                 </div>
@@ -102,19 +104,19 @@
         </section>
     </body>
     <footer class="bodyFooter">
-		<div class="bodyFooterLink">
+        <div class="bodyFooterLink">
             <a
                 id="licenseLink"
                 href="https://github.com/OpenLiberty/open-liberty/blob/master/LICENSE"
             >License</a>
-			<a href="https://twitter.com/OpenLibertyIO">Twitter</a>
-			<a href="https://github.com/OpenLiberty">GitHub</a>
-			<a href="https://openliberty.io/">openliberty.io</a>
-		</div>
-		<p id="footer_text">an IBM open source project</p>
-		<p id="footer_copyright">&copy;Copyright IBM Corp. 2020</p>
-	</footer>
-	<div id="toast"></div>
+            <a href="https://twitter.com/OpenLibertyIO">Twitter</a>
+            <a href="https://github.com/OpenLiberty">GitHub</a>
+            <a href="https://openliberty.io/">openliberty.io</a>
+        </div>
+        <p id="footer_text">an IBM open source project</p>
+        <p id="footer_copyright">&copy;Copyright IBM Corp. 2020</p>
+    </footer>
+    <div id="toast"></div>
     <script>
         getPreviousOrders();
     </script>

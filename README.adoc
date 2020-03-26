@@ -131,7 +131,7 @@ For more information about the interfaces used for SSE see the Javadocs for http
 
 === Reading from the reactive messaging channel
 
-The [hotspot=reactiveMessagingStream file=1]`receiveOrder()` function subscribes to the [hotspot=incoming file=1]`order` incoming stream which was configured to read from the [hotspot=topic file=1]`statusTopic` topic in Kafka. This function is called whenever one of the other microservices produces a new message to the [hotspot=topic file=1]`statusTopic` topic. When the message is received, which is an Order object, it creates the event and broadcasts it to all subscribers.
+The [hotspot=reactiveMessagingStream file=1]`receiveOrder()` function subscribes to the [hotspot=incoming file=1]`order` incoming stream which was configured to read from the [hotspot=topic file=0]`statusTopic` topic in Kafka. This function is called whenever one of the other microservices produces a new message to the [hotspot=topic file=0]`statusTopic` topic. When the message is received, which is an Order object, it creates the event and broadcasts it to all subscribers.
 
 === Broadcasting events
 

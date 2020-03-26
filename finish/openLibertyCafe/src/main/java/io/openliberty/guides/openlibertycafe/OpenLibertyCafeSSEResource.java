@@ -106,7 +106,7 @@ public class OpenLibertyCafeSSEResource {
                         // end::newEventBuilder[]
                         // tag::id[]
                         .id(String.valueOf(counter.incrementAndGet()))
-                        // tag::id[]
+                        // end::id[]
                         // tag::data[]
                         .data(Order.class, order)
                         // end::data[]

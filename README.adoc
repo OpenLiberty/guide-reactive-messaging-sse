@@ -157,7 +157,7 @@ In this section, you will create a frontend application which will connect to th
 
 image::frontend.png[OpenLibertyCafe frontend,align="center"]
 
-Most of the application has been created except for the JavaScript file, which contains the application logic, which will be modified to add SSE functionality.
+Most of the application has been created except for the JavaScript file containing the application logic, which will be modified to add SSE functionality.
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----

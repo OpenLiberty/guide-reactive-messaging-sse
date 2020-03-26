@@ -98,6 +98,12 @@ The [hotspot=kafkaConfig file=0]`mp.messaging.connector.liberty-kafka.bootstrap.
 
 == Creating the SSE REST API
 
+microprofile-config.properties
+[source,xml,linenums,role="code_column"]
+----
+include::finish/openLibertyCafe/src/main/resources/META-INF/microprofile-config.properties[]
+----
+
 In this section, you will create a REST API for SSE in the `OpenLibertyCafe` microservice which will allow clients to subscribe to events. Additionally, the server will read the messages from the [hotspot=orderStream file=0]`order` incoming stream and push them to the subscribers via SSE.
 
 [role="code_command hotspot file=0", subs="quotes"]
@@ -135,7 +141,7 @@ The [hotspot=reactiveMessagingStream file=0]`receiveOrder()` function subscribes
 
 === Broadcasting events
 
-Broadcasting events is handled in the [hotspot=reactiveMessagingStream file=0]`receiveOrder()` function. Firstly, it gets the value of the [hotspot=broadcaster file=0]`broadcaster` wrapped in an [hotspot=getBroadcasterOptional file=0]`Optional`. Then, it checks if the broadcaster is [hotspot=isBroadcasterPresent file=0]`present`, meaning that the [hotspot=broadcaster file=0]`broadcaster` is not null. If it is not null, then there is at least one subscriber, otherwise there is no client to send the event to. If the [hotspot=broadcaster file=0]`broadcaster` has been set, an [hotspot=createEvent file=0]`OutboundSseEvent` needs to be created. An instance of the `OutboundSseEvent.Builder` is obtained by using the [hotspot=newEventBuilder file=0]`Sse#newEventBuilder` method which will help create the [hotspot=createEvent file=0]`OutboundSseEvent`. Methods from the builder can be chained to set the [hotspot=id file=0]`id`, [hotspot=data file=0]`data`, [hotspot=name file=0]`name`, [hotspot=delay file=0]`reconnect delay`, [hotspot=comment file=0]`comment`, and [hotspot=mediaType file=0]`media type`. Then, the [hotspot=build file=0]`OutboundSseEvent.Builder#build` method is called to return the [hotspot=createEvent file=0]`OutboundSseEvent` instance. The [hotspot=createEvent file=0]`OutboundSseEvent` is broadcasted, or sent to all registered sinks, by returning the [hotspot=broadcaster]`broadcaster` from the [hotspot=optionalGet file=0]`Optional` invoking the [hotspot=broadcastEvent file=0]`SseBroadcaster#broadcast` method.
+Broadcasting events is handled in the [hotspot=reactiveMessagingStream file=0]`receiveOrder()` function. Firstly, it gets the value of the [hotspot=broadcaster file=0]`broadcaster` wrapped in an [hotspot=getBroadcasterOptional file=0]`Optional`. Then, it checks if the broadcaster is [hotspot=isBroadcasterPresent file=0]`present`, meaning that the [hotspot=broadcaster file=0]`broadcaster` is not null. If it is not null, then there is at least one subscriber, otherwise there is no client to send the event to. If the [hotspot=broadcaster file=0]`broadcaster` has been set, an [hotspot=createEvent file=0]`OutboundSseEvent` needs to be created. An instance of the `OutboundSseEvent.Builder` is obtained by using the [hotspot=newEventBuilder file=0]`Sse#newEventBuilder` method which will help create the [hotspot=createEvent file=0]`OutboundSseEvent`. Methods from the builder can be chained to set the [hotspot=id file=0]`id`, [hotspot=data file=0]`data`, [hotspot=name file=0]`name`, [hotspot=delay file=0]`reconnect delay`, [hotspot=comment file=0]`comment`, and [hotspot=mediaType file=0]`media type`. Then, the [hotspot=build file=0]`OutboundSseEvent.Builder#build` method is called to return the [hotspot=createEvent file=0]`OutboundSseEvent` instance. The [hotspot=createEvent file=0]`OutboundSseEvent` is broadcasted, or sent to all registered sinks, by returning the [hotspot=broadcaster]`broadcaster` from the [hotspot=optionalGet file=0]`Optional` and invoking the [hotspot=broadcastEvent file=0]`SseBroadcaster#broadcast` method.
 
 For more information about these interfaces see the Javadocs for https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent.html&package=allclasses-frame.html[OutboundSseEvent^] and https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent.Builder.html&package=allclasses-frame.html[OutboundSseEvent.Builder^].
 

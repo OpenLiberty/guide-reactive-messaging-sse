@@ -52,7 +52,7 @@ function createTableRow(order) {
             '<button ' +
                 'class=\"completeButton\"' +
                 (order.status === 'READY' ? '' : 'disabled ') + 
-                'onclick=\"completeOrder(\'' + order.orderId + '\')\"' + 
+                'onclick=\"completeOrder(' + order.orderId + ')\"' + 
             '>Complete</button>' +
         '</td>';
 

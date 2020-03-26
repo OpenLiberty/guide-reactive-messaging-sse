@@ -15,7 +15,7 @@
 :page-description: Learn how to push Server-Sent Events from a reactive messaging application to a frontend appliation
 :guide-author: Open Liberty
 :page-tags: ['MicroProfile', 'Jakarta EE', 'Microservices']
-:page-related-guides: ['microprofile-reactive-messaging', 'microprofile-reactive-messaging-acknowledgement', 'reactive-service-testing', 'jax-rs-reactive-client']
+:page-related-guides: ['microprofile-reactive-messaging', 'microprofile-reactive-messaging-acknowledgement', 'reactive-service-testing', 'jax-rs-reactive-client', 'containerize']
 :page-permalink: /guides/{projectid}
 :imagesdir: /img/guide/{projectid}
 :page-seo-title: Sending Server-Sent Events with JAX-RS and MicroProfile Reactive Messaging

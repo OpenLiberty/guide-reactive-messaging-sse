@@ -113,10 +113,14 @@ function sendOrderRequest(event) {
     request.send(JSON.stringify({
         tableId: tableId,
         foodList: foodOrders
-                    ? foodOrders.split(',').map(function(food) { return food.trim(); })
+                    ? foodOrders
+                        .split(',')
+                        .map(function(food) { return food.trim(); }) 
                     : [],
         beverageList: beverageOrders
-                        ? beverageOrders.split(',').map(function(beverage) { return beverage.trim(); })
+                        ? beverageOrders
+                            .split(',')
+                            .map(function(beverage) { return beverage.trim(); })
                         : [],
     }));
 }

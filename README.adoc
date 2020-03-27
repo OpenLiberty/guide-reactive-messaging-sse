@@ -18,8 +18,8 @@
 :page-related-guides: ['microprofile-reactive-messaging', 'microprofile-reactive-messaging-acknowledgement', 'reactive-service-testing', 'jax-rs-reactive-client', 'containerize']
 :page-permalink: /guides/{projectid}
 :imagesdir: /img/guide/{projectid}
-:page-seo-title: Sending Server-Sent Events with JAX-RS and MicroProfile Reactive Messaging
-:page-seo-description: Learn how to push Server-Sent Events from a reactive messaging application to a frontend appliation
+:page-seo-title: Sending Server-Sent Events (SSE) with JAX-RS and MicroProfile Reactive Messaging
+:page-seo-description: A getting started tutorial with examples on how to push messages as Server-Sent Events (SSE) using JAX-RS from a MicroProfile Reactive Messaging Java application to a frontend application.
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/dev
 :source-highlighter: prettify
 = Sending Server-Sent Events with JAX-RS and MicroProfile Reactive Messaging

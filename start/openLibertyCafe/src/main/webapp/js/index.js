@@ -25,9 +25,9 @@ function createTableRow(order) {
         '<td>' + order.status + '</td>' +
         '<td>' + 
             '<button ' +
-                'class=\"completeButton\"' +
+                'class="completeButton"' +
                 (order.status === 'READY' ? '' : 'disabled ') + 
-                'onclick=\"completeOrder(\'' + order.orderId + '\')\"' + 
+                "onclick=\"completeOrder('" + order.orderId + "')\"" + 
             '>Complete</button>' +
         '</td>';
 

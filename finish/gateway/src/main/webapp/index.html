@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Open Liberty System</title>
+        <script type="text/javascript" src="js/index.js"></script>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body>
+        <section id="appIntro">
+            <div id="titleSection">
+                <h1 id="appTitle">Open Liberty System <span id="systemName">--</span></h1>
+                <h2>System load: <span id="systemLoad">--</span>%</h2>
+                <div class="line"></div>
+                <div class="headerImage"></div>
+            </div>
+            <div id="propertiesContainer" class="hFlexContainer">
+                <div id="propertiesRequest" class="vFlexContainer">
+                    <strong class="flexSelfCenter">Add new data</strong>
+                    <form id="newDataForm">
+                        <div class="vFlexContainer inputLine">
+                            <!-- tag::foodOrdersLabel[] -->
+                            <label for="properties">System properties</label>
+                            <!-- end::foodOrdersLabel[] -->
+                            <!-- tag::foodOrdersField[] -->
+                            <textarea
+                                for="properties"
+                                id="properties"
+                                class="textBox"
+                                rows="10"
+                                cols="40"
+                                placeholder="Example: os.name, os.arch"
+                            ></textarea>
+                            <!-- end::foodOrdersField[] -->
+                        </div>
+                        <button class="buttons" onclick="sendPropertiesRequest(event)">
+                            Submit
+                        </button>
+                    </form>
+                    <!-- end::form[] -->
+                </div>
+                <div id="table" class="vFlexContainer">
+                    <!-- tag::table[] -->
+                    <table id="systemsTable" class="vFlexContainer">
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="systemsTableBody"></tbody>
+                    </table>
+                    <!-- end::table[] -->
+                </div>
+            </div>
+        </section>
+    </body>
+    <footer class="bodyFooter">
+        <div class="bodyFooterLink">
+            <a
+                id="licenseLink"
+                href="https://github.com/OpenLiberty/open-liberty/blob/master/LICENSE"
+            >License</a>
+            <a href="https://twitter.com/OpenLibertyIO">Twitter</a>
+            <a href="https://github.com/OpenLiberty">GitHub</a>
+            <a href="https://openliberty.io/">openliberty.io</a>
+        </div>
+        <p id="footer_text">an IBM open source project</p>
+        <p id="footer_copyright">&copy;Copyright IBM Corp. 2020</p>
+    </footer>
+    <script>
+        getSystem();
+    </script>
+</html>

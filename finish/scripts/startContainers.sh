@@ -3,10 +3,6 @@
 KAFKA_SERVER=kafka:9092
 NETWORK=reactive-app
 
-ORDER_SERVICE_URL="http://order:9081"
-SERVINGWINDOW_SERVICE_URL="http://servingwindow:9082"
-STATUS_SERVICE_URL="http://status:9085"
-
 docker network create $NETWORK
 
 docker run -d \
@@ -25,51 +21,32 @@ docker run -d \
   --name=kafka \
   --rm \
   bitnami/kafka:2 &
-
-docker run -d \
-  -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVER \
-  --network=$NETWORK \
-  --name=kitchen \
-  --rm \
-  kitchen:1.0-SNAPSHOT &
-
-docker run -d \
-  -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVER \
-  --network=$NETWORK \
-  --name=bar \
-  --rm \
-  bar:1.0-SNAPSHOT &
-
-docker run -d \
-  -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVER \
-  --network=$NETWORK \
-  --name=servingwindow \
-  --rm \
-  servingwindow:1.0-SNAPSHOT &
-
-docker run -d \
-  -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVER \
-  --network=$NETWORK \
-  --name=order \
-  --rm \
-  order:1.0-SNAPSHOT &
   
-docker run -d \
-  -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVER \
-  --network=$NETWORK \
-  --name=status \
-  --rm \
-  status:1.0-SNAPSHOT &
+sleep 15
 
 docker run -d \
   -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVER \
-  -e OrderClient_mp_rest_url=$ORDER_SERVICE_URL \
-  -e ServingWindowClient_mp_rest_url=$SERVINGWINDOW_SERVICE_URL \
-  -e StatusClient_mp_rest_url=$STATUS_SERVICE_URL \
+  -p 9083:9083 \
+  --network=$NETWORK \
+  --name=system \
+  --rm \
+  system:1.0-SNAPSHOT &
+ 
+docker run -d \
+  -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVER \
+  -p 9085:9085 \
+  --network=$NETWORK \
+  --name=inventory \
+  --rm \
+  inventory:1.0-SNAPSHOT &
+
+docker run -d \
+  -e InventoryClient_mp_rest_url=http://inventory:9085 \
+  -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVER \
   -p 9080:9080 \
   --network=$NETWORK \
-  --name=openlibertycafe \
+  --name=gateway \
   --rm \
-  openlibertycafe:1.0-SNAPSHOT &
+  gateway:1.0-SNAPSHOT &
   
 wait

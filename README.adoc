@@ -36,8 +36,9 @@ You will modify the Backend for Frontend (BFF) of a reactive messaging applicati
 === What is Microprofile Reactive Messaging?
 
 The MicroProfile Reactive Messaging specification utilizes a message-driven architecture by providing an
-easy way to send, receive, and process messages. The base application featured in this guide uses the `OpenLibertyCafe`
-application that mimics a cafe. To learn more about Microprofile Reactive Messaging and how the application works, check out the
+easy way to send, receive, and process messages. The implementations of the application and its services are provided for you 
+in the `start` directory. The `system` and `inventory` microservices uses MicroProfile Reactive Messaging to send and receive the system 
+load events. If you want to learn more about Microprofile Reactive Messaging, you can read the
 https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating asynchronous reactive microservices using MicroProfile Reactive Messaging^]
 guide.
 
@@ -66,17 +67,17 @@ Navigate to the `start` directory.
 
 To get the service running, the Open Liberty server for the BFF microservice needs to be updated to enable the MicroProfile Reactive Messaging feature. Fortunately, Server-Sent Events have been apart of the JAX-RS feature since version 2.1 so no updates are needed to enable SSE.
 
-Configure the `OpenLibertyCafe` BFF server to enable MicroProfile Reactive Messaging by adding [hotspot=featureMP file=0]`mpReactiveMessaging-1.0` feature element to the [hotspot file=0]`server.xml`.
+Configure the `Gateway` BFF server to enable MicroProfile Reactive Messaging by adding [hotspot=featureMP file=0]`mpReactiveMessaging-1.0` feature element to the [hotspot file=0]`server.xml`.
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
-#Replace the `OpenLibertyCafe` server configuration file.#
-`openLibertyCafe/src/main/liberty/config/server.xml`
+#Replace the `Gateway` server configuration file.#
+`gateway/src/main/liberty/config/server.xml`
 ----
 server.xml
 [source,xml,linenums,role="code_column"]
 ----
-include::finish/openLibertyCafe/src/main/liberty/config/server.xml[]
+include::finish/gateway/src/main/liberty/config/server.xml[]
 ----
 
 == Configuring the Kafka connector

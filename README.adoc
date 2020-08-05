@@ -37,8 +37,7 @@ You will modify the Backend for Frontend (BFF) of a reactive messaging applicati
 
 The MicroProfile Reactive Messaging specification utilizes a message-driven architecture by providing an
 easy way to send, receive, and process messages. The implementations of the application and its services are provided for you 
-in the `start` directory. The `system` and `inventory` microservices uses MicroProfile Reactive Messaging to send and receive the system 
-load events. If you want to learn more about Microprofile Reactive Messaging, you can read the
+in the `start` directory. The `system` and `inventory` microservices uses MicroProfile Reactive Messaging to send and receive the system load events. If you want to learn more about Microprofile Reactive Messaging, you can read the
 https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating asynchronous reactive microservices using MicroProfile Reactive Messaging^]
 guide.
 
@@ -181,7 +180,7 @@ To consume the events sent from the server, call the [hotspot=consumeNamedEvent 
 
 == Building the application
 
-You will build and run the `Bar`, `Kitchen`, `OpenLibertyCafe`, `Order`, `ServingWindow`, and `Status` microservices in Docker containers.
+You will build and run the `System`, `Inventory`, and `Gateway` microservices in Docker containers.
 
 Start your Docker environment.
 
@@ -203,12 +202,9 @@ Run the following commands to containerize the microservices:
 
 [role='command']
 ```
-docker build -t bar:1.0-SNAPSHOT bar/.
-docker build -t kitchen:1.0-SNAPSHOT kitchen/.
-docker build -t openlibertycafe:1.0-SNAPSHOT openLibertyCafe/.
-docker build -t order:1.0-SNAPSHOT order/.
-docker build -t servingwindow:1.0-SNAPSHOT servingWindow/.
-docker build -t status:1.0-SNAPSHOT status/.
+docker build -t system:1.0-SNAPSHOT system/.
+docker build -t inventory:1.0-SNAPSHOT inventory/.
+docker build -t gateway:1.0-SNAPSHOT gateway/.
 ```
 
 Next, use the provided script to start the application in Docker containers. The script creates a network for the containers to communicate with each other. It also creates containers for Kafka, Zookeeper, and all of the microservices in the project.

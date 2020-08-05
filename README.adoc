@@ -94,44 +94,46 @@ microprofile-config.properties
 include::finish/openLibertyCafe/src/main/resources/META-INF/microprofile-config.properties[]
 ----
 
-The [hotspot=kafkaConfig file=0]`mp.messaging.connector.liberty-kafka.bootstrap.servers` property defines the Kafka connector for the Open Liberty runtime. The `OpenLibertyCafe` will listen to an incoming stream [hotspot=orderStream file=0]`order` to receive messages from the [hotspot=topic file=0]`statusTopic` in Kafka. The [hotspot=keyDeserializer file=0]`key.deserializer` and [hotspot=valueDeserializer file=0]`value.deserializer` defines how to deserialze the messages from Kafka. The [hotspot=connector file=0]`connector` used for this stream is the `liberty-kafka` connector, a pre-built connector provided by Open Liberty. The [hotspot=groupId file=0]`group.id` defines a unique name for the consumer group. All these properties are required by the https://kafka.apache.org/documentation/#api[Apache Kafka client API^].
+The [hotspot=kafkaConfig file=0]`mp.messaging.connector.liberty-kafka.bootstrap.servers` property defines the Kafka connector for the Open Liberty runtime. The `Gateway` will listen to incoming streams [hotspot=orderStream file=0]`orders` to receive messages from the [hotspot=topic1 file=0]`systemLoadTopic` and [hotspot=topic2 file=0]`addSystemPropertyTopic` in Kafka. The [hotspot=keyDeserializer file=0]`key.deserializer` and [hotspot=valueDeserializer file=0]`value.deserializer` defines how to deserialze the messages from Kafka. The [hotspot=connector file=0]`connector` used for both streams is the `liberty-kafka` connector, a pre-built connector provided by Open Liberty. The [hotspot=groupId file=0]`group.id` defines a unique name for each consumer group. All these properties are required by the https://kafka.apache.org/documentation/#api[Apache Kafka client API^].
 
 == Creating the SSE REST API
 
 microprofile-config.properties
 [source,xml,linenums,role="code_column"]
 ----
-include::finish/openLibertyCafe/src/main/resources/META-INF/microprofile-config.properties[]
+include::finish/gateway/src/main/resources/META-INF/microprofile-config.properties[]
 ----
 
-In this section, you will create a REST API for SSE in the `OpenLibertyCafe` microservice which will allow clients to subscribe to events. Additionally, the server will read the messages from the [hotspot=orderStream file=0]`order` incoming stream and push them to the subscribers via SSE.
+In this section, you will create a REST API for SSE in the `Gateway` microservice which will allow clients to subscribe to events. Additionally, the server will read the messages from the two [hotspot=orderStream file=0]`order` incoming streams and push them to the subscribers via SSE.
 
 [role="code_command hotspot file=1", subs="quotes"]
 ----
-#Create the `OpenLibertyCafeSSEResource` class.#
-`openLibertyCafe/src/main/java/io/openliberty/guides/openlibertycafe/OpenLibertyCafeSSEResource.java`
+#Create the `GatewaySSEResource` class.#
+`gateway/src/main/java/io/openliberty/guides/gateway/GatewaySSEResource.java`
 ----
-OpenLibertyCafeSSEResource.java
+GatewaySSEResource.java
 [source,java,linenums,role="code_column hide_tags=copyright"]
 ----
-include::finish/openLibertyCafe/src/main/java/io/openliberty/guides/openlibertycafe/OpenLibertyCafeSSEResource.java[]
+include::finish/gateway/src/main/java/io/openliberty/guides/gateway/GatewaySSEResource.java[]
 ----
 
-OpenLibertyCafeApplication.java
+GatewayApplication.java
 [source,java,linenums,role="code_column hide_tags=copyright"]
 ----
-include::finish/openLibertyCafe/src/main/java/io/openliberty/guides/openlibertycafe/OpenLibertyCafeApplication.java[]
+include::finish/gateway/src/main/java/io/openliberty/guides/gateway/GatewayApplication.java[]
 ----
 
 === Creating the SSE API endpoint
 
-The [hotspot=subscribeToOrders file=1]`subscribeToOrders()` function allows clients to subscribe to events via an HTTP request to `GET /api/sse/`. The `/api` is from the [hotspot=path1 file=2]`@ApplicationPath` annotation at the `OpenLibertyCafeApplication` class, the `/sse` is from the [hotspot=path2 file=1]`@Path` annotation at the `OpenLibertyCafeSSEResource` class, and the `/` is the [hotspot=path3 file=1]`@Path` annotation at the `subscribeToOrders()` function. To indicate client requests to receive Server-Sent Events, this endpoint is annotated with [hotspot=sseMimeType file=1]`@Produces(MediaType.SERVER_SENT_EVENTS)` which sets the `Content-Type` in the response header to `text/event-stream`. Additionally, the function's parameters takes in an [hotspot=sseEventSinkParam file=1]`SseEventSink` and an [hotspot=sseParam file=1]`Sse` which are injected using the `@Context` annotation. Firstly, the function checks if the [hotspot=sse file=1]`sse` and [hotspot=broadcaster file=1]`broadcaster` instance variables have been assigned. If not, they will be assigned. This check and assignment is done using the [hotspot=sseAndBroadcaster file=1]`Optional` class with the [hotspot=sse file=1]`sse` being obtained from the [hotspot=sseParam file=1]`@Content` injection and the [hotspot=broadcaster file=1]`broadcaster` being obtained using [hotspot=getBroadcaster file=1]`Sse#newBroadcaster` method. Then, the [hotspot=sseEventSinkParam file=1]`SseEventSink` is [hotspot=registerSink file=1]`registered` to the [hotspot=broadcaster file=1]`SseBroadcaster` to subscribe to events.
+The [hotspot=subscribeToSystems file=1]`subscribeToSystem()` function allows clients to subscribe to events via an HTTP request to `GET /api/sse/`. The `/api` is from the [hotspot=path1 file=2]`@ApplicationPath` annotation at the `GatewayApplication` class, the `/sse` is from the [hotspot=path2 file=1]`@Path` annotation at the `GatewaySSEResource` class, and the `/` is the [hotspot=path3 file=1]`@Path` annotation at the `subscribeToSystems()` function. To indicate client requests to receive Server-Sent Events, this endpoint is annotated with [hotspot=sseMimeType file=1]`@Produces(MediaType.SERVER_SENT_EVENTS)` which sets the `Content-Type` in the response header to `text/event-stream`. Additionally, the function's parameters takes in an [hotspot=sseEventSinkParam file=1]`SseEventSink` and an [hotspot=sseParam file=1]`Sse` which are injected using the `@Context` annotation. Firstly, the function checks if the [hotspot=sse file=1]`sse` and [hotspot=broadcaster file=1]`broadcaster` instance variables have been assigned. If not, they will be assigned. This check and assignment is done with the [hotspot=sse file=1]`sse` being obtained from the [hotspot=sseParam file=1]`@Context` injection and the [hotspot=broadcaster file=1]`broadcaster` being obtained using the [hotspot=newBroadcaster file=1]`Sse.newBroadcaster()` method. Then, the [hotspot=sseEventSinkParam file=1]`SseEventSink` is [hotspot=registerSink file=1]`registered` to the [hotspot=broadcaster file=1]`SseBroadcaster` to subscribe to events.
 
 For more information about the interfaces used for SSE see the Javadocs for https://openliberty.io/docs/ref/javadocs/liberty-javaee8-javadoc/javax/ws/rs/sse/Sse.html[Sse^], https://openliberty.io/docs/ref/javadocs/liberty-javaee8-javadoc/javax/ws/rs/sse/SseEventSink.html[SseEventSink^], and https://openliberty.io/docs/ref/javadocs/liberty-javaee8-javadoc/javax/ws/rs/sse/SseBroadcaster.html[SseBroadcaster^].
 
 === Reading from the reactive messaging channel
 
-The [hotspot=reactiveMessagingStream file=1]`receiveOrder()` function subscribes to the [hotspot=incoming file=1]`order` incoming stream which was configured to read from the [hotspot=topic file=0]`statusTopic` topic in Kafka. This function is called whenever one of the other microservices produces a new message to the [hotspot=topic file=0]`statusTopic` topic. When the message is received, which is an Order object, it creates the event and broadcasts it to all subscribers.
+The [hotspot=getSystemLoadMessage file=1]`getSystemLoadMessage()` function subscribes to the [hotspot=incoming1 file=1]`systemLoad` incoming stream which was configured to read from the [hotspot=topic1 file=0]`systemLoadTopic` topic in Kafka. The [hotspot=getPropertyMessage file=1]`getPropertyMessage()` function subscribes to the [hotspot=incoming2 file=1]`propertyMessage` incoming stream which was configured to read from the [hotspot=topic2 file=0]`addSystemPropertyTopic` topic in Kafka. 
+
+These functions are called whenever one of the other microservices produces a new message to the respective topics. When the message is received, which is an Systemload object for the [hotspot=getSystemLoadMessage file=1]`getSystemLoadMessage()` function and PropertyMessage object for the [hotspot=getPropertyMessage file=1]`getPropertyMessage()` function, it creates the event and broadcasts it to all subscribers.
 
 === Broadcasting events
 

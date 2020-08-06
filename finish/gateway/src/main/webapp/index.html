@@ -9,7 +9,6 @@
     <body>
         <section id="appIntro">
             <div id="titleSection">
-                <h1 id="appTitle">Open Liberty System <span id="systemName">--</span></h1>
                 <h2>System load: <span id="systemLoad">--</span>%</h2>
                 <div class="line"></div>
                 <div class="headerImage"></div>
@@ -18,13 +17,17 @@
                 <div class="msSection" id="systemProperties">
                     <div class="headerRow">
                         <div class="headerIcon"><img src="img/sysProps.svg"/></div>
-                        <div class="headerTitle" id="sysPropTitle"><h2>System Properties</h2></div>
+                        <div class="headerTitle" id="sysPropTitle">Open Liberty System <span id="systemName">--</span></div>
                     </div>
                     <div class="sectionContent">
+                        <!-- tag::form[] -->
                         <form id="systemPropertiesForm">
                             <p style="text-align: center;"><strong>Add new data</strong></p>
                             <div>
+                                <!-- tag::propertyLabel[] -->
                                 <label for="properties">System properties</label>
+                                <!-- end::propertyLabel[] -->
+                                <!-- tag::textField[] -->
                                 <textarea
                                     for="properties"
                                     id="properties"
@@ -33,21 +36,30 @@
                                     cols="25"
                                     placeholder="Example: os.name, os.arch"
                                 ></textarea>
+                                <!-- end::textField[] -->
                             </div>
                             <button class="buttons" onclick="sendPropertiesRequest(event)">
                                 Submit
                             </button>
-                        </form><div id="systemPropertiesTable">
+                        </form>
+                        <!-- end::form[] -->
+                        <!-- tag::table[] -->
+                        <div id="systemPropertiesTable">
                             <table>
                                 <thead id="sysPropertiesTableHead">
                                     <tr>
+                                        <!-- tag::valuesColumn[] -->
                                         <th>Properties</th>
+                                        <!-- end::valuesColumn[] -->
+                                        <!-- tag::propertiesColumn[] -->
                                         <th>Value</th>
+                                        <!-- end::propertiesColumn[] -->
                                     </tr>
                                 </thead>
                                 <tbody id="sysPropertiesTableBody"></tbody>
                             </table>
                         </div>
+                        <!-- end::table[] -->
                     </div>
                 </div>
             </div>

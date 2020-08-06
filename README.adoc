@@ -155,15 +155,15 @@ index.html
 include::finish/gateway/src/main/webapp/index.html[]
 ----
 
-In this section, you will create a frontend application which will connect to the `OpenLibertyCafe` microservice through the [hotspot=subscribeToOrders file=0]`SSE REST API` and consumes the events when they are pushed. The frontend UI contains a [hotspot=form file=1]`form` to submit new orders which contains a [hotspot=tableIdField file=1]`textfield` for the [hotspot=tableIdLabel file=1]`Table Id`, a [hotspot=foodOrdersField file=1]`textarea` for [hotspot=foodOrdersLabel file=1]`Food Orders`, and a [hotspot=beverageOrdersField file=1]`textarea` for [hotspot=beverageOrdersLabel file=1]`Beverage Orders`. Use comma separated values to submit multiple orders in one textarea (e.g, Type `burger, pizza` in the Food Orders textarea if you wanted to order a burger and a pizza). When the orders are received from the `OpenLibertyCafe` microservice, they are displayed in a [hotspot=table file=1]`table` which has columns for the [hotspot=orderId file=1]`Order Id`, [hotspot=tId file=1]`Table Id`, [hotspot=type file=1]`Type`, [hotspot=item file=1]`Item`, and [hotspot=status file=1]`Status`. There is an additional [hotspot=complete file=1]`Mark as Complete` column which will have a button to complete an order which appears if the order's status is `READY`.
+In this section, you will create a frontend application which will connect to the `Gateway` microservice through the [hotspot=subscribeToSystems file=0]`SSE REST API` and consumes the events when they are pushed. The frontend UI contains a [hotspot=form file=1]`form` to submit new system property requests, which contains a  [hotspot=textField file=1]`textarea` for the [hotspot=propertyLabel file=1]`Properties`. Use comma separated values to submit multiple requests at once in the system property textarea. When the properties are received from the `Gateway` microservice, they are displayed in a [hotspot=table file=1]`table` which has columns for the [hotspot=propertiesColumn file=1]`Properties` and their respective [hotspot=valuesColumn file=1]`Values`.
 
-image::frontend.png[OpenLibertyCafe frontend,align="center"]
+image::frontend.png[Gateway frontend,align="center"]
 
-Most of the application has been created except for the JavaScript file containing the application logic, which will be modified to add SSE functionality.
+Most of the application has been created except for the JavaScript file containing the application logic, which will be created to add SSE functionality.
 
 [role="code_command hotspot file=2", subs="quotes"]
 ----
-#Replace the `index.js` JavaScript file.#
+#Create the `index.js` JavaScript file.#
 `gateway/src/main/webapp/js/index.js`
 ----
 index.js
@@ -178,7 +178,7 @@ The frontend application subscribes to the SSE by creating a new instance of [ho
 
 === Consuming the Server-Sent Events
 
-To consume the events sent from the server, call the [hotspot=consumeNamedEvent file=2]`EventSource#addEventListener` method to add an event listener. This event listener will listen for events with the name of [hotspot=orderEvent file=2]`order` as specified when creating the [hotspot=name file=0]`OutboundSseEvent`. When the event is received, a [hotspot=eventHandler file=2]`function` is run to handle the event. The [hotspot=eventHandler file=2]`function` will be passed an [hotspot=eventObject file=2]`event` object and [hotspot=parse file=2]`parses` the event's data property, which is an [hotspot=data file=0]`Order`, from a JSON string to a JavaScript object. The [hotspot=callUpdateTable hotspot=updateTable file=2]`updateTable()` function is called to update the table using information contained in the JavaScript object.
+To consume the events sent from the server, call the [hotspot=consumeNamedEvent file=2]`EventSource.addEventListener()` method to add an event listener. This first event listener will listen for events with the name of [hotspot=systemLoadEvent file=2]`systemLoad` and the second event listener will listen for events with the name of [hotspot=propertyMessageEvent file=2]`propertyMessage`, as specified when creating the [hotspot=name file=0]`OutboundSseEvent`. When the event is received, a [hotspot=eventHandler1 hotspot=eventHandler2 file=2]`function` is run to handle the event. The [hotspot=eventHandler1 hotspot=eventHandler2 file=2]`function` will use an event object and [hotspot=parse file=2]`parse` the event's data property from a JSON string to a JavaScript object.
 
 == Building the application
 

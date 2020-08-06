@@ -1,30 +1,47 @@
 function initSSE() {
+    // tag::eventSource[]
     var source = new EventSource('/api/sse');
+    // end::eventSource[]
     
+    // tag::consumeNamedEvent[]
     source.addEventListener(
+        // tag::systemLoadEvent[]
         'systemLoad',
+        // end::systemLoadEvent[]
         systemLoadHandler
     );
 
     source.addEventListener(
+        // tag::propertyMessageEvent[]
         'propertyMessage',
+        // end::propertyMessageEvent[]
+        //
         propertyMessageHandler
     );
+    // end::consumeNamedEvent[]
 }
 
+// tag::eventHandler1[]
 function systemLoadHandler(event) {
+    // tag::parse[]
     var system = JSON.parse(event.data);
+    // end::parse[]
 
     document.getElementById('systemName').innerHTML = system.hostname;
     document.getElementById('systemLoad').innerHTML = system.loadAverage.toFixed(2);
 }
+// end::eventHandler1[]
 
+// tag::eventHandler2[]
 function propertyMessageHandler() {
+    // tag::parse[]
     var property = JSON.parse(event.data);
+    // end::parse[]
 
     document.getElementById('systemName').innerHTML = property.hostname;
     addPropertyToTable(property.key, property.value);
 }
+// end::eventHandler2[]
 
 function addPropertyToTable(property, value) {
     if (document.getElementById(property)) return;

@@ -93,12 +93,6 @@
             <version>5.5.2</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.30</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -109,7 +103,6 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${version.maven-war-plugin}</version>
                 <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
                     <packagingExcludes>pom.xml</packagingExcludes>
                 </configuration>
             </plugin>

@@ -54,16 +54,13 @@ public class SystemLoad {
         return "CpuLoadAverage: " + jsonb.toJson(this);
     }
     
-    //tag::jsonbSerializer[]
     public static class SystemLoadSerializer implements Serializer<Object> {
         @Override
         public byte[] serialize(String topic, Object data) {
           return jsonb.toJson(data).getBytes();
         }
     }
-    //end::jsonbSerializer[]
-      
-    //tag::jsonbDeSerializer[]
+    
     public static class SystemLoadDeserializer implements Deserializer<SystemLoad> {
         @Override
         public SystemLoad deserialize(String topic, byte[] data) {
@@ -72,5 +69,4 @@ public class SystemLoad {
             return jsonb.fromJson(new String(data), SystemLoad.class);
         }
     }
-    //end::jsonbDeSerializer[]
 }

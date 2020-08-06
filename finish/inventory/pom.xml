@@ -38,14 +38,12 @@
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
-        <!-- tag::reactiveMessaging[] -->
         <dependency>
             <groupId>org.eclipse.microprofile.reactive.messaging</groupId>
             <artifactId>microprofile-reactive-messaging-api</artifactId>
             <version>1.0</version>
             <scope>provided</scope>
         </dependency>
-        <!-- end::reactiveMessaging[] -->
         
         <!--  Required dependencies -->
         <dependency>
@@ -53,20 +51,17 @@
            <artifactId>models</artifactId>
            <version>1.0-SNAPSHOT</version>
         </dependency>
-        <!-- tag::kafka[] -->
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
             <version>2.4.0</version>
         </dependency>
-        <!-- end::kafka[] -->
-        <!-- tag::rxjava[] -->
         <dependency>
              <groupId>io.reactivex.rxjava3</groupId>
              <artifactId>rxjava</artifactId>
              <version>3.0.0</version>
         </dependency>
-        <!-- end::rxjava[] -->
+        
         <!-- For tests -->
         <dependency>
             <groupId>org.microshed</groupId>
@@ -86,12 +81,6 @@
             <version>5.6.2</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.30</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -102,7 +91,6 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.2.3</version>
                 <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
                     <packagingExcludes>pom.xml</packagingExcludes>
                 </configuration>
             </plugin>

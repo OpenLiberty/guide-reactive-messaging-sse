@@ -164,12 +164,12 @@ Most of the application has been created except for the JavaScript file containi
 [role="code_command hotspot file=2", subs="quotes"]
 ----
 #Replace the `index.js` JavaScript file.#
-`openLibertyCafe/src/main/webapp/js/index.js`
+`gateway/src/main/webapp/js/index.js`
 ----
 index.js
 [source,javascript,linenums,role="code_column"]
 ----
-include::finish/openLibertyCafe/src/main/webapp/js/index.js[]
+include::finish/gateway/src/main/webapp/js/index.js[]
 ----
 
 === Subscribing to Server-Sent Events

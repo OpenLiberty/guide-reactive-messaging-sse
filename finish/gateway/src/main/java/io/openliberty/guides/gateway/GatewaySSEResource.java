@@ -63,19 +63,37 @@ public class GatewaySSEResource {
     }
     // end::subscribeToSystems[]
 
+    // tag::broadcastData[]
     private void broadcastData(String name, Object data) {
+        // tag::notNull[]
         if (broadcaster != null) {
+        // end::notNull[]
+            // tag::createEvent[]
+            // tag::newEventBuilder[]
             OutboundSseEvent event = sse.newEventBuilder()
+            // end::newEventBuilder[]
+                                        // tag::name[]
                                         .name(name)
+                                        // end::name[]
+                                        // tag::data[]
                                         .data(data.getClass(), data)
+                                        // end::data[]
+                                        // tag::mediaType[]
                                         .mediaType(MediaType.APPLICATION_JSON_TYPE)
+                                        // end::mediaType[]
+                                        // tag::build[]
                                         .build();
-                                        
+                                        // end::build[]
+            // end::createEvent[]
+            
+            // tag::broadcastEvent[]        
             broadcaster.broadcast(event);
+            // end::broadcastEvent[]
         } else {
             logger.info("Unable to send SSE. Broadcaster context is not set up.");
         }
     }
+    // end::broadcastData[]
 
     // tag::getSystemLoadMessage[]
     // tag::incoming1

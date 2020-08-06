@@ -1,4 +1,7 @@
-FROM open-liberty
+FROM openliberty/open-liberty:kernel-java8-openj9-ubi
+
+ARG VERSION=1.0
+ARG REVISION=SNAPSHOT
 
 LABEL \
   org.opencontainers.image.authors="My Name" \

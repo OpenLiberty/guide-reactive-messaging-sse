@@ -137,22 +137,22 @@ These functions are called whenever one of the other microservices produces a ne
 
 === Broadcasting events
 
-Broadcasting events is handled in the [hotspot=reactiveMessagingStream file=1]`receiveOrder()` function. Firstly, it gets the value of the [hotspot=broadcaster file=1]`broadcaster` wrapped in an [hotspot=getBroadcasterOptional file=1]`Optional`. Then, it checks if the broadcaster is [hotspot=isBroadcasterPresent file=1]`present`, meaning that the [hotspot=broadcaster file=1]`broadcaster` is not null. If it is not null, then there is at least one subscriber, otherwise there is no client to send the event to. If the [hotspot=broadcaster file=1]`broadcaster` has been set, an [hotspot=createEvent file=1]`OutboundSseEvent` needs to be created. An instance of the `OutboundSseEvent.Builder` is obtained by using the [hotspot=newEventBuilder file=1]`Sse#newEventBuilder` method which will help create the [hotspot=createEvent file=1]`OutboundSseEvent`. Methods from the builder can be chained to set the [hotspot=id file=1]`id`, [hotspot=data file=1]`data`, [hotspot=name file=1]`name`, [hotspot=delay file=1]`reconnect delay`, [hotspot=comment file=1]`comment`, and [hotspot=mediaType file=1]`media type`. Then, the [hotspot=build file=1]`OutboundSseEvent.Builder#build` method is called to return the [hotspot=createEvent file=1]`OutboundSseEvent` instance. The [hotspot=createEvent file=1]`OutboundSseEvent` is broadcasted, or sent to all registered sinks, by returning the [hotspot=broadcaster file=1]`broadcaster` from the [hotspot=optionalGet file=1]`Optional` and invoking the [hotspot=broadcastEvent file=1]`SseBroadcaster#broadcast` method.
+Broadcasting events is handled in the [hotspot=broadcastData file=1]`broadcastData()` function. Firstly, it checks if the [hotspot=broadcaster file=1]`broadcaster` is not [hotspot=notNull file=1]`null`. If it is not null, then there is at least one subscriber, otherwise there is no client to send the event to. If the [hotspot=broadcaster file=1]`broadcaster` has been set, an [hotspot=createEvent file=1]`OutboundSseEvent` needs to be created. An instance of the `OutboundSseEvent.Builder` is obtained by using the [hotspot=newEventBuilder file=1]`Sse.newEventBuilder()` method which will help create the [hotspot=createEvent file=1]`OutboundSseEvent`. Methods from the builder can be chained to set the [hotspot=name file=1]`name`, [hotspot=data file=1]`data`, and [hotspot=mediaType file=1]`media type`. Then, the [hotspot=build file=1]`OutboundSseEvent.Builder.build()` method is called to return the [hotspot=createEvent file=1]`OutboundSseEvent` instance. The [hotspot=createEvent file=1]`OutboundSseEvent` is broadcasted, or sent to all registered sinks, by invoking the hotspot=broadcastEvent file=1]`SseBroadcaster.broadcast()` method.
 
 For more information about these interfaces see the Javadocs for https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent.html&package=allclasses-frame.html[OutboundSseEvent^] and https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent.Builder.html&package=allclasses-frame.html[OutboundSseEvent.Builder^].
 
 == Creating the frontend application
 
-OpenLibertyCafeSSEResource.java
+GatewaySSEResource.java
 [source,java,linenums,role="code_column hide_tags=copyright"]
 ----
-include::finish/openLibertyCafe/src/main/java/io/openliberty/guides/openlibertycafe/OpenLibertyCafeSSEResource.java[]
+include::finish/gateway/src/main/java/io/openliberty/guides/gateway/GatewaySSEResource.java[]
 ----
 
 index.html
 [source,javascript,linenums,role="code_column hide_tags=copyright"]
 ----
-include::finish/openLibertyCafe/src/main/webapp/index.html[]
+include::finish/gateway/src/main/webapp/index.html[]
 ----
 
 In this section, you will create a frontend application which will connect to the `OpenLibertyCafe` microservice through the [hotspot=subscribeToOrders file=0]`SSE REST API` and consumes the events when they are pushed. The frontend UI contains a [hotspot=form file=1]`form` to submit new orders which contains a [hotspot=tableIdField file=1]`textfield` for the [hotspot=tableIdLabel file=1]`Table Id`, a [hotspot=foodOrdersField file=1]`textarea` for [hotspot=foodOrdersLabel file=1]`Food Orders`, and a [hotspot=beverageOrdersField file=1]`textarea` for [hotspot=beverageOrdersLabel file=1]`Beverage Orders`. Use comma separated values to submit multiple orders in one textarea (e.g, Type `burger, pizza` in the Food Orders textarea if you wanted to order a burger and a pizza). When the orders are received from the `OpenLibertyCafe` microservice, they are displayed in a [hotspot=table file=1]`table` which has columns for the [hotspot=orderId file=1]`Order Id`, [hotspot=tId file=1]`Table Id`, [hotspot=type file=1]`Type`, [hotspot=item file=1]`Item`, and [hotspot=status file=1]`Status`. There is an additional [hotspot=complete file=1]`Mark as Complete` column which will have a button to complete an order which appears if the order's status is `READY`.
@@ -197,7 +197,7 @@ mvn package
 Run the following command to download or update the `open-liberty` docker image to latest.
 [role='command']
 ```
-docker pull open-liberty
+docker pull openliberty/open-liberty:kernel-java8-openj9-ubi
 ```
 
 Run the following commands to containerize the microservices:
@@ -231,33 +231,21 @@ include::{common-includes}/os-tabs.adoc[]
 
 == Trying the application
 
-Once the application is up and running, open your browser and checkout the service that your created at the `http://localhost:9080` URL. Note: The latest version of most modern web browsers should have support for Server-Sent Events with the exception of Internet Explorer.
+Once the application is up and running, open your browser and checkout the service that your created at the `http://localhost:9080` URL. The application may take some time to get ready. Note: The latest version of most modern web browsers should have support for Server-Sent Events with the exception of Internet Explorer.
 
-Begin by filling in the `New order request` form. Sample data is provided to test the application:
+First note the `system load` value that should appear above the table and change every few seconds. 
 
-Table Id:
+Next, fill in the `System` form. Sample data is provided to test the application:
+
+System Properties:
 [source, role="command"]
 ----
-1
+os.name, os.arch
 ----
 
-Food orders:
-[source, role="command"]
-----
-pizza, burger, fries
-----
+Now, press the `Submit` button.
 
-Beverage orders:
-[source, role="command"]
-----
-coke, water
-----
-
-Now, press the `Submit order` button.
-
-The `Orders` table should begin to populate its rows with the information pertinent to the orders you have requested. The most notable column to look for is the `Status` column which should go from `NEW` to `IN_PROGRESS` to `READY`.
-
-Once the order is `READY`, a button appears to its right labelled `Complete`. Press the `Complete` button to complete the order. The Status will go from `READY` to `COMPLETE`.
+The `Orders` table should begin to populate its rows with the information pertinent to the system properties you have requested.
 
 == Tearing down the environment
 

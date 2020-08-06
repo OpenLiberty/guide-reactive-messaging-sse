@@ -58,6 +58,12 @@ h2 {
     font-weight: 400;
 }
 
+.headerTitle > h2 {
+    font-family: BunueloLight;
+    font-size:40px;
+    margin: 0;
+}
+
 a {
     text-decoration: none;
 }
@@ -105,6 +111,67 @@ button:hover {
 
 button:disabled {
     display: none;
+}
+
+.msSection {
+    background: white;
+    box-shadow: 0 2px 4px 0 rgba(63,70,89,0.31);
+}
+
+.headerRow {
+    height: 100px;
+    position:relative;
+    z-index:2;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
+}
+.headerRow > div {
+    display: inline-block;
+}
+
+.headerIcon {
+    width: 250px;
+    height: 100%;
+    float: left;
+    background-color: #E8EAEF;
+}
+.headerIcon img {
+    display:block;
+    margin:auto;
+    margin-top: 20px;
+}
+
+.headerTitle {
+    background-color: white;
+    color:#5d6a8e;
+    letter-spacing:0;
+    text-align:left;
+    padding-left: 40px;
+    padding-top: 10px;
+    width: calc(100% - 290px);
+}
+
+#sysPropTitle {
+    padding-top: 28px;
+}
+
+#systemPropertiesTable {
+    display: inline-block;
+    width: calc(100% - 250px);
+    height: 300px;
+    overflow-y: scroll;
+    background: white;
+}
+
+#systemPropertiesForm {
+    display: inline-block;
+    vertical-align: top;
+    width: 220px;
+    height: 300px;
+    padding: 15px;
+}
+
+.sectionContent {
+    height: 300px;
 }
 
 .bodyFooter {
@@ -184,13 +251,36 @@ button:disabled {
 	justify-content: space-between;
 }
 
-#table {
-    background-color: white;
-	margin: 1em;
-	padding: .5em;
-	border-radius: 7pt;
-	width: 30%;
-	justify-content: space-between;
+table {
+    width: 100%;
+    font-size: 14px;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+th {
+    height: 63px;
+    padding-left: 41px;
+    font-size: 16px;
+}
+tr {
+    height: 45px;
+}
+td {
+    padding-left: 41px;
+}
+
+#sysPropertiesTableHead tr {
+    background: #D6D9E4;
+}
+
+#sysPropertiesTableBody {
+    height: calc(300px - 65px);
+    overflow-y: scroll;
+}
+
+#sysPropertiesTableBody tr:nth-child(2n+1) {
+    background: rgb(238, 239, 243);
 }
 
 .inputLine {
@@ -215,12 +305,3 @@ button:disabled {
     overflow-y: scroll;
 }
 
-td {
-    padding-top: 5px;
-    padding-bottom: 5px;
-}
-
-th, td {
-    width: 180px;
-    text-align: left;
-};

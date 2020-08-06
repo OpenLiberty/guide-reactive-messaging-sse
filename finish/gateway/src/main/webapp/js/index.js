@@ -27,12 +27,11 @@ function propertyMessageHandler() {
 }
 
 function addPropertyToTable(property, value) {
-    if (!document.getElementById(property)) {
-        var tableRow = document.createElement('tr');
-        tableRow.id = property;
-        tableRow.innerHTML = '<td>' + property + '</td><td>' + value + '</td>';
-        document.getElementById('systemsTableBody').appendChild(tableRow);
-    }
+    if (document.getElementById(property)) return;
+    var tableRow = document.createElement('tr');
+    tableRow.id = property;
+    tableRow.innerHTML = '<td>' + property + '</td><td>' + value + '</td>';
+    document.getElementById('sysPropertiesTableBody').appendChild(tableRow);
 }
 
 function getSystem() {
@@ -65,13 +64,13 @@ function getSystem() {
 function sendPropertiesRequest(event) {
     event.preventDefault();
 
-    var newDataForm = document.getElementById('newDataForm');
-    var properties = newDataForm.elements.item(0).value;
+    var form = document.getElementById('systemPropertiesForm');
+    var properties = form.elements.properties.value;
 
     var request = new XMLHttpRequest();
 
     request.onload = function() {
-        newDataForm.reset();
+        form.reset();
     };
 
     request.open('POST', '/api/inventory/systems/properties');

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Open Liberty System</title>
+        <script type="text/javascript" src="js/index.js"></script>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body>
+        <section id="appIntro">
+            <div id="titleSection">
+                <h1 id="appTitle">Open Liberty System <span id="systemName">--</span></h1>
+                <h2>System load: <span id="systemLoad">--</span>%</h2>
+                <div class="line"></div>
+                <div class="headerImage"></div>
+            </div>
+            <div class="msSection" id="systemProperties">
+                <div class="msSection" id="systemProperties">
+                    <div class="headerRow">
+                        <div class="headerIcon"><img src="img/sysProps.svg"/></div>
+                        <div class="headerTitle" id="sysPropTitle"><h2>System Properties</h2></div>
+                    </div>
+                    <div class="sectionContent">
+                        <!-- tag::form[] -->
+                        <form id="systemPropertiesForm">
+                            <p style="text-align: center;"><strong>Add new data</strong></p>
+                            <div>
+                                <!-- tag::propertyLabel[] -->
+                                <label for="properties">System properties</label>
+                                <!-- end::propertyLabel[] -->
+                                <!-- tag::textField[] -->
+                                <textarea
+                                    for="properties"
+                                    id="properties"
+                                    class="textBox"
+                                    rows="8"
+                                    cols="25"
+                                    placeholder="Example: os.name, os.arch"
+                                ></textarea>
+                                <!-- end::textField[] -->
+                            </div>
+                            <button class="buttons" onclick="sendPropertiesRequest(event)">
+                                Submit
+                            </button>
+                        </form>
+                        <!-- end::form[] -->
+                        <div id="systemPropertiesTable">
+                            <!-- tag::table[] -->
+                            <table>
+                                <thead id="sysPropertiesTableHead">
+                                    <tr>
+                                        <!-- tag::propertiesColumn[] -->
+                                        <th>Properties</th>
+                                        <!-- end::propertiesColumn[] -->
+                                        <!-- tag::valuesColumn[] -->
+                                        <th>Value</th>
+                                        <!-- end::valuesColumn[] -->
+                                    </tr>
+                                </thead>
+                                <tbody id="sysPropertiesTableBody"></tbody>
+                            </table>
+                            <!-- end::table[] -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <footer class="bodyFooter">
+            <div class="bodyFooterLink">
+                <a
+                    id="licenseLink"
+                    href="https://github.com/OpenLiberty/open-liberty/blob/master/LICENSE"
+                >License</a>
+                <a href="https://twitter.com/OpenLibertyIO">Twitter</a>
+                <a href="https://github.com/OpenLiberty">GitHub</a>
+                <a href="https://openliberty.io/">openliberty.io</a>
+            </div>
+            <p id="footer_text">an IBM open source project</p>
+            <p id="footer_copyright">&copy;Copyright IBM Corp. 2020</p>
+        </footer>
+        <script>
+            getSystem();
+        </script>
+    </body>
+</html>

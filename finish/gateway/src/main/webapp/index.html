@@ -9,6 +9,7 @@
     <body>
         <section id="appIntro">
             <div id="titleSection">
+                <h1 id="appTitle">Open Liberty System <span id="systemName">--</span></h1>
                 <h2>System load: <span id="systemLoad">--</span>%</h2>
                 <div class="line"></div>
                 <div class="headerImage"></div>
@@ -17,7 +18,7 @@
                 <div class="msSection" id="systemProperties">
                     <div class="headerRow">
                         <div class="headerIcon"><img src="img/sysProps.svg"/></div>
-                        <div class="headerTitle" id="sysPropTitle">Open Liberty System <span id="systemName">--</span></div>
+                        <div class="headerTitle" id="sysPropTitle"><h2>System Properties</h2></div>
                     </div>
                     <div class="sectionContent">
                         <!-- tag::form[] -->
@@ -43,8 +44,8 @@
                             </button>
                         </form>
                         <!-- end::form[] -->
-                        <!-- tag::table[] -->
                         <div id="systemPropertiesTable">
+                            <!-- tag::table[] -->
                             <table>
                                 <thead id="sysPropertiesTableHead">
                                     <tr>
@@ -58,8 +59,8 @@
                                 </thead>
                                 <tbody id="sysPropertiesTableBody"></tbody>
                             </table>
+                            <!-- end::table[] -->
                         </div>
-                        <!-- end::table[] -->
                     </div>
                 </div>
             </div>

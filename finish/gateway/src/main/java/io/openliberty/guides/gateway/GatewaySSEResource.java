@@ -51,7 +51,7 @@ public class GatewaySSEResource {
 
         if (this.sse == null || this.broadcaster == null) { 
             this.sse = sse;
-            // tag::newBroadcaster
+            // tag::newBroadcaster[]
             this.broadcaster = sse.newBroadcaster();
             // end::newBroadcaster[]
         }
@@ -96,9 +96,9 @@ public class GatewaySSEResource {
     // end::broadcastData[]
 
     // tag::getSystemLoadMessage[]
-    // tag::incoming1
+    // tag::incoming1[]
     @Incoming("systemLoad")
-    // end::incoming1
+    // end::incoming1[]
     public void getSystemLoadMessage(SystemLoad sl)  {
         logger.info("Message received from systemLoadTopic. " + sl.toString());
         broadcastData("systemLoad", sl);
@@ -106,9 +106,9 @@ public class GatewaySSEResource {
     // end::getSystemLoadMessage[]
 
     // tag::getPropertyMessage[]
-    // tag::incoming2
+    // tag::incoming2[]
     @Incoming("propertyMessage")
-    // tag::incoming2
+    // tag::incoming2[]
     public void getPropertyMessage(PropertyMessage pm)  {
         logger.info("Message received from propertyMessageTopic. " + pm.toString());
         broadcastData("propertyMessage", pm);

@@ -23,9 +23,9 @@ function initSSE() {
 
 // tag::eventHandler1[]
 function systemLoadHandler(event) {
-    // tag::parse[]
+    // tag::parse1[]
     var system = JSON.parse(event.data);
-    // end::parse[]
+    // end::parse1[]
 
     document.getElementById('systemName').innerHTML = system.hostname;
     document.getElementById('systemLoad').innerHTML = system.loadAverage.toFixed(2);
@@ -34,9 +34,9 @@ function systemLoadHandler(event) {
 
 // tag::eventHandler2[]
 function propertyMessageHandler() {
-    // tag::parse[]
+    // tag::parse2[]
     var property = JSON.parse(event.data);
-    // end::parse[]
+    // end::parse2[]
 
     document.getElementById('systemName').innerHTML = property.hostname;
     addPropertyToTable(property.key, property.value);

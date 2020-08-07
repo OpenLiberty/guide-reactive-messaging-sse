@@ -37,13 +37,13 @@ You will modify the Backend for Frontend (BFF) of a reactive messaging applicati
 
 The MicroProfile Reactive Messaging specification utilizes a message-driven architecture by providing an
 easy way to send, receive, and process messages. The implementations of the application and its services are provided for you 
-in the `start` directory. The `system` and `inventory` microservices uses MicroProfile Reactive Messaging to send and receive the system load events. If you want to learn more about Microprofile Reactive Messaging, you can read the
+in the `start` directory. The `system` and `inventory` microservices uses MicroProfile Reactive Messaging to send and receive the system load and system property events. If you want to learn more about Microprofile Reactive Messaging, you can read the
 https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating asynchronous reactive microservices using MicroProfile Reactive Messaging^]
 guide.
 
 === What are Server-Sent Events?
 
-Server-Sent Events (SSE) is a specification introduced in HTML5 which allows clients to subscribe to events that are pushed from a server. Firstly, the client needs to make a connection with the server over HTTP. The connection is kept-alive and the server is able to continuously push events to the client as long as the connection persists. This differs from traditional HTTP requests as they use one request for one response, while SSE uses one request for a stream of responses. SSE also differs from Web Sockets as SSE is unidirectional from the server to the client and Web Sockets allow for bidirectional communication.
+Server-Sent Events (SSE) is a specification introduced in HTML5 which allows clients to subscribe to events that are pushed from a server. Firstly, the client needs to make a connection with the server over HTTP. The connection is kept-alive and the server is able to continuously push events to the client as long as the connection persists. This differs from traditional HTTP requests as they use one request for one response, while SSE uses one request for a stream of responses. SSE also differs from Web Sockets as SSE is uni-directional from the server to the client and Web Sockets allow for bi-directional communication.
 
 // =================================================================================================
 // Prerequisites
@@ -86,12 +86,12 @@ In order for our application to receive data, the Kafka connector must be set up
 [role="code_command hotspot file=0", subs="quotes"]
 ----
 #Create the `microprofile-config.properties` file.#
-`openLibertyCafe/src/main/resources/META-INF/microprofile-config.properties`
+`gateway/src/main/resources/META-INF/microprofile-config.properties`
 ----
 microprofile-config.properties
 [source,xml,linenums,role="code_column"]
 ----
-include::finish/openLibertyCafe/src/main/resources/META-INF/microprofile-config.properties[]
+include::finish/gateway/src/main/resources/META-INF/microprofile-config.properties[]
 ----
 
 The [hotspot=kafkaConfig file=0]`mp.messaging.connector.liberty-kafka.bootstrap.servers` property defines the Kafka connector for the Open Liberty runtime. The `Gateway` will listen to incoming streams [hotspot=orderStream file=0]`orders` to receive messages from the [hotspot=topic1 file=0]`systemLoadTopic` and [hotspot=topic2 file=0]`addSystemPropertyTopic` in Kafka. The [hotspot=keyDeserializer file=0]`key.deserializer` and [hotspot=valueDeserializer file=0]`value.deserializer` defines how to deserialze the messages from Kafka. The [hotspot=connector file=0]`connector` used for both streams is the `liberty-kafka` connector, a pre-built connector provided by Open Liberty. The [hotspot=groupId file=0]`group.id` defines a unique name for each consumer group. All these properties are required by the https://kafka.apache.org/documentation/#api[Apache Kafka client API^].
@@ -104,7 +104,7 @@ microprofile-config.properties
 include::finish/gateway/src/main/resources/META-INF/microprofile-config.properties[]
 ----
 
-In this section, you will create a REST API for SSE in the `Gateway` microservice which will allow clients to subscribe to events. Additionally, the server will read the messages from the two [hotspot=orderStream file=0]`order` incoming streams and push them to the subscribers via SSE.
+In this section, you will create a REST API for SSE in the `Gateway` microservice which will allow clients to subscribe to events. Additionally, the server will read the messages from the two incoming [hotspot=orderStream file=0]`streams` and push them to the subscribers via SSE.
 
 [role="code_command hotspot file=1", subs="quotes"]
 ----
@@ -137,7 +137,7 @@ These functions are called whenever one of the other microservices produces a ne
 
 === Broadcasting events
 
-Broadcasting events is handled in the [hotspot=broadcastData file=1]`broadcastData()` function. Firstly, it checks if the [hotspot=broadcaster file=1]`broadcaster` is not [hotspot=notNull file=1]`null`. If it is not null, then there is at least one subscriber, otherwise there is no client to send the event to. If the [hotspot=broadcaster file=1]`broadcaster` has been set, an [hotspot=createEvent file=1]`OutboundSseEvent` needs to be created. An instance of the `OutboundSseEvent.Builder` is obtained by using the [hotspot=newEventBuilder file=1]`Sse.newEventBuilder()` method which will help create the [hotspot=createEvent file=1]`OutboundSseEvent`. Methods from the builder can be chained to set the [hotspot=name file=1]`name`, [hotspot=data file=1]`data`, and [hotspot=mediaType file=1]`media type`. Then, the [hotspot=build file=1]`OutboundSseEvent.Builder.build()` method is called to return the [hotspot=createEvent file=1]`OutboundSseEvent` instance. The [hotspot=createEvent file=1]`OutboundSseEvent` is broadcasted, or sent to all registered sinks, by invoking the hotspot=broadcastEvent file=1]`SseBroadcaster.broadcast()` method.
+Broadcasting events is handled in the [hotspot=broadcastData file=1]`broadcastData()` function. Firstly, it checks if the [hotspot=broadcaster file=1]`broadcaster` is not [hotspot=notNull file=1]`null`. If it is not null, then there is at least one subscriber, otherwise there is no client to send the event to. If the [hotspot=broadcaster file=1]`broadcaster` has been set, an [hotspot=createEvent file=1]`OutboundSseEvent` needs to be created. An instance of the `OutboundSseEvent.Builder` is obtained by using the [hotspot=newEventBuilder file=1]`Sse.newEventBuilder()` method which will help create the [hotspot=createEvent file=1]`OutboundSseEvent`. Methods from the builder can be chained to set the [hotspot=name file=1]`name`, [hotspot=data file=1]`data`, and [hotspot=mediaType file=1]`media type`. Then, the [hotspot=build file=1]`OutboundSseEvent.Builder.build()` method is called to return the [hotspot=createEvent file=1]`OutboundSseEvent` instance. The [hotspot=createEvent file=1]`OutboundSseEvent` is broadcasted, or sent to all registered sinks, by invoking the [hotspot=broadcastEvent file=1]`SseBroadcaster.broadcast()` method.
 
 For more information about these interfaces see the Javadocs for https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent.html&package=allclasses-frame.html[OutboundSseEvent^] and https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent.Builder.html&package=allclasses-frame.html[OutboundSseEvent.Builder^].
 
@@ -174,11 +174,11 @@ include::finish/gateway/src/main/webapp/js/index.js[]
 
 === Subscribing to Server-Sent Events
 
-The frontend application subscribes to the SSE by creating a new instance of [hotspot=eventSource file=2]`EventSource` and specifying `/api/sse` endpoint in the parameter. The `EventSource` will send a GET request to the `/api/sse` endpoint created in the previous section with a request header of `Accept: text/event-stream` to connect to the server.
+The frontend application subscribes to the SSE by creating a new instance of [hotspot=eventSource file=2]`EventSource` and specifying `/api/sse` endpoint in the parameter. The [hotspot=eventSource file=2]`EventSource` will send a GET request to the `/api/sse` endpoint created in the previous section with a request header of `Accept: text/event-stream` to connect to the server.
 
 === Consuming the Server-Sent Events
 
-To consume the events sent from the server, call the [hotspot=consumeNamedEvent file=2]`EventSource.addEventListener()` method to add an event listener. This first event listener will listen for events with the name of [hotspot=systemLoadEvent file=2]`systemLoad` and the second event listener will listen for events with the name of [hotspot=propertyMessageEvent file=2]`propertyMessage`, as specified when creating the [hotspot=name file=0]`OutboundSseEvent`. When the event is received, a [hotspot=eventHandler1 hotspot=eventHandler2 file=2]`function` is run to handle the event. The [hotspot=eventHandler1 hotspot=eventHandler2 file=2]`function` will use an event object and [hotspot=parse file=2]`parse` the event's data property from a JSON string to a JavaScript object.
+To consume the events sent from the server, call the [hotspot=consumeNamedEvent file=2]`EventSource.addEventListener()` method to add an event listener. This first event listener will listen for events with the name of [hotspot=systemLoadEvent file=2]`systemLoad` and the second event listener will listen for events with the name of [hotspot=propertyMessageEvent file=2]`propertyMessage`, as specified when creating the [hotspot=name file=0]`OutboundSseEvent`. When the event is received, a [hotspot=eventHandler1 hotspot=eventHandler2 file=2]`function` is run to handle the event. The [hotspot=eventHandler1 hotspot=eventHandler2 file=2]`function` will use an event object and [hotspot=parse1 hotspot=parse2 file=2]`parse` the event's data property from a JSON string to a JavaScript object.
 
 == Building the application
 
@@ -233,7 +233,7 @@ include::{common-includes}/os-tabs.adoc[]
 
 Once the application is up and running, open your browser and checkout the service that your created at the `http://localhost:9080` URL. The application may take some time to get ready. Note: The latest version of most modern web browsers should have support for Server-Sent Events with the exception of Internet Explorer.
 
-First note the `system load` value that should appear above the table and change every few seconds. 
+First, notice the `system load` value that should appear in the table header and change every few seconds. 
 
 Next, fill in the `System` form. Sample data is provided to test the application:
 
@@ -245,7 +245,7 @@ os.name, os.arch
 
 Now, press the `Submit` button.
 
-The `Orders` table should begin to populate its rows with the information pertinent to the system properties you have requested.
+The `Systems` table should begin to populate its rows with the information pertinent to the system properties you have requested.
 
 == Tearing down the environment
 

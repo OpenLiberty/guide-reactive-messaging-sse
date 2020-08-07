@@ -1,4 +1,4 @@
-<server description="Open Liberty Cafe">
+<server description="Gateway">
 
   <featureManager>
     <feature>beanValidation-2.0</feature>

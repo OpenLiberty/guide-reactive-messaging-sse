@@ -12,7 +12,6 @@
     <modules>
         <module>models</module>
         <module>system</module>
-        <module>inventory</module>
         <module>frontend</module>
     </modules>
 </project>

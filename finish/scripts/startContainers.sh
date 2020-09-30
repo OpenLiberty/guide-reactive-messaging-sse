@@ -31,30 +31,21 @@ docker run -d \
   --rm \
   system:1.0-SNAPSHOT &
 
-  # docker run -d \
-  # -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVER \
-  # --network=$NETWORK \
-  # --name=system2 \
-  # --rm \
-  # system:1.0-SNAPSHOT &
-
-  # docker run -d \
-  # -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVER \
-  # --network=$NETWORK \
-  # --name=system3 \
-  # --rm \
-  # system:1.0-SNAPSHOT &
- 
-docker run -d \
+  docker run -d \
   -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVER \
-  -p 9085:9085 \
   --network=$NETWORK \
-  --name=inventory \
+  --name=system2 \
   --rm \
-  inventory:1.0-SNAPSHOT &
+  system:1.0-SNAPSHOT &
+
+  docker run -d \
+  -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVER \
+  --network=$NETWORK \
+  --name=system3 \
+  --rm \
+  system:1.0-SNAPSHOT &
 
 docker run -d \
-  -e InventoryClient_mp_rest_url=http://inventory:9085 \
   -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVER \
   -p 9080:9080 \
   --network=$NETWORK \

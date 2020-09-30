@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Open Liberty System</title>
+        <script type="text/javascript" src="js/index.js"></script>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body>
+        <section id="appIntro">
+            <div id="titleSection">
+                <h1 id="appTitle">Open Liberty System</h1>
+                <div class="line"></div>
+                <div class="headerImage"></div>
+            </div>
+
+            <div class="msSection" id="systemProperties">
+                <div class="headerRow">
+                    <div class="headerIcon"><img src="img/sysProps.svg"/></div>
+                    <div class="headerTitle" id="sysPropTitle"><h2>System Properties</h2></div>
+                </div>
+                <div class="sectionContent">
+                    <table id="systemTable">
+                        <tbody id="sysTableBody">
+                        <tr><th>Hostname</th><th>System Load</th><th>Health</th></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        
+        </section>
+        <footer class="bodyFooter">
+            <div class="bodyFooterLink">
+                <a
+                    id="licenseLink"
+                    href="https://github.com/OpenLiberty/open-liberty/blob/master/LICENSE"
+                >License</a>
+                <a href="https://twitter.com/OpenLibertyIO">Twitter</a>
+                <a href="https://github.com/OpenLiberty">GitHub</a>
+                <a href="https://openliberty.io/">openliberty.io</a>
+            </div>
+            <p id="footer_text">an IBM open source project</p>
+            <p id="footer_copyright">&copy;Copyright IBM Corp. 2020</p>
+        </footer>
+        <script>
+            getSystem();
+        </script>
+    </body>
+</html>

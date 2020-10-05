@@ -1,5 +1,5 @@
 function initSSE() {
-    var source = new EventSource('/api/sse');
+    var source = new EventSource('/frontend/sse');
     source.addEventListener(
         'systemLoad',
         systemLoadHandler
@@ -14,6 +14,8 @@ function systemLoadHandler(event) {
         var tableRow = document.createElement('tr');
         tableRow.id = system.hostname;
         tableRow.innerHTML = '<td>' + system.hostname + '</td><td>' + system.loadAverage.toFixed(2) + '</td>';
-        document.getElementById('sysTableBody').appendChild(tableRow);
+        document.getElementById('sysPropertiesTableBody').appendChild(tableRow);
     }
 }
+
+

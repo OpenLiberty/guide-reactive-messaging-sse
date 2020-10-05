@@ -36,8 +36,10 @@ public class SystemService {
 
     private static final OperatingSystemMXBean osMean = 
             ManagementFactory.getOperatingSystemMXBean();
-            
+
     private static String hostname = null;
+
+    private long updateInterval = Long.parseLong(System.getenv("UPDATE_INTERVAL"));
 
     private static String getHostname() {
         if (hostname == null) {
@@ -52,7 +54,8 @@ public class SystemService {
 
     @Outgoing("systemLoad")
     public Publisher<SystemLoad> sendSystemLoad() {
-        return Flowable.interval(5, TimeUnit.SECONDS)
+        System.out.println("SENT");
+        return Flowable.interval(updateInterval, TimeUnit.SECONDS)
                 .map((interval -> new SystemLoad(getHostname(),
                         new Double(osMean.getSystemLoadAverage()))));
     }

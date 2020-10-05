@@ -1,29 +1,40 @@
+/*******************************************************************************
+* Copyright (c) 2018 IBM Corporation and others.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+*     IBM Corporation - initial API and implementation
+*******************************************************************************/
 @import url("https://fonts.googleapis.com/css?family=Asap:300,400,500");
 
 @font-face {
-	font-family: BunueloLight;
-    src: url("../fonts/BunueloCleanPro-Light.otf");
+    font-family: BunueloLight;
+    src: url("/fonts/BunueloCleanPro-Light.otf");
 }
 
 @font-face {
-	font-family: BunueloSemiBold;
-    src: url("../fonts/BunueloCleanPro-SemiBold.otf");
+    font-family: BunueloSemiBold;
+    src: url("/fonts/BunueloCleanPro-SemiBold.otf");
 }
 
-body {
-    font-family: Asap;
-	font-size: 16px;
+body{
+    font-family:Asap;
+    font-size: 16px;
     color:#24243b;
     background-color: white;
     margin: 0px;
 }
 
 section {
-	padding-top: 55px;
+    padding-top: 55px;
     padding-left: 8%;
     padding-right: 8%;
-    letter-spacing: 0;
-    text-align: left;
+    /* font-weight: 400; */
+    letter-spacing:0;
+    text-align:left;
 }
 
 .line {
@@ -33,18 +44,22 @@ section {
 }
 
 .headerImage {
-    background-image: url(../img/header_ufo.png);
+    background-image: url(/img/header_ufo.png);
     background-repeat: no-repeat;
     background-position: top 20px right 15px;
     height: 103px;
     margin-top: -94px;
 }
 
+#whereTo {
+    padding-bottom: 80px;
+    width: 50%;
+}
+
 p {
     line-height: 22px;
     margin-top: 0px;
 }
-
 h1 {
     font-family:BunueloSemiBold;
     font-size: 40px;
@@ -52,70 +67,31 @@ h1 {
     letter-spacing:0;
     text-align:left;
 }
-
 h2 {
     font-size: 24px;
     font-weight: 400;
 }
-
-.headerTitle > h2 {
-    font-family: BunueloLight;
-    font-size:40px;
-    margin: 0;
+h4 {
+    margin-top: 52px;
 }
-
 a {
     text-decoration: none;
 }
 
 #appIntro {
-    background-image: linear-gradient(#141427 0%, #2c2e50 100%);
-	background-repeat: no-repeat;
-	padding-bottom: .5em;
+    background-image:linear-gradient(#141427 0%, #2c2e50 100%);
+    background-size: 100% calc(100% - 70px);
+    background-repeat: no-repeat;
 }
 
 #titleSection {
     color: white;
+    margin-bottom: 80px;
 }
 
 #appTitle {
-    font-family: BunueloLight;
-    font-size: 55px;
-}
-
-button {
-    border-radius:100px;
-    height:44px;
-    color:#24253a;
-    text-align:center;
-    font-family: Asap;
-    cursor: pointer;
-	border: none;
-	font-weight: 500;
-	font-size:16px;
-	background-color:#abd155;
-	transition: background-color .2s;
-	margin-top: 25px;
-    margin-bottom: 25px;
-    width: 100%;
-}
-
-li {
-    margin: 0;
-    padding: 5px 10px;
-}
-
-button:hover {
-    background-color: #C7EE63;
-}
-
-button:disabled {
-    display: none;
-}
-
-.msSection {
-    background: white;
-    box-shadow: 0 2px 4px 0 rgba(63,70,89,0.31);
+    font-family:BunueloLight;
+    font-size:55px;
 }
 
 .headerRow {
@@ -128,8 +104,47 @@ button:disabled {
     display: inline-block;
 }
 
+.collapsibleRow {
+    transition: border 400ms ease-out, box-shadow 200ms linear;
+    cursor: pointer;
+}
+.collapsibleRow:hover .headerTitle {
+    background-color: #f4f4f4;
+    transition: background-color 0.1s;
+}
+.collapsed .collapsibleRow {
+    box-shadow: none;
+    border-bottom: 4px solid;
+}
+.collapsed#healthSection > .headerRow {
+    border-bottom-color: #D6D9E4;
+}
+.collapsed#configSection > .headerRow {
+    border-bottom-color: #F8D7C1;
+}
+.collapsed#metricsSection > .headerRow {
+    border-bottom-color: #EEF3C3;
+}
+
+.collapsed .collapsibleContent { /* collapsing animation */
+    transition: all 400ms ease-out, opacity 300ms ease-in;
+}
+.expanded .collapsibleContent { /* expanding animation */
+    transition: all 400ms ease-out, opacity 450ms ease-out;
+}
+.collapsed .collapsibleContent {
+    opacity: 0;
+    max-height: 0;
+    visibility: hidden;
+}
+.expanded .collapsibleContent {
+    opacity: 1;
+    max-height: 1000px;
+    visibility: visible;
+}
+
 .headerIcon {
-    width: 250px;
+    width: 160px;
     height: 100%;
     float: left;
     background-color: #E8EAEF;
@@ -140,6 +155,16 @@ button:disabled {
     margin-top: 20px;
 }
 
+#healthSection .headerIcon {
+    background-color: #E8EAEF;
+}
+#configSection .headerIcon {
+    background-color: #FDE4D1;
+}
+#metricsSection .headerIcon {
+    background-color: #F5F8DA;
+}
+
 .headerTitle {
     background-color: white;
     color:#5d6a8e;
@@ -147,36 +172,218 @@ button:disabled {
     text-align:left;
     padding-left: 40px;
     padding-top: 10px;
-    width: calc(100% - 290px);
+    width: calc(100% - 200px); /* 160 from icon, 40 from padding */
+}
+#healthSection h2 {
+    color: #5D6A8E;
+}
+#configSection h2 {
+    color: #E57000;
+}
+#metricsSection h2 {
+    color: #4F6700;
 }
 
 #sysPropTitle {
     padding-top: 28px;
 }
 
-#systemPropertiesTable {
-    display: inline-block;
-    width: calc(100% - 250px);
-    height: 300px;
-    overflow-y: scroll;
-    background: white;
+.headerTitle > h2 {
+    font-family: BunueloLight;
+    font-size:40px;
+    margin: 0;
 }
 
-#systemPropertiesForm {
-    display: inline-block;
-    vertical-align: top;
-    width: 220px;
-    height: 300px;
-    padding: 15px;
+.caret {
+    position: absolute;
+    right: 45px;
+    top: 45px;
+}
+
+.collapsed#configSection .caret {
+    background-image: url("../img/carets/caret_down_orange.svg")
+}
+.expanded#configSection .caret {
+    background-image: url("../img/carets/caret_up_orange.svg")
+}
+
+.msSection {
+    background: white;
+    box-shadow: 0 2px 4px 0 rgba(63,70,89,0.31);
 }
 
 .sectionContent {
-    height: 300px;
+    margin-left: 160px;
+}
+
+#systemPropertiesTable {
+    padding-left: 160px;
+    background: white;
+}
+
+button {
+    border-radius:100px;
+    height:44px;
+    color:#24253a;
+    text-align:center;
+    font-family: Asap;
+    margin-top: 25px;
+    margin-bottom: 70px;
+    cursor: pointer;
+    border: none;
+}
+
+button a {
+    text-decoration: none;
+    color:#F4914D;
+}
+
+#guidesButton {
+    background-color:#abd155;
+    width:269px;
+    font-weight: 500;
+    font-size:16px;
+    transition: background-color .2s;
+}
+#guidesButton:hover {
+    background-color: #C7EE63;
+}
+#mpGuidesButton {
+    border:2px solid #f4914d8c;
+    border-radius:100px;
+    font-size:20px;
+    letter-spacing:0;
+    padding-left: 40px;
+    padding-right: 40px;
+    background-color: white;
+    transition: background-color .2s, color .2s;
+}
+#mpGuidesButton:hover {
+    background-color: #f4914d;
+    color: white;
+}
+
+section#openLibertyAndMp {
+    background:#f4f4f5;
+    background-size: 100% calc(100% - 70px);
+    background-repeat: no-repeat;
+}
+
+#healthBox {
+    text-align: left;
+    display: table-cell;
+    vertical-align: middle;
+    width: 47%;
+}
+
+#healthBox > div {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#healthIcon {
+    padding-left: 73px;
+    padding-top: 56px;
+    padding-bottom: 56px;
+}
+#healthStatusIcon {
+    width: 104px;
+    height: 104px;
+}
+
+#healthText {
+    padding: 50px;
+}
+
+#serviceStatus {
+    font-size: 50px;
+    font-family:BunueloLight;
+    margin-top: 30px;
+}
+
+#healthNote {
+    text-align: left;
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 43px;
+    line-height: 26px;
+    width: 53%;
+}
+
+table {
+    width: 100%;
+    font-size: 14px;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+th {
+    height: 63px;
+    padding-left: 41px;
+    font-size: 16px;
+}
+tr {
+    height: 45px;
+}
+td {
+    padding-left: 41px;
+}
+#systemPropertiesTable tr:first-child {
+    background: #D6D9E4;
+}
+#configTable tr:first-child {
+    background: #F8D7C1;;
+}
+#metricsTable tr:first-child {
+    background: #EEF3C3;
+}
+
+#systemPropertiesTable tr:nth-child(2n+3) {
+    background: #EEEFF3;
+}
+#configTable tr:nth-child(2n+2) {
+    background: #FEF8F4;
+}
+#metricsTable tr:nth-child(2n+2) {
+    background: #FBFCEE;
+}
+
+#systemPropertiesTable .sourceRow,
+#healthTable .sourceRow {
+    border-top: 4px solid #D6D9E4;
+}
+#systemPropertiesTable .sourceRow a,
+#healthTable .sourceRow a {
+    color: #5D6A8E;
+}
+#configTable .sourceRow {
+    border-top: 4px solid #F8D7C1;
+}
+#configTable .sourceRow a {
+    color: #E57000;
+}
+#metricsTable .sourceRow {
+    border-top: 4px solid #EEF3C3;
+}
+#metricsTable .sourceRow a {
+    color: #4F6700;
+}
+.sourceRow a {
+    font-weight: 500;
+}
+
+#learnMore {
+    margin-top: 120px;
+    padding: 0px 200px 100px;
+}
+
+#learnMore > h2 {
+    color:#5e6b8d;
 }
 
 .bodyFooter {
   padding: 5px 8%;
-  background-image: url(../img/footer_main.png);
+  background-image: url(/img/footer_main.png);
   background-repeat: no-repeat;
   background-position: top 20px right 110px;
   margin-bottom: 40px;
@@ -217,91 +424,3 @@ button:disabled {
 #footer_copyright {
   font-size: 11px;
 }
-
-.vFlexContainer {
-	display: flex;
-	flex-direction: column;
-}
-
-.hFlexContainer {
-	display: flex;
-	flex-direction: row;
-}
-
-.flexBox {
-	flex: 0 1 auto;
-}
-
-.flexSelfCenter {
-	align-self: center;
-}
-
-.textBox  {
-    font-size: 10pt;
-    text-indent: 2pt;
-    resize: none;
-}
-
-#propertiesRequest {
-	background-color: white;
-	margin: 1em;
-	padding: .5em;
-	border-radius: 7pt;
-	width: 15em;
-	justify-content: space-between;
-}
-
-table {
-    width: 100%;
-    font-size: 14px;
-    text-align: left;
-    border-collapse: collapse;
-}
-
-th {
-    height: 63px;
-    padding-left: 41px;
-    font-size: 16px;
-}
-tr {
-    height: 45px;
-}
-td {
-    padding-left: 41px;
-}
-
-#sysPropertiesTableHead tr {
-    background: #D6D9E4;
-}
-
-#sysPropertiesTableBody {
-    height: calc(300px - 65px);
-    overflow-y: scroll;
-}
-
-#sysPropertiesTableBody tr:nth-child(2n+1) {
-    background: rgb(238, 239, 243);
-}
-
-.inputLine {
-	margin: .75em 0;
-}
-
-#form {
-    padding: 10px;
-    margin: 2.5em 5em;
-    border: 1px solid black;
-    height: 25em;
-    flex-grow: 1;
-}
-
-#systemsTable {
-    flex-grow: 1;
-    padding: 10px;
-}
-
-#systemsTableBody{
-    height: 16em;
-    overflow-y: scroll;
-}
-

@@ -16,7 +16,7 @@ package io.openliberty.guides.frontend;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-@ApplicationPath("api")
+@ApplicationPath("frontend")
 public class FrontendApplication extends Application {
 
 }

@@ -25,6 +25,7 @@ docker run -d \
 sleep 15
 
 docker run -d \
+  -e UPDATE_INTERVAL=1 \
   -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVER \
   --network=$NETWORK \
   --name=system1 \
@@ -32,6 +33,7 @@ docker run -d \
   system:1.0-SNAPSHOT &
 
   docker run -d \
+  -e UPDATE_INTERVAL=2 \
   -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVER \
   --network=$NETWORK \
   --name=system2 \
@@ -39,6 +41,7 @@ docker run -d \
   system:1.0-SNAPSHOT &
 
   docker run -d \
+  -e UPDATE_INTERVAL=6 \
   -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVER \
   --network=$NETWORK \
   --name=system3 \

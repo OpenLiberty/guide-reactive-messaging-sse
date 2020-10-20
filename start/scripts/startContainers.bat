@@ -1,9 +1,6 @@
 @ECHO OFF
 set KAFKA_SERVER=kafka:9092
 set NETWORK=reactive-app
-set ORDER_SERVICE_URL="http://order:9081"
-set SERVINGWINDOW_SERVICE_URL="http://servingwindow:9082"
-set STATUS_SERVICE_URL="http://order:9085"
 
 docker network create %NETWORK%
 
@@ -27,44 +24,30 @@ start /b docker run -d ^
 start /b docker run -d ^
   -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=%KAFKA_SERVER% ^
   --network=%NETWORK% ^
-  --name=kitchen ^
+  --name=system1 ^
   --rm ^
-  kitchen:1.0-SNAPSHOT
+  system:1.0-SNAPSHOT
+
 
 start /b docker run -d ^
   -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=%KAFKA_SERVER% ^
   --network=%NETWORK% ^
-  --name=bar ^
+  --name=system2 ^
   --rm ^
-  bar:1.0-SNAPSHOT 
+  system:1.0-SNAPSHOT
+
 
 start /b docker run -d ^
   -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=%KAFKA_SERVER% ^
   --network=%NETWORK% ^
-  --name=servingwindow ^
+  --name=system3 ^
   --rm ^
-  servingwindow:1.0-SNAPSHOT
+  system:1.0-SNAPSHOT
 
 start /b docker run -d ^
-  -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=%KAFKA_SERVER% ^
-  --network=%NETWORK% ^
-  --name=order ^
-  --rm ^
-  order:1.0-SNAPSHOT 
-
-start /b docker run -d ^
-  -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=%KAFKA_SERVER% ^
-  --network=%NETWORK% ^
-  --name=status ^
-  --rm ^
-  status:1.0-SNAPSHOT 
-  
-start /b docker run -d ^
-  -e OrderClient_mp_rest_url=%ORDER_SERVICE_URL% ^
-  -e ServingWindowClient_mp_rest_url=%SERVINGWINDOW_SERVICE_URL% ^
-  -e StatusClient_mp_rest_url=%STATUS_SERVICE_URL% ^
+  -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVER ^
   -p 9080:9080 ^
-  --network=%NETWORK% ^
-  --name=openlibertycafe ^
+  --network=$NETWORK ^
+  --name=frontend ^
   --rm ^
-  openlibertycafe:1.0-SNAPSHOT
+  gateway:1.0-SNAPSHOT

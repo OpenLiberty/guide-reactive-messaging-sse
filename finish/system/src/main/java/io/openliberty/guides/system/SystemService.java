@@ -54,7 +54,6 @@ public class SystemService {
 
     @Outgoing("systemLoad")
     public Publisher<SystemLoad> sendSystemLoad() {
-        System.out.println("SENT");
         return Flowable.interval(updateInterval, TimeUnit.SECONDS)
                 .map((interval -> new SystemLoad(getHostname(),
                         new Double(osMean.getSystemLoadAverage()))));

@@ -1,13 +1,25 @@
+// tag::initSSE[]
 function initSSE() {
+    // tag::eventSource[]
     var source = new EventSource('/frontend/sse');
+    // end::eventSource[]
+    // tag::eventListener[]
     source.addEventListener(
+        // tag::systemLoad[]
         'systemLoad',
+        // end::systemLoad[]
+        // tag::setHandler[]
         systemLoadHandler
+        // end::setHandler[]
     );
+    // end::eventListener[]
 }
-
+// end::initSSE[]
+// tag::systemLoadHandler[]
 function systemLoadHandler(event) {
+    // tag::parse[]
     var system = JSON.parse(event.data);
+    // end::parse[]
     if(document.getElementById(system.hostname)){
         document.getElementById(system.hostname).cells[1].innerHTML = system.loadAverage.toFixed(2);
     }else{
@@ -17,5 +29,6 @@ function systemLoadHandler(event) {
         document.getElementById('sysPropertiesTableBody').appendChild(tableRow);
     }
 }
+// end::systemLoadHandler[]
 
 

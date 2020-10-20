@@ -25,7 +25,7 @@ docker run -d \
 sleep 15
 
 docker run -d \
-  -e UPDATE_INTERVAL=1 \
+  -e UPDATE_INTERVAL=3 \
   -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVER \
   --network=$NETWORK \
   --name=system1 \

@@ -123,230 +123,230 @@ Kafka Producer Configs^] and
 https://kafka.apache.org/documentation/#consumerconfigs[Apache Kafka Consumer
 Configs^].
 
-//// =================================================================================================
-//// Setting up SSE in the frontend service
-//// =================================================================================================
-//
-//== Setting up SSE in the frontend service
-//
-//// File 0
-//frontend/FrontendResource.java
-//[source, java, linenums, role='code_column hide_tags=copyright']
-//----
-//include::finish/frontend/src/main/java/io/openliberty/guides/frontend/FrontendResource.java[]
-//----
-//
-//In this section you will create the `FrontendResource` class. This class is
-//respsonsible for receiving the incoming messages and broadcasting Server-sent
-//Events containing the hostname and systemload found in these messages. This
-//class also sets up an endpoint that the frontend JavaScript client uses to
-//subscribe to the broadcaster.
-//
-//In this section, you will create a REST API for SSE in the `frontend` service
-//which will allow clients to subscribe to events.
-//Additionally, the server will read the messages from the incoming stream and
-//push the contents to the subscribers via SSE.
-//
-//[role="code_command hotspot file=0", subs="quotes"]
-//----
-//#Create the FrontendResource class.#
-//`frontend/src/main/java/io/openliberty/guides/frontend/FrontendResource.java`
-//----
-//
-//=== Creating the SSE API endpoint
-//
-//The [hotspot=subscribeToSystems file=0]`subscribeToSystem()` function allows
-//clients to subscribe to events via an HTTP request to `GET /frontend/sse/`. To
-//indicate client requests to receive Server-Sent Events, this endpoint is
-//annotated with [hotspot=sseMimeType
-//file=0]`@Produces(MediaType.SERVER_SENT_EVENTS)` which sets the `Content-Type`
-//in the response header to `text/event-stream`. Additionally, the function's
-//parameters takes in an [hotspot=sseEventSinkParam file=0]`SseEventSink` and an
-//[hotspot=sseParam file=0]`Sse` which are injected using the `@Context`
-//annotation. Firstly, the function checks if the [hotspot=sse file=0]`sse` and
-//[hotspot=broadcaster file=0]`broadcaster` instance variables have been assigned.
-//If not, they will be assigned. This check and assignment is done with the
-//[hotspot=sse file=0]`sse` being obtained from the [hotspot=sseParam
-//file=1]`@Context` injection and the [hotspot=broadcaster file=0]`broadcaster`
-//being obtained using the [hotspot=newBroadcaster file=0]`Sse.newBroadcaster()`
-//method. Then, the [hotspot=sseEventSinkParam file=0]`SseEventSink` is
-//[hotspot=registerSink file=0]`registered` to the [hotspot=broadcaster
-//file=1]`SseBroadcaster` to subscribe to events.
-//
-//For more information about these interfaces see the Javadocs for
-//https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent.html&package=allclasses-frame.html[OutboundSseEvent^]
-//and
-//https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent.Builder.html&package=allclasses-frame.html[OutboundSseEvent.Builder^].
-//
-//=== Reading from the reactive messaging channel
-//
-//The [hotspot=getSystemLoadMessage file=0]`getSystemLoadMessage()` method
-//receives the message that contains the hostname and the average system load. The
-//[hotspot=systemLoad file=0]`@Incoming("systemLoad")` annotation indicates that
-//the method retrieves the message by connecting to the `systemLoad` channel in
-//Kafka that you configured in the previous section. 
-//
-//Each time a message is received, the [hotspot=getSystemLoadMessage
-//file=0]`getSystemLoadMessage()` method is called, and the hostname and system
-//load containted in that message are broadcasted in an event to all subsribers. 
-//
-//=== Broadcasting events
-//
-//Broadcasting events is handled in the [hotspot=broadcastData
-//file=0]`broadcastData()` function. Firstly, it checks if the
-//[hotspot=broadcaster file=0]`broadcaster` is not [hotspot=notNull file=0]`null`.
-//If it is not null, then there is at least one subscriber, otherwise there is no
-//client to send the event to. If the [hotspot=broadcaster file=0]`broadcaster`
-//has been set, an [hotspot=createEvent file=0]`OutboundSseEvent` needs to be
-//created. An instance of the `OutboundSseEvent.Builder` is obtained by using the
-//[hotspot=newEventBuilder file=0]`Sse.newEventBuilder()` method which will help
-//create the [hotspot=createEvent file=0]`OutboundSseEvent`. Methods from the
-//builder can be chained to set the [hotspot=name file=0]`name`, [hotspot=data
-//file=0]`data`, and [hotspot=mediaType file=0]`media type`. Then, the
-//[hotspot=build file=0]`OutboundSseEvent.Builder.build()` method is called to
-//return the [hotspot=createEvent file=0]`OutboundSseEvent` instance. The
-//[hotspot=createEvent file=0]`OutboundSseEvent` is broadcasted, or sent to all
-//registered sinks, by invoking the [hotspot=broadcastEvent
-//file=0]`SseBroadcaster.broadcast()` method.
-//
-//// =================================================================================================
-//// Configure the frontend client to subscribe to and consume events
-//// =================================================================================================
-//
-//== Configure the UI to subscribe to and consume events
-//
-//// File 0
-//index.js
-//[source, javascript, linenums, role='code_column hide_tags=copyright']
-//----
-//include::finish/frontend/src/main/webapp/js/index.js[]
-//----
-//
-//In this section, you will configure the frontend client to subscribe to events
-//and display their contents in a table in the UI. 
-//
-//The frontend UI is a table with each row containing a system's hostname and load. The HTML and styling for the UI
-//has already been provided to you, however you must populate the table with
-//information received from the Server-sent Events.
-//
-//[role="code_command hotspot file=0", subs="quotes"]
-//----
-//#Create the index.js file.#
-//`frontend/src/main/webapp/js/index.js`
-//----
-//
-//=== Subscribing to Server-Sent Events
-//
-//The [hotspot=initSSE file=0]`initSSE()` method is called when the page first
-//loads and subscribes to the SSE by creating a new instance of
-//[hotspot=eventSource file=0]`EventSource` and specifying `/frontend/sse`
-//endpoint in the parameter. The [hotspot=eventSource file=0]`EventSource` will send a `GET` request to the
-//`/frontend/sse` endpoint created in the previous section with a request header of
-//`Accept: text/event-stream` to connect to the server.
-//
-//=== Consuming the Server-Sent Events
-//
-//To consume the events sent from the server, call the [hotspot=eventListener
-//file=0]`EventSource.addEventListener()` method to add an event listener. This
-//event listener will listen for events with the name of [hotspot=systemLoad
-//file=0]`systemLoad`. Each time the event is received, the function that was set
-//as the [hotspot=setHandler file=0]`handler function` will be called. In this
-//case, the [hotspot=systemLoadHandler file=0]`systemLoadHandler()` function is
-//the handler. [hotspot=systemLoadHandler file=0]`systemLoadHandler()` will take the
-//event object and [hotspot=parse file=0]`parse` the event's data property from a
-//JSON string into a JavaScript object. The contents of this object, the system's
-//hostname and load, are used to update the table. If a system is already present in the
-//table, the load is updated, otherwise a new row is added for the system.
-//
-//// =================================================================================================
-//// Building and running the application
-//// =================================================================================================
-//
-//== Building and running the application
-//
-//Start your Docker environment.
-//
-//To build the application, run the Maven `install` and `package` goals from the command line in the `start` directory:
-//
-//[role='command']
-//```
-//mvn -pl models install
-//mvn package
-//```
-//
-//Run the following command to download or update the `open-liberty` docker image to latest.
-//[role='command']
-//```
-//docker pull openliberty/open-liberty:kernel-java8-openj9-ubi
-//```
-//
-//Run the following commands to containerize the `frontend` and `system` services:
-//
-//[role='command']
-//```
-//docker build -t frontend:1.0-SNAPSHOT frontend/.
-//docker build -t system:1.0-SNAPSHOT system/.
-//```
-//
-//Next, use the provided script to start the application in Docker containers. The
-//script creates a network for the containers to communicate with each other. It
-//also creates containers for Kafka, Zookeeper, the Frontend service, and 3
-//instances of the System service.
-//
-//include::{common-includes}/os-tabs.adoc[]
-//
-//[.tab_content.mac_section.linux_section]
-//--
-//[role='command']
-//```
-//./scripts/startContainers.sh
-//```
-//--
-//
-//[.tab_content.windows_section]
-//--
-//[role='command']
-//```
-//.\scripts\startContainers.bat
-//```
-//--
-//
-//Once your application is up and running, open your browser and check out your
-//service by visiting http://localhost:9080[http://localhost:9080]. The
-//application may take some time to get ready. Note: The latest version of most
-//modern web browsers should have support for Server-Sent Events, with the
-//exception of Internet Explorer.
-//
-//You should see three rows in the table, one for each of the running system
-//containers. You should also be able to see the system loads periodically
-//updating. If you can see the loads updating, you know that your frontend service
-//is successfully receiving messages from the systems services and is successfully
-//broadcasting SSE to the JavaScript client to be displayed.
-//
-//// =================================================================================================
-//// Tearing down the environment
-//// =================================================================================================
-//
-//== Tearing down the environment
-//
-//Run the following script to stop the application:
-//
-//include::{common-includes}/os-tabs.adoc[]
-//
-//[.tab_content.mac_section.linux_section]
-//--
-//[role='command']
-//```
-//./scripts/stopContainers.sh
-//```
-//--
-//
-//[.tab_content.windows_section]
-//--
-//[role='command']
-//```
-//.\scripts\stopContainers.bat
-//```
+// =================================================================================================
+// Setting up SSE in the frontend service
+// =================================================================================================
+
+== Setting up SSE in the frontend service
+
+// File 0
+frontend/FrontendResource.java
+[source, java, linenums, role='code_column hide_tags=copyright']
+----
+include::finish/frontend/src/main/java/io/openliberty/guides/frontend/FrontendResource.java[]
+----
+
+In this section you will create the `FrontendResource` class. This class is
+respsonsible for receiving the incoming messages and broadcasting Server-sent
+Events containing the hostname and systemload found in these messages. This
+class also sets up an endpoint that the frontend JavaScript client uses to
+subscribe to the broadcaster.
+
+In this section, you will create a REST API for SSE in the `frontend` service
+which will allow clients to subscribe to events.
+Additionally, the server will read the messages from the incoming stream and
+push the contents to the subscribers via SSE.
+
+[role="code_command hotspot file=0", subs="quotes"]
+----
+#Create the FrontendResource class.#
+`frontend/src/main/java/io/openliberty/guides/frontend/FrontendResource.java`
+----
+
+=== Creating the SSE API endpoint
+
+The [hotspot=subscribeToSystems file=0]`subscribeToSystem()` function allows
+clients to subscribe to events via an HTTP request to `GET /frontend/sse/`. To
+indicate client requests to receive Server-Sent Events, this endpoint is
+annotated with [hotspot=sseMimeType
+file=0]`@Produces(MediaType.SERVER_SENT_EVENTS)` which sets the `Content-Type`
+in the response header to `text/event-stream`. Additionally, the function's
+parameters takes in an [hotspot=sseEventSinkParam file=0]`SseEventSink` and an
+[hotspot=sseParam file=0]`Sse` which are injected using the `@Context`
+annotation. Firstly, the function checks if the [hotspot=sse file=0]`sse` and
+[hotspot=broadcaster file=0]`broadcaster` instance variables have been assigned.
+If not, they will be assigned. This check and assignment is done with the
+[hotspot=sse file=0]`sse` being obtained from the [hotspot=sseParam
+file=0]`@Context` injection and the [hotspot=broadcaster file=0]`broadcaster`
+being obtained using the [hotspot=newBroadcaster file=0]`Sse.newBroadcaster()`
+method. Then, the [hotspot=sseEventSinkParam file=0]`SseEventSink` is
+[hotspot=registerSink file=0]`registered` to the [hotspot=broadcaster
+file=0]`SseBroadcaster` to subscribe to events.
+
+For more information about these interfaces see the Javadocs for
+https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent.html&package=allclasses-frame.html[OutboundSseEvent^]
+and
+https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent.Builder.html&package=allclasses-frame.html[OutboundSseEvent.Builder^].
+
+=== Reading from the reactive messaging channel
+
+The [hotspot=getSystemLoadMessage file=0]`getSystemLoadMessage()` method
+receives the message that contains the hostname and the average system load. The
+[hotspot=systemLoad file=0]`@Incoming("systemLoad")` annotation indicates that
+the method retrieves the message by connecting to the `systemLoad` channel in
+Kafka that you configured in the previous section. 
+
+Each time a message is received, the [hotspot=getSystemLoadMessage
+file=0]`getSystemLoadMessage()` method is called, and the hostname and system
+load containted in that message are broadcasted in an event to all subsribers. 
+
+=== Broadcasting events
+
+Broadcasting events is handled in the [hotspot=broadcastData
+file=0]`broadcastData()` function. Firstly, it checks if the
+[hotspot=broadcaster file=0]`broadcaster` is not [hotspot=notNull file=0]`null`.
+If it is not null, then there is at least one subscriber, otherwise there is no
+client to send the event to. If the [hotspot=broadcaster file=0]`broadcaster`
+has been set, an [hotspot=createEvent file=0]`OutboundSseEvent` needs to be
+created. An instance of the `OutboundSseEvent.Builder` is obtained by using the
+[hotspot=newEventBuilder file=0]`Sse.newEventBuilder()` method which will help
+create the [hotspot=createEvent file=0]`OutboundSseEvent`. Methods from the
+builder can be chained to set the [hotspot=name file=0]`name`, [hotspot=data
+file=0]`data`, and [hotspot=mediaType file=0]`media type`. Then, the
+[hotspot=build file=0]`OutboundSseEvent.Builder.build()` method is called to
+return the [hotspot=createEvent file=0]`OutboundSseEvent` instance. The
+[hotspot=createEvent file=0]`OutboundSseEvent` is broadcasted, or sent to all
+registered sinks, by invoking the [hotspot=broadcastEvent
+file=0]`SseBroadcaster.broadcast()` method.
+
+// =================================================================================================
+// Configure the frontend client to subscribe to and consume events
+// =================================================================================================
+
+== Configure the UI to subscribe to and consume events
+
+// File 0
+index.js
+[source, javascript, linenums, role='code_column hide_tags=copyright']
+----
+include::finish/frontend/src/main/webapp/js/index.js[]
+----
+
+In this section, you will configure the frontend client to subscribe to events
+and display their contents in a table in the UI. 
+
+The frontend UI is a table with each row containing a system's hostname and load. The HTML and styling for the UI
+has already been provided to you, however you must populate the table with
+information received from the Server-sent Events.
+
+[role="code_command hotspot file=0", subs="quotes"]
+----
+#Create the index.js file.#
+`frontend/src/main/webapp/js/index.js`
+----
+
+=== Subscribing to Server-Sent Events
+
+The [hotspot=initSSE file=0]`initSSE()` method is called when the page first
+loads and subscribes to the SSE by creating a new instance of
+[hotspot=eventSource file=0]`EventSource` and specifying `/frontend/sse`
+endpoint in the parameter. The [hotspot=eventSource file=0]`EventSource` will send a `GET` request to the
+`/frontend/sse` endpoint created in the previous section with a request header of
+`Accept: text/event-stream` to connect to the server.
+
+=== Consuming the Server-Sent Events
+
+To consume the events sent from the server, call the [hotspot=eventListener
+file=0]`EventSource.addEventListener()` method to add an event listener. This
+event listener will listen for events with the name of [hotspot=systemLoad
+file=0]`systemLoad`. Each time the event is received, the function that was set
+as the [hotspot=setHandler file=0]`handler function` will be called. In this
+case, the [hotspot=systemLoadHandler file=0]`systemLoadHandler()` function is
+the handler. [hotspot=systemLoadHandler file=0]`systemLoadHandler()` will take the
+event object and [hotspot=parse file=0]`parse` the event's data property from a
+JSON string into a JavaScript object. The contents of this object, the system's
+hostname and load, are used to update the table. If a system is already present in the
+table, the load is updated, otherwise a new row is added for the system.
+
+// =================================================================================================
+// Building and running the application
+// =================================================================================================
+
+== Building and running the application
+
+Start your Docker environment.
+
+To build the application, run the Maven `install` and `package` goals from the command line in the `start` directory:
+
+[role='command']
+```
+mvn -pl models install
+mvn package
+```
+
+Run the following command to download or update the `open-liberty` docker image to latest.
+[role='command']
+```
+docker pull openliberty/open-liberty:kernel-java8-openj9-ubi
+```
+
+Run the following commands to containerize the `frontend` and `system` services:
+
+[role='command']
+```
+docker build -t frontend:1.0-SNAPSHOT frontend/.
+docker build -t system:1.0-SNAPSHOT system/.
+```
+
+Next, use the provided script to start the application in Docker containers. The
+script creates a network for the containers to communicate with each other. It
+also creates containers for Kafka, Zookeeper, the Frontend service, and 3
+instances of the System service.
+
+include::{common-includes}/os-tabs.adoc[]
+
+[.tab_content.mac_section.linux_section]
+--
+[role='command']
+```
+./scripts/startContainers.sh
+```
+--
+
+[.tab_content.windows_section]
+--
+[role='command']
+```
+.\scripts\startContainers.bat
+```
+--
+
+Once your application is up and running, open your browser and check out your
+service by visiting http://localhost:9080[http://localhost:9080]. The
+application may take some time to get ready. Note: The latest version of most
+modern web browsers should have support for Server-Sent Events, with the
+exception of Internet Explorer.
+
+You should see three rows in the table, one for each of the running system
+containers. You should also be able to see the system loads periodically
+updating. If you can see the loads updating, you know that your frontend service
+is successfully receiving messages from the systems services and is successfully
+broadcasting SSE to the JavaScript client to be displayed.
+
+// =================================================================================================
+// Tearing down the environment
+// =================================================================================================
+
+== Tearing down the environment
+
+Run the following script to stop the application:
+
+include::{common-includes}/os-tabs.adoc[]
+
+[.tab_content.mac_section.linux_section]
+--
+[role='command']
+```
+./scripts/stopContainers.sh
+```
+--
+
+[.tab_content.windows_section]
+--
+[role='command']
+```
+.\scripts\stopContainers.bat
+```
 --
 // =================================================================================================
 // Great work! You're done!

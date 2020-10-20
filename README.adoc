@@ -88,7 +88,7 @@ include::{common-includes}/gitclone.adoc[]
 == Configuring the Kafka connector for the frontend service
 
 // File 0
-frontend/microprofile-config.properties
+microprofile-config.properties
 [source, text, linenums, role='code_column hide_tags=copyright']
 ----
 include::finish/frontend/src/main/resources/META-INF/microprofile-config.properties[]
@@ -110,18 +110,16 @@ Configure the Kafka connector in the `frontend` service to receive the messages 
 `frontend/src/main/resources/META-INF/microprofile-config.properties`
 ----
 
-The `frontend` service uses an incomming connector to receive messages through
-the [hotspot=systemLoadChannel file=0]`systemLoad` channel. The messages were
+The `frontend` service uses an incoming connector to receive messages through
+the [hotspot=systemLoadChannel file=0]`systemLoad` channel. The messages are then
 published by the `system` service to the [hotspot=systemLoadTopic
 file=0]`systemLoadTopic` in the Kafka message broker. The
 [hotspot=keyDeserializer file=0]`key.deserializer` and
 [hotspot=valueDeserializer file=0]`value.deserializer` properties define how to
 deserialize the messages. The [hotspot=groupId file=0]`group.id` property
 defines a unique name for the consumer group. All of these properties are
-required by the https://kafka.apache.org/documentation/#producerconfigs[Apache
-Kafka Producer Configs^] and
-https://kafka.apache.org/documentation/#consumerconfigs[Apache Kafka Consumer
-Configs^].
+required by the https://kafka.apache.org/documentation/#consumerconfigs[Apache Kafka Consumer
+Configs^] documentation.
 
 // =================================================================================================
 // Setting up SSE in the frontend service
@@ -130,22 +128,23 @@ Configs^].
 == Setting up SSE in the frontend service
 
 // File 0
-frontend/FrontendResource.java
+FrontendResource.java
 [source, java, linenums, role='code_column hide_tags=copyright']
 ----
 include::finish/frontend/src/main/java/io/openliberty/guides/frontend/FrontendResource.java[]
 ----
 
-In this section you will create the `FrontendResource` class. This class is
-respsonsible for receiving the incoming messages and broadcasting Server-sent
-Events containing the hostname and systemload found in these messages. This
-class also sets up an endpoint that the frontend JavaScript client uses to
-subscribe to the broadcaster.
+// File 1
+microprofile-config.properties
+[source, text, linenums, role='code_column hide_tags=copyright']
+----
+include::finish/frontend/src/main/resources/META-INF/microprofile-config.properties[]
+----
 
 In this section, you will create a REST API for SSE in the `frontend` service
-which will allow clients to subscribe to events.
-Additionally, the server will read the messages from the incoming stream and
-push the contents to the subscribers via SSE.
+which will allow clients to subscribe to events. Additionally, the service will
+read the messages from the incoming stream and push the contents to the
+subscribers via SSE.
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
@@ -156,7 +155,7 @@ push the contents to the subscribers via SSE.
 === Creating the SSE API endpoint
 
 The [hotspot=subscribeToSystems file=0]`subscribeToSystem()` function allows
-clients to subscribe to events via an HTTP request to `GET /frontend/sse/`. To
+clients to subscribe to events via an HTTP `GET` request to `/frontend/sse/`. To
 indicate client requests to receive Server-Sent Events, this endpoint is
 annotated with [hotspot=sseMimeType
 file=0]`@Produces(MediaType.SERVER_SENT_EVENTS)` which sets the `Content-Type`
@@ -181,14 +180,14 @@ https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent
 === Reading from the reactive messaging channel
 
 The [hotspot=getSystemLoadMessage file=0]`getSystemLoadMessage()` method
-receives the message that contains the hostname and the average system load. The
+receives the message that contain the hostname and the average system load. The
 [hotspot=systemLoad file=0]`@Incoming("systemLoad")` annotation indicates that
-the method retrieves the message by connecting to the `systemLoad` channel in
+the method retrieves the message by connecting to the [hotspot=systemLoadChannel file=1]`systemLoad` channel in
 Kafka that you configured in the previous section. 
 
 Each time a message is received, the [hotspot=getSystemLoadMessage
 file=0]`getSystemLoadMessage()` method is called, and the hostname and system
-load containted in that message are broadcasted in an event to all subsribers. 
+load contained in that message are broadcasted in an event to all subsribers. 
 
 === Broadcasting events
 
@@ -238,25 +237,25 @@ information received from the Server-sent Events.
 === Subscribing to Server-Sent Events
 
 The [hotspot=initSSE file=0]`initSSE()` method is called when the page first
-loads and subscribes to the SSE by creating a new instance of
+loads. This subscribes the client to the SSE by creating a new instance of
 [hotspot=eventSource file=0]`EventSource` and specifying `/frontend/sse`
-endpoint in the parameter. The [hotspot=eventSource file=0]`EventSource` will send a `GET` request to the
+endpoint in the parameter. The [hotspot=eventSource file=0]`EventSource` will make a `GET` request to the
 `/frontend/sse` endpoint created in the previous section with a request header of
 `Accept: text/event-stream` to connect to the server.
 
 === Consuming the Server-Sent Events
 
-To consume the events sent from the server, call the [hotspot=eventListener
-file=0]`EventSource.addEventListener()` method to add an event listener. This
-event listener will listen for events with the name of [hotspot=systemLoad
-file=0]`systemLoad`. Each time the event is received, the function that was set
-as the [hotspot=setHandler file=0]`handler function` will be called. In this
-case, the [hotspot=systemLoadHandler file=0]`systemLoadHandler()` function is
-the handler. [hotspot=systemLoadHandler file=0]`systemLoadHandler()` will take the
-event object and [hotspot=parse file=0]`parse` the event's data property from a
-JSON string into a JavaScript object. The contents of this object, the system's
-hostname and load, are used to update the table. If a system is already present in the
-table, the load is updated, otherwise a new row is added for the system.
+The [hotspot=eventListener file=0]`EventSource.addEventListener()` method is
+called to add an event listener. This event listener will listen for events with
+the name of [hotspot=systemLoad file=0]`systemLoad`. The
+hotspot=systemLoadHandler file=0]`systemLoadHandler()` function is
+[hotspot=setHandler file=0]`set` as the handler function, and each time an event
+is received, it will be called. [hotspot=systemLoadHandler
+file=0]`systemLoadHandler()` will take the event object and [hotspot=parse
+file=0]`parse` the event's data property from a JSON string into a JavaScript
+object. The contents of this object, the system's hostname and load, are used to
+update the table. If a system is already present in the table, the load is
+updated, otherwise a new row is added for the system.
 
 // =================================================================================================
 // Building and running the application
@@ -274,11 +273,11 @@ mvn -pl models install
 mvn package
 ```
 
-Run the following command to download or update the `open-liberty` docker image to latest.
+Run the following command to download or update to the latest
+`openliberty/open-liberty:kernel-java8-openj9-ubi` Docker image:
+
 [role='command']
-```
-docker pull openliberty/open-liberty:kernel-java8-openj9-ubi
-```
+``` docker pull openliberty/open-liberty:kernel-java8-openj9-ubi ```
 
 Run the following commands to containerize the `frontend` and `system` services:
 
@@ -290,8 +289,8 @@ docker build -t system:1.0-SNAPSHOT system/.
 
 Next, use the provided script to start the application in Docker containers. The
 script creates a network for the containers to communicate with each other. It
-also creates containers for Kafka, Zookeeper, the Frontend service, and 3
-instances of the System service.
+also creates containers for Kafka, Zookeeper, the `frontend` service, and 3
+instances of the `system` service.
 
 include::{common-includes}/os-tabs.adoc[]
 
@@ -320,7 +319,7 @@ exception of Internet Explorer.
 You should see three rows in the table, one for each of the running system
 containers. You should also be able to see the system loads periodically
 updating. If you can see the loads updating, you know that your frontend service
-is successfully receiving messages from the systems services and is successfully
+is successfully receiving messages from the system services and is successfully
 broadcasting SSE to the JavaScript client to be displayed.
 
 // =================================================================================================

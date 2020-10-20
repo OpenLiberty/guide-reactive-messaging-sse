@@ -55,10 +55,9 @@ The application in this guide consists of a `frontend` service and 3 instances
 of the `system` service. The `system` services periodically publish messages
 containing the current system load to the `frontend` service. The `frontend`
 service then pushes the contents of these messages as SSE to a JavaScript client
-that consumes the events and displays a table containing each system's hostname, and
-it's periodically updating load.
-
-The following diagram depicts the application that is used in this guide:
+that consumes the events and displays a table containing each system's hostname,
+and it's periodically updating load. The following diagram depicts the
+application that is used in this guide:
 
 To learn more about how the reactive Java services used in this guide work, check out the https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating
 reactive Java microservices^] guide.

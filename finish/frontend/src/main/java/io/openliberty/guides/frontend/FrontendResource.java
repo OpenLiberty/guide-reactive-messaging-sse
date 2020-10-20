@@ -33,9 +33,7 @@ public class FrontendResource {
 
     // tag::subscribeToSystems[]
     @GET
-    // tag::path3[]
     @Path("/")
-    // end::path3[]
     // tag::sseMimeType[]
     @Produces(MediaType.SERVER_SENT_EVENTS)
     // end::sseMimeType[]

@@ -36,7 +36,7 @@ frontend client using Server-Sent Events (SSE).
 
 == What you'll learn
 
-Learn how to stream messages from a MicroProfile Reactive Messaging service to a
+You will learn how to stream messages from a MicroProfile Reactive Messaging service to a
 frontend client using Server-Sent Events (SSE).
 
 === What are Server-Sent Events?
@@ -55,8 +55,10 @@ The application in this guide consists of a `frontend` service and 3 instances
 of the `system` service. The `system` services periodically publish messages
 containing the current system load to the `frontend` service. The `frontend`
 service then pushes the contents of these messages as SSE to a JavaScript client
-that consumes the events to maintain an updating tables of each system and its
-load.
+that consumes the events and displays a table containing each system's hostname, and
+it's periodically updating load.
+
+The following diagram depicts the application that is used in this guide:
 
 To learn more about how the reactive Java services used in this guide work, check out the https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating
 reactive Java microservices^] guide.
@@ -68,7 +70,7 @@ reactive Java microservices^] guide.
 
 == Additional prerequisites
 
-You will now build and run the  microservices in Docker containers. You can learn more about containerizing microservices with Docker in the https://openliberty.io/guides/containerize.html[Containerizing microservices^] guide.
+You will build and run the  microservices in Docker containers. You can learn more about containerizing microservices with Docker in the https://openliberty.io/guides/containerize.html[Containerizing microservices^] guide.
 
 Install Docker by following the instructions on the official https://docs.docker.com/engine/installation[Docker documentation^]. Start your Docker environment.
 
@@ -86,17 +88,17 @@ include::{common-includes}/gitclone.adoc[]
 == Configuring the Kafka connector for the frontend service
 
 // File 0
-frontend/microprofile-config.properties.xml
+frontend/microprofile-config.properties
 [source, text, linenums, role='code_column hide_tags=copyright']
 ----
 include::finish/frontend/src/main/resources/META-INF/microprofile-config.properties[]
 ----
 
-Navigate to the `start` directory.
+Navigate to the `start` directory to begin.
 
 A complete `system` service has been provided for you in the `start/system`
 directory. The `system` service is the producer of the messages that are
-published to the Kafka messaging system as a stream of events. The periodically
+published to the Kafka messaging system. The periodically
 published messages contain the system's hostname and a calculation of the
 average system load (its CPU usage) for the last minute.
 
@@ -105,7 +107,7 @@ Configure the Kafka connector in the `frontend` service to receive the messages 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
 #Create the microprofile-config.properties file.#
-`src/main/resources/META-INF/microprofile-config.properties`
+`frontend/src/main/resources/META-INF/microprofile-config.properties`
 ----
 
 The `frontend` service uses an incomming connector to receive messages through

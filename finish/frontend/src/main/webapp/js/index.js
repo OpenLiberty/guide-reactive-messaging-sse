@@ -14,6 +14,7 @@ function initSSE() {
     );
     // end::eventListener[]
 }
+
 // end::initSSE[]
 // tag::systemLoadHandler[]
 function systemLoadHandler(event) {

@@ -34,7 +34,7 @@ import java.util.logging.Logger;
 // tag::frontendResource[]
 public class FrontendResource {
 
-    private Logger logger = Logger.getLogger(GatewaySSEResource.class.getName());
+    private Logger logger = Logger.getLogger(FrontendResource.class.getName());
 
     // tag::sse[]
     private Sse sse;

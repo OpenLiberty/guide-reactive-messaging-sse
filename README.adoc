@@ -53,8 +53,8 @@ the server to the client and Web Sockets allow for bidirectional communication.
 
 The application in this guide consists of a `frontend` service and 3 instances
 of the `system` service. The `system` services periodically publish messages
-containing the current system load to the `frontend` service. The `frontend`
-service then pushes the contents of these messages as SSE to a JavaScript client
+containing the thier hostname and current system load. The `frontend`
+service receives these messages and pushes the contents as SSE to a JavaScript client
 that consumes the events and displays a table containing each system's hostname,
 and it's periodically updating load. The following diagram depicts the
 application that is used in this guide:
@@ -97,7 +97,7 @@ include::finish/frontend/src/main/resources/META-INF/microprofile-config.propert
 
 Navigate to the `start` directory to begin.
 
-A complete `system` service has been provided for you in the `start/system`
+A complete `system` service has been provided to you in the `start/system`
 directory. The `system` service is the producer of the messages that are
 published to the Kafka messaging system. The periodically
 published messages contain the system's hostname and a calculation of the
@@ -155,7 +155,7 @@ subscribers via SSE.
 
 === Creating the SSE API endpoint
 
-The [hotspot=subscribeToSystems file=0]`subscribeToSystem()` function allows
+The [hotspot=subscribeToSystems file=0]`subscribeToSystem()` method allows
 clients to subscribe to events via an HTTP `GET` request to `/frontend/sse/`. To
 indicate client requests to receive Server-Sent Events, this endpoint is
 annotated with [hotspot=sseMimeType
@@ -173,7 +173,7 @@ method. Then, the [hotspot=sseEventSinkParam file=0]`SseEventSink` is
 [hotspot=registerSink file=0]`registered` to the [hotspot=broadcaster
 file=0]`SseBroadcaster` to subscribe to events.
 
-For more information about these interfaces see the Javadocs for
+For more information about these interfaces, see the Javadocs for
 https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent.html&package=allclasses-frame.html[OutboundSseEvent^]
 and
 https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent.Builder.html&package=allclasses-frame.html[OutboundSseEvent.Builder^].
@@ -227,7 +227,7 @@ and display their contents in a table in the UI.
 
 The frontend UI is a table with each row containing a system's hostname and load. The HTML and styling for the UI
 has already been provided to you, however you must populate the table with
-information received from the Server-sent Events.
+information received from the Server-Sent Events.
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
@@ -240,16 +240,16 @@ information received from the Server-sent Events.
 The [hotspot=initSSE file=0]`initSSE()` method is called when the page first
 loads. This subscribes the client to the SSE by creating a new instance of
 [hotspot=eventSource file=0]`EventSource` and specifying `/frontend/sse`
-endpoint in the parameter. The [hotspot=eventSource file=0]`EventSource` will make a `GET` request to the
-`/frontend/sse` endpoint created in the previous section with a request header of
-`Accept: text/event-stream` to connect to the server.
+endpoint in the parameter. The [hotspot=eventSource file=0]`EventSource` will
+make a `GET` request to this endpoint with a request header of `Accept:
+text/event-stream` to connect to the server.
 
 === Consuming the Server-Sent Events
 
 The [hotspot=eventListener file=0]`EventSource.addEventListener()` method is
 called to add an event listener. This event listener will listen for events with
 the name of [hotspot=systemLoad file=0]`systemLoad`. The
-hotspot=systemLoadHandler file=0]`systemLoadHandler()` function is
+[hotspot=systemLoadHandler file=0]`systemLoadHandler()` function is
 [hotspot=setHandler file=0]`set` as the handler function, and each time an event
 is received, it will be called. [hotspot=systemLoadHandler
 file=0]`systemLoadHandler()` will take the event object and [hotspot=parse
@@ -263,8 +263,6 @@ updated, otherwise a new row is added for the system.
 // =================================================================================================
 
 == Building and running the application
-
-Start your Docker environment.
 
 To build the application, run the Maven `install` and `package` goals from the command line in the `start` directory:
 
@@ -322,8 +320,8 @@ exception of Internet Explorer.
 You should see three rows in the table, one for each of the running system
 containers. You should also be able to see the system loads periodically
 updating. If you can see the loads updating, you know that your frontend service
-is successfully receiving messages from the system services and is successfully
-broadcasting SSE to the JavaScript client to be displayed.
+is successfully receiving messages and broadcasting them as SSE to the JavaScript
+client to be displayed.
 
 // =================================================================================================
 // Tearing down the environment

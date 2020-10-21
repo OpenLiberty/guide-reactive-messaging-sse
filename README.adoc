@@ -53,7 +53,7 @@ the server to the client and Web Sockets allow for bidirectional communication.
 
 The application in this guide consists of a `frontend` service and 3 instances
 of the `system` service. The `system` services periodically publish messages
-containing the thier hostname and current system load. The `frontend`
+containing the their hostname and current system load. The `frontend`
 service receives these messages and pushes the contents as SSE to a JavaScript client
 that consumes the events and displays a table containing each system's hostname,
 and it's periodically updating load. The following diagram depicts the
@@ -188,7 +188,7 @@ Kafka that you configured in the previous section.
 
 Each time a message is received, the [hotspot=getSystemLoadMessage
 file=0]`getSystemLoadMessage()` method is called, and the hostname and system
-load contained in that message are broadcasted in an event to all subsribers. 
+load contained in that message are broadcasted in an event to all subscribers. 
 
 === Broadcasting events
 

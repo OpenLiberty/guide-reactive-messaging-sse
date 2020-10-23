@@ -7,13 +7,13 @@ LABEL \
   org.opencontainers.image.authors="My Name" \
   org.opencontainers.image.vendor="Open Liberty" \
   org.opencontainers.image.url="local" \
-  org.opencontainers.image.source="https://github.com/OpenLiberty/guide-microprofile-reactive-messaging" \
+  org.opencontainers.image.source="https://github.com/OpenLiberty/guide-reactive-messaging-sse" \
   org.opencontainers.image.version="$VERSION" \
   org.opencontainers.image.revision="$REVISION" \
   vendor="Open Liberty" \
   name="frontend" \
   version="$VERSION-$REVISION" \
-  summary="The frontend microservice from the MicroProfile Reactive Messaging guide" \
+  summary="The frontend microservice from the 'Streaming messages to a client using Server-Sent Events' guide" \
   description="This image contains the frontend microservice running with the Open Liberty runtime."
 
 COPY --chown=1001:0 src/main/liberty/config /config/

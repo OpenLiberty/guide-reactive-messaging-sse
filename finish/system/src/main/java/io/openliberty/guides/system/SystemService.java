@@ -21,9 +21,7 @@ import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
-import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.reactivestreams.Publisher;
 
 import io.openliberty.guides.models.SystemLoad;
@@ -31,8 +29,6 @@ import io.reactivex.rxjava3.core.Flowable;
 
 @ApplicationScoped
 public class SystemService {
-    
-    private static Logger logger = Logger.getLogger(SystemService.class.getName());
 
     private static final OperatingSystemMXBean osMean = 
             ManagementFactory.getOperatingSystemMXBean();

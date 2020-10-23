@@ -82,45 +82,6 @@ Install Docker by following the instructions on the official https://docs.docker
 [role='command']
 include::{common-includes}/gitclone.adoc[]
 
-// =================================================================================================
-// Configuring the Kafka connector for the frontend service
-// =================================================================================================
-
-== Configuring the Kafka connector for the frontend service
-
-// File 0
-microprofile-config.properties
-[source, text, linenums, role='code_column hide_tags=copyright']
-----
-include::finish/frontend/src/main/resources/META-INF/microprofile-config.properties[]
-----
-
-Navigate to the `start` directory to begin.
-
-A complete `system` service has been provided to you in the `start/system`
-directory. The `system` service is the producer of the messages that are
-published to the Kafka messaging system. The periodically
-published messages contain the system's hostname and a calculation of the
-average system load (its CPU usage) for the last minute.
-
-Configure the Kafka connector in the `frontend` service to receive the messages from the `system` service.
-
-[role="code_command hotspot file=0", subs="quotes"]
-----
-#Create the microprofile-config.properties file.#
-`frontend/src/main/resources/META-INF/microprofile-config.properties`
-----
-
-The `frontend` service uses an incoming connector to receive messages through
-the [hotspot=systemLoadChannel file=0]`systemLoad` channel. The messages are then
-published by the `system` service to the [hotspot=systemLoadTopic
-file=0]`systemLoadTopic` in the Kafka message broker. The
-[hotspot=keyDeserializer file=0]`key.deserializer` and
-[hotspot=valueDeserializer file=0]`value.deserializer` properties define how to
-deserialize the messages. The [hotspot=groupId file=0]`group.id` property
-defines a unique name for the consumer group. All of these properties are
-required by the https://kafka.apache.org/documentation/#consumerconfigs[Apache Kafka Consumer
-Configs^] documentation.
 
 // =================================================================================================
 // Setting up SSE in the frontend service
@@ -141,6 +102,8 @@ microprofile-config.properties
 ----
 include::finish/frontend/src/main/resources/META-INF/microprofile-config.properties[]
 ----
+
+Navigate to the `start` directory to begin.
 
 In this section, you will create a REST API for SSE in the `frontend` service
 which will allow clients to subscribe to events. Additionally, the service will
@@ -169,9 +132,9 @@ If not, they will be assigned. This check and assignment is done with the
 [hotspot=sse file=0]`sse` being obtained from the [hotspot=sseParam
 file=0]`@Context` injection and the [hotspot=broadcaster file=0]`broadcaster`
 being obtained using the [hotspot=newBroadcaster file=0]`Sse.newBroadcaster()`
-method. Then, the [hotspot=sseEventSinkParam file=0]`SseEventSink` is
-[hotspot=registerSink file=0]`registered` to the [hotspot=broadcaster
-file=0]`SseBroadcaster` to subscribe to events.
+method. Then, the [hotspot=registerSink file=0]`register()` method is called to
+register the [hotspot=sseEventSinkParam file=0]`SseEventSink` to the
+[hotspot=broadcaster file=0]`SseBroadcaster` to subscribe to events.
 
 For more information about these interfaces, see the Javadocs for
 https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent.html&package=allclasses-frame.html[OutboundSseEvent^]
@@ -184,7 +147,7 @@ The [hotspot=getSystemLoadMessage file=0]`getSystemLoadMessage()` method
 receives the message that contain the hostname and the average system load. The
 [hotspot=systemLoad file=0]`@Incoming("systemLoad")` annotation indicates that
 the method retrieves the message by connecting to the [hotspot=systemLoadChannel file=1]`systemLoad` channel in
-Kafka that you configured in the previous section. 
+Kafka that you will configure in the next section. 
 
 Each time a message is received, the [hotspot=getSystemLoadMessage
 file=0]`getSystemLoadMessage()` method is called, and the hostname and system
@@ -196,24 +159,62 @@ Broadcasting events is handled in the [hotspot=broadcastData
 file=0]`broadcastData()` function. Firstly, it checks if the
 [hotspot=broadcaster file=0]`broadcaster` is not [hotspot=notNull file=0]`null`.
 If it is not null, then there is at least one subscriber, otherwise there is no
-client to send the event to. If the [hotspot=broadcaster file=0]`broadcaster`
-has been set, an [hotspot=createEvent file=0]`OutboundSseEvent` needs to be
-created. An instance of the `OutboundSseEvent.Builder` is obtained by using the
+client to send the event to. If the `broadcaster` has been set, an
+[hotspot=createEvent file=0]`OutboundSseEvent` needs to be created. An instance
+of the `OutboundSseEvent.Builder` is obtained by using the
 [hotspot=newEventBuilder file=0]`Sse.newEventBuilder()` method which will help
-create the [hotspot=createEvent file=0]`OutboundSseEvent`. Methods from the
-builder can be chained to set the [hotspot=name file=0]`name`, [hotspot=data
-file=0]`data`, and [hotspot=mediaType file=0]`media type`. Then, the
-[hotspot=build file=0]`OutboundSseEvent.Builder.build()` method is called to
-return the [hotspot=createEvent file=0]`OutboundSseEvent` instance. The
-[hotspot=createEvent file=0]`OutboundSseEvent` is broadcasted, or sent to all
-registered sinks, by invoking the [hotspot=broadcastEvent
+create the `OutboundSseEvent`. Methods from the builder can be chained to set
+the [hotspot=name file=0]`name`, [hotspot=data file=0]`data`, and
+[hotspot=mediaType file=0]`media type`. Then, the [hotspot=build
+file=0]`OutboundSseEvent.Builder.build()` method is called to return the
+`OutboundSseEvent` instance. The `OutboundSseEvent` is broadcasted, or sent to
+all registered sinks, by invoking the [hotspot=broadcastEvent
 file=0]`SseBroadcaster.broadcast()` method.
+
+// =================================================================================================
+// Configuring the Kafka connector for the frontend service
+// =================================================================================================
+
+== Configuring the Kafka connector for the frontend service
+
+// File 0
+microprofile-config.properties
+[source, text, linenums, role='code_column hide_tags=copyright']
+----
+include::finish/frontend/src/main/resources/META-INF/microprofile-config.properties[]
+----
+
+A complete `system` service has been provided to you in the `start/system`
+directory. The `system` service is the producer of the messages that are
+published to the Kafka messaging system. The periodically
+published messages contain the system's hostname and a calculation of the
+average system load (its CPU usage) for the last minute.
+
+Configure the Kafka connector in the `frontend` service to receive the messages from the `system` service.
+
+[role="code_command hotspot file=0", subs="quotes"]
+----
+#Create the microprofile-config.properties file.#
+`frontend/src/main/resources/META-INF/microprofile-config.properties`
+----
+
+The `frontend` service uses an incoming connector to receive messages through
+the [hotspot=systemLoadChannel file=0]`systemLoad` channel. The messages are
+then published by the `system` service to the [hotspot=systemLoadTopic
+file=0]`systemLoadTopic` in the Kafka message broker. The
+[hotspot=keyDeserializer file=0]`key.deserializer` and
+[hotspot=valueDeserializer file=0]`value.deserializer` properties define how to
+deserialize the messages. The [hotspot=groupId file=0]`group.id` property
+defines a unique name for the consumer group. All of these properties are
+required by the https://kafka.apache.org/documentation/#consumerconfigs[Apache
+Kafka Consumer Configs^] documentation.
+
 
 // =================================================================================================
 // Configure the frontend client to subscribe to and consume events
 // =================================================================================================
 
-== Configure the UI to subscribe to and consume events
+== Configure the frontend client to subscribe to and consume events
 
 // File 0
 index.js
@@ -249,11 +250,10 @@ text/event-stream` to connect to the server.
 The [hotspot=eventListener file=0]`EventSource.addEventListener()` method is
 called to add an event listener. This event listener will listen for events with
 the name of [hotspot=systemLoad file=0]`systemLoad`. The
-[hotspot=systemLoadHandler file=0]`systemLoadHandler()` function is
-[hotspot=setHandler file=0]`set` as the handler function, and each time an event
-is received, it will be called. [hotspot=systemLoadHandler
-file=0]`systemLoadHandler()` will take the event object and [hotspot=parse
-file=0]`parse` the event's data property from a JSON string into a JavaScript
+[hotspot=systemLoadHandler file=0]`systemLoadHandler()` function is set as the
+handler function, and each time an event is received, it will be called.
+[hotspot=systemLoadHandler file=0]`systemLoadHandler()` will take the event
+object and parse the event's data property from a JSON string into a JavaScript
 object. The contents of this object, the system's hostname and load, are used to
 update the table. If a system is already present in the table, the load is
 updated, otherwise a new row is added for the system.

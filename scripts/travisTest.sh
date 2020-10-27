@@ -9,6 +9,8 @@ set -euxo pipefail
 
 ./scripts/packageApps.sh
 
+export UPDATE_INTERVAL=5
+
 mvn -pl system verify
 
 ./scripts/buildImages.sh

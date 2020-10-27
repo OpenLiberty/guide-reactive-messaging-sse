@@ -18,7 +18,7 @@ sleep 180
 
 frontendStatus="$(curl --write-out "%{http_code}" --silent --output /dev/null "http://localhost:9080")"
 
-if ["$frontendStatus" == "200"]
+if [ "$frontendStatus" == "200" ]
 then 
   echo Frontend OK
 else 

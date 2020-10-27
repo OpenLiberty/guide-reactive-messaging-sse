@@ -33,7 +33,7 @@ import io.openliberty.guides.models.SystemLoad.SystemLoadDeserializer;
 public class SystemServiceIT {
 
     @KafkaConsumerClient(valueDeserializer = SystemLoadDeserializer.class,
-            groupId = "system",
+            groupId = "system-load-status",
             topics = "systemLoadTopic",
             properties = ConsumerConfig.AUTO_OFFSET_RESET_CONFIG + "=earliest")
     public static KafkaConsumer<String, SystemLoad> consumer;
@@ -41,7 +41,7 @@ public class SystemServiceIT {
     @Test
     public void testCpuStatus() {
         ConsumerRecords<String, SystemLoad> records =
-                consumer.poll(Duration.ofMillis(30 * 1000));
+                consumer.poll(Duration.ofMillis(60 * 1000));
         System.out.println("Polled " + records.count() + " records from Kafka:");
 
         for (ConsumerRecord<String, SystemLoad> record : records) {

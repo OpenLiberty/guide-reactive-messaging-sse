@@ -146,7 +146,7 @@ https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent
 The [hotspot=getSystemLoadMessage file=0]`getSystemLoadMessage()` method
 receives the message that contain the hostname and the average system load. The
 [hotspot=systemLoad file=0]`@Incoming("systemLoad")` annotation indicates that
-the method retrieves the message by connecting to the [hotspot=systemLoadChannel file=1]`systemLoad` channel in
+the method retrieves the message by connecting to the `systemLoad` channel in
 Kafka that you will configure in the next section. 
 
 Each time a message is received, the [hotspot=getSystemLoadMessage

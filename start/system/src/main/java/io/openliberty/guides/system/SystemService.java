@@ -18,11 +18,13 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+import javax.inject.Inject;
 
 import javax.enterprise.context.ApplicationScoped;
 
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.reactivestreams.Publisher;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import io.openliberty.guides.models.SystemLoad;
 import io.reactivex.rxjava3.core.Flowable;

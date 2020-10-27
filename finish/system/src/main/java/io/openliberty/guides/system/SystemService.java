@@ -35,7 +35,7 @@ public class SystemService {
 
     private static String hostname = null;
 
-    private long updateInterval = Long.parseLong(System.getenv("UPDATE_INTERVAL"));
+    // private long updateInterval = Long.parseLong(System.getenv("UPDATE_INTERVAL"));
 
     private static String getHostname() {
         if (hostname == null) {

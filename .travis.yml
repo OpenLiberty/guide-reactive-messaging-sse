@@ -4,7 +4,6 @@ before_script:
 - cd finish
 - sudo apt-get install jq
 - chmod +x ../scripts/travisTest.sh
-- export UPDATE_INTERVAL=15
 script:
 - ../scripts/travisTest.sh
 after_script:

@@ -32,5 +32,6 @@ public class AppContainerConfig implements SharedContainerConfiguration {
                     .withExposedPorts(9083)
                     .withReadinessPath("/health/ready")
                     .withNetwork(network)
+                    .withEnv("UPDATE_INTERVAL", "5")
                     .dependsOn(kafka);
 }

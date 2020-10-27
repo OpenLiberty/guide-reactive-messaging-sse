@@ -59,7 +59,7 @@ that consumes the events and displays a table containing each system's hostname,
 and it's periodically updating load. The following diagram depicts the
 application that is used in this guide:
 
-image::SSE_Diagram.png[JWT frontend and system services, width=490, height=654, align="center"]
+image::SSE_Diagram.png[JWT frontend and system services, align="center"]
 
 To learn more about how the reactive Java services used in this guide work, check out the https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating
 reactive Java microservices^] guide.

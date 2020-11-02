@@ -99,7 +99,7 @@ include::{common-includes}/gitclone.adoc[]
 BFFResource.java
 [source, java, linenums, role='code_column hide_tags=copyright']
 ----
-include::finish/frontend/src/main/java/io/openliberty/guides/frontend/BFFResource.java[]
+include::finish/frontend/src/main/java/io/openliberty/guides/bff/BFFResource.java[]
 ----
 
 // File 1
@@ -111,7 +111,7 @@ include::finish/frontend/src/main/resources/META-INF/microprofile-config.propert
 
 Navigate to the `start` directory to begin.
 
-In this section, you will create a REST API for SSE in the BFF service
+In this section, you will create a REST API for SSE in the `BFF` service
 which will allow clients to subscribe to events. Additionally, the service will
 read the messages from the incoming stream and push the contents to the
 subscribers via SSE.
@@ -196,7 +196,7 @@ published to the Kafka messaging system. The periodically
 published messages contain the system's hostname and a calculation of the
 average system load (its CPU usage) for the last minute.
 
-Configure the Kafka connector in the BFF service to receive the messages from the `system` service.
+Configure the Kafka connector in the `BFF` service to receive the messages from the `system` service.
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----

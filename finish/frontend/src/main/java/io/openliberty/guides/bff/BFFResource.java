@@ -10,7 +10,7 @@
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
 // end::copyright[]
-package io.openliberty.guides.frontend;
+package io.openliberty.guides.bff;
 
 import io.openliberty.guides.models.*;
 
@@ -31,9 +31,9 @@ import java.util.logging.Logger;
 @ApplicationScoped
 @Path("/sse")
 // tag::frontendResource[]
-public class FrontendResource {
+public class BFFResource {
 
-    private Logger logger = Logger.getLogger(FrontendResource.class.getName());
+    private Logger logger = Logger.getLogger(BFFResource.class.getName());
 
     // tag::sse[]
     private Sse sse;

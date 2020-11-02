@@ -39,9 +39,15 @@ frontend client using Server-Sent Events (SSE).
 You will learn how to stream messages from a MicroProfile Reactive Messaging service to a
 frontend client using Server-Sent Events (SSE).
 
+MicroProfile Reactive Messaging provides an easy way for Java services to
+asynchronously send, receive, and process messages that are received as
+continuous streams of events. Server-Sent Events provide a convient way to
+stream the data in these events to a browser client while maintaining the
+asynchronicity of the communication and flow of data.
+
 === What are Server-Sent Events?
 
-Server-Sent Events (SSE) is a specification introduced in HTML5 which allows
+Server-Sent Events is a specification introduced in HTML5 which allows
 clients to subscribe to events that are pushed from a server. Firstly, the
 client needs to make a connection with the server over HTTP. The connection is
 kept-alive and the server is able to continuously push events to the client as
@@ -50,13 +56,13 @@ they use one request for one response, while SSE uses one request for a stream
 of responses. SSE also differs from Web Sockets as SSE is unidirectional from
 the server to the client and Web Sockets allow for bidirectional communication.
 
-
-The application in this guide consists of a `frontend` service and 3 instances
-of the `system` service. The `system` services periodically publish messages
-containing the their hostname and current system load. The `frontend`
-service receives these messages and pushes the contents as SSE to a JavaScript client
-that consumes the events and displays a table containing each system's hostname,
-and it's periodically updating load. The following diagram depicts the
+The application in this guide consists of a `frontend` application and 3
+instances of the `system` service. The `system` services periodically publish
+messages containing the their hostname and current system load. The `frontend`
+application provides a backend-for-frontend (BFF) service that receives these
+messages and pushes the contents as SSE to a frontend JavaScript client that
+consumes the events and displays a table containing each system's hostname, and
+it's periodically updating load. The following diagram depicts the
 application that is used in this guide:
 
 image::SSE_Diagram.png[JWT frontend and system services, align="center"]
@@ -84,10 +90,10 @@ include::{common-includes}/gitclone.adoc[]
 
 
 // =================================================================================================
-// Setting up SSE in the frontend service
+// Setting up SSE in the BFF service
 // =================================================================================================
 
-== Setting up SSE in the frontend service
+== Setting up SSE in the BFF service
 
 // File 0
 FrontendResource.java
@@ -105,21 +111,21 @@ include::finish/frontend/src/main/resources/META-INF/microprofile-config.propert
 
 Navigate to the `start` directory to begin.
 
-In this section, you will create a REST API for SSE in the `frontend` service
+In this section, you will create a REST API for SSE in the `BFF` service
 which will allow clients to subscribe to events. Additionally, the service will
 read the messages from the incoming stream and push the contents to the
 subscribers via SSE.
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
-#Create the FrontendResource class.#
-`frontend/src/main/java/io/openliberty/guides/frontend/FrontendResource.java`
+#Create the BFFResource class.#
+`frontend/src/main/java/io/openliberty/guides/BFF/BFFResource.java`
 ----
 
 === Creating the SSE API endpoint
 
 The [hotspot=subscribeToSystems file=0]`subscribeToSystem()` method allows
-clients to subscribe to events via an HTTP `GET` request to `/frontend/sse/`. To
+clients to subscribe to events via an HTTP `GET` request to `/bff/sse/`. To
 indicate client requests to receive Server-Sent Events, this endpoint is
 annotated with [hotspot=sseMimeType
 file=0]`@Produces(MediaType.SERVER_SENT_EVENTS)` which sets the `Content-Type`
@@ -172,10 +178,10 @@ all registered sinks, by invoking the [hotspot=broadcastEvent
 file=0]`SseBroadcaster.broadcast()` method.
 
 // =================================================================================================
-// Configuring the Kafka connector for the frontend service
+// Configuring the Kafka connector for the BFF service
 // =================================================================================================
 
-== Configuring the Kafka connector for the frontend service
+== Configuring the Kafka connector for the BFF service
 
 // File 0
 microprofile-config.properties
@@ -190,7 +196,7 @@ published to the Kafka messaging system. The periodically
 published messages contain the system's hostname and a calculation of the
 average system load (its CPU usage) for the last minute.
 
-Configure the Kafka connector in the `frontend` service to receive the messages from the `system` service.
+Configure the Kafka connector in the `BFF` service to receive the messages from the `system` service.
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
@@ -198,7 +204,7 @@ Configure the Kafka connector in the `frontend` service to receive the messages 
 `frontend/src/main/resources/META-INF/microprofile-config.properties`
 ----
 
-The `frontend` service uses an incoming connector to receive messages through
+The `BFF` service uses an incoming connector to receive messages through
 the [hotspot=systemLoadChannel file=0]`systemLoad` channel. The messages are
 then published by the `system` service to the [hotspot=systemLoadTopic
 file=0]`systemLoadTopic` in the Kafka message broker. The
@@ -280,7 +286,7 @@ Run the following command to download or update to the latest
 docker pull openliberty/open-liberty:kernel-java8-openj9-ubi
 ```
 
-Run the following commands to containerize the `frontend` and `system` services:
+Run the following commands to containerize the `frontend` application and `system` service:
 
 [role='command']
 ```
@@ -290,7 +296,7 @@ docker build -t system:1.0-SNAPSHOT system/.
 
 Next, use the provided script to start the application in Docker containers. The
 script creates a network for the containers to communicate with each other. It
-also creates containers for Kafka, Zookeeper, the `frontend` service, and 3
+also creates containers for Kafka, Zookeeper, the `frontend` application, and 3
 instances of the `system` service.
 
 include::{common-includes}/os-tabs.adoc[]

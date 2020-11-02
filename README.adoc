@@ -246,7 +246,7 @@ information received from the Server-Sent Events.
 
 The [hotspot=initSSE file=0]`initSSE()` method is called when the page first
 loads. This subscribes the client to the SSE by creating a new instance of
-[hotspot=eventSource file=0]`EventSource` and specifying `/frontend/sse`
+[hotspot=eventSource file=0]`EventSource` and specifying `/bff/sse`
 endpoint in the parameter. The [hotspot=eventSource file=0]`EventSource` will
 make a `GET` request to this endpoint with a request header of `Accept:
 text/event-stream` to connect to the server.
@@ -325,8 +325,8 @@ exception of Internet Explorer.
 
 You should see three rows in the table, one for each of the running system
 containers. You should also be able to see the system loads periodically
-updating. If you can see the loads updating, you know that your frontend service
-is successfully receiving messages and broadcasting them as SSE to the JavaScript
+updating. If you can see the loads updating, you know that your `BFF` service
+is successfully receiving messages and broadcasting them as SSE to the frontend client
 client to be displayed.
 
 // =================================================================================================

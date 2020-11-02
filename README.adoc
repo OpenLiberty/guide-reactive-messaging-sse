@@ -56,14 +56,14 @@ they use one request for one response, while SSE uses one request for a stream
 of responses. SSE also differs from Web Sockets as SSE is unidirectional from
 the server to the client and Web Sockets allow for bidirectional communication.
 
-The application in this guide consists of a `frontend` application and 3
-instances of the `system` service. The `system` services periodically publish
-messages containing the their hostname and current system load. The `frontend`
-application provides a backend-for-frontend (BFF) service that receives these
-messages and pushes the contents as SSE to a frontend JavaScript client that
-consumes the events and displays a table containing each system's hostname, and
-it's periodically updating load. The following diagram depicts the
-application that is used in this guide:
+This guide consists of a `frontend` application and 3 instances of the `system`
+service. The `system` services periodically publish messages containing their
+hostname and current system load. The `frontend` application provides a frontend
+JavaScript client and a backend-for-frontend (BFF) service. The BFF service
+receives the messages from the `system` services and pushes the contents as SSE
+to the frontend client that consumes the events and displays a table containing
+each system's hostname, and its periodically updating load. The following
+diagram depicts the application that is used in this guide:
 
 image::SSE_Diagram.png[JWT frontend and system services, align="center"]
 
@@ -96,10 +96,10 @@ include::{common-includes}/gitclone.adoc[]
 == Setting up SSE in the BFF service
 
 // File 0
-FrontendResource.java
+BFFResource.java
 [source, java, linenums, role='code_column hide_tags=copyright']
 ----
-include::finish/frontend/src/main/java/io/openliberty/guides/frontend/FrontendResource.java[]
+include::finish/frontend/src/main/java/io/openliberty/guides/frontend/BFFResource.java[]
 ----
 
 // File 1
@@ -111,7 +111,7 @@ include::finish/frontend/src/main/resources/META-INF/microprofile-config.propert
 
 Navigate to the `start` directory to begin.
 
-In this section, you will create a REST API for SSE in the `BFF` service
+In this section, you will create a REST API for SSE in the BFF service
 which will allow clients to subscribe to events. Additionally, the service will
 read the messages from the incoming stream and push the contents to the
 subscribers via SSE.
@@ -119,7 +119,7 @@ subscribers via SSE.
 [role="code_command hotspot file=0", subs="quotes"]
 ----
 #Create the BFFResource class.#
-`frontend/src/main/java/io/openliberty/guides/BFF/BFFResource.java`
+`frontend/src/main/java/io/openliberty/guides/bff/BFFResource.java`
 ----
 
 === Creating the SSE API endpoint
@@ -196,7 +196,7 @@ published to the Kafka messaging system. The periodically
 published messages contain the system's hostname and a calculation of the
 average system load (its CPU usage) for the last minute.
 
-Configure the Kafka connector in the `BFF` service to receive the messages from the `system` service.
+Configure the Kafka connector in the BFF service to receive the messages from the `system` service.
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----

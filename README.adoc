@@ -59,7 +59,7 @@ the server to the client and Web Sockets allow for bidirectional communication.
 This guide consists of a `frontend` application and 3 instances of the `system`
 service. The `system` services periodically publish messages containing their
 hostname and current system load. The `frontend` application provides a frontend
-JavaScript client and a backend-for-frontend (BFF) service. The BFF service
+JavaScript client and a backend-for-frontend (`BFF`) service. The `BFF` service
 receives the messages from the `system` services and pushes the contents as SSE
 to the frontend client that consumes the events and displays a table containing
 each system's hostname, and its periodically updating load. The following

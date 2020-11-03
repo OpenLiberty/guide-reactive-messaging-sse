@@ -21,7 +21,7 @@ function systemLoadHandler(event) {
     // tag::parse[]
     var system = JSON.parse(event.data);
     // end::parse[]
-    if(document.getElementById(system.hostname)) {
+    if (document.getElementById(system.hostname)) {
         document.getElementById(system.hostname).cells[1].innerHTML =
                                         system.loadAverage.toFixed(2);
     } else {

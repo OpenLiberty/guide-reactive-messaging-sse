@@ -5,9 +5,9 @@ name: Test Guide
 
 on:
   push:
-    branches: [ master, qa ]
+    branches: [ master, qa, dev ]
   pull_request:
-    branches: [ master, qa ]
+    branches: [ master, qa, dev ]
 
 jobs:
   build:

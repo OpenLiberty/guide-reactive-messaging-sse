@@ -10,13 +10,13 @@
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
 // end::copyright[]
-package io.openliberty.guides.frontend;
+package io.openliberty.guides.bff;
 
 // JAX-RS
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-@ApplicationPath("frontend")
-public class FrontendApplication extends Application {
+@ApplicationPath("bff")
+public class BFFApplication extends Application {
 
 }

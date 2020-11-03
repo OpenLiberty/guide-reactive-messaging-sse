@@ -1,7 +1,7 @@
 // tag::initSSE[]
 function initSSE() {
     // tag::eventSource[]
-    var source = new EventSource('/frontend/sse');
+    var source = new EventSource('/bff/sse');
     // end::eventSource[]
     // tag::eventListener[]
     source.addEventListener(

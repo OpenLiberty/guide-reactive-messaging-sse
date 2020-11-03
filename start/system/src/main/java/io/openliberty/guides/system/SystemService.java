@@ -17,14 +17,13 @@ import java.lang.management.OperatingSystemMXBean;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
-import javax.inject.Inject;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.reactivestreams.Publisher;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import io.openliberty.guides.models.SystemLoad;
 import io.reactivex.rxjava3.core.Flowable;
@@ -32,7 +31,8 @@ import io.reactivex.rxjava3.core.Flowable;
 @ApplicationScoped
 public class SystemService {
 
-    @Inject @ConfigProperty(name="UPDATE_INTERVAL")
+    @Inject
+    @ConfigProperty(name="UPDATE_INTERVAL", defaultValue="5")
     private long updateInterval;
 
     private static final OperatingSystemMXBean osMean = 
@@ -43,9 +43,9 @@ public class SystemService {
     private static String getHostname() {
         if (hostname == null) {
             try {
-                return InetAddress.getLocalHost().getHostName();
+                hostname = InetAddress.getLocalHost().getHostName();
             } catch (UnknownHostException e) {
-                return System.getenv("HOSTNAME");
+                hostname = System.getenv("HOSTNAME");
             }
         }
         return hostname;
@@ -54,7 +54,7 @@ public class SystemService {
     @Outgoing("systemLoad")
     public Publisher<SystemLoad> sendSystemLoad() {
         return Flowable.interval(updateInterval, TimeUnit.SECONDS)
-                .map((interval -> new SystemLoad(getHostname(),
-                        new Double(osMean.getSystemLoadAverage()))));
+                       .map((interval -> new SystemLoad(getHostname(),
+                           Double.valueOf(osMean.getSystemLoadAverage()))));
     }
 }

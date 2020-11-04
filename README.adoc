@@ -12,7 +12,7 @@
 :page-releasedate: 2020-04-13
 :page-guide-category: microprofile
 :page-essential: false
-:page-description: Learn how to push Server-Sent Events from a reactive messaging application to a frontend appliation
+:page-description: Learn how to push Server-Sent Events from a reactive messaging application to a frontend application
 :guide-author: Open Liberty
 :page-tags: ['MicroProfile', 'Jakarta EE', 'Microservices']
 :page-related-guides: ['microprofile-reactive-messaging', 'microprofile-reactive-messaging-acknowledgement', 'reactive-service-testing', 'containerize']
@@ -41,7 +41,7 @@ frontend client using Server-Sent Events (SSE).
 
 MicroProfile Reactive Messaging provides an easy way for Java services to
 asynchronously send, receive, and process messages that are received as
-continuous streams of events. Server-Sent Events provide a convient way to
+continuous streams of events. Server-Sent Events provide a convenient way to
 stream the data in these events to a browser client while maintaining the
 asynchronicity of the communication and flow of data.
 
@@ -360,7 +360,7 @@ include::{common-includes}/os-tabs.adoc[]
 
 == Great work! You're done!
 
-You have just developed an application using MicroProfile Reactive Messaging, Open Liberty and Kakfa.
+You have just developed an application using MicroProfile Reactive Messaging, Open Liberty and Kafka.
 
 == Related Links
 

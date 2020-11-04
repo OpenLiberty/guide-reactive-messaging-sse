@@ -18,6 +18,9 @@ sleep 180
 
 frontendStatus="$(curl --write-out "%{http_code}" --silent --output /dev/null "http://localhost:9080")"
 
+docker exec system1 cat /logs/messages.log | grep product
+docker exec system1 cat /logs/messages.log | grep java
+
 if [ "$frontendStatus" == "200" ]
 then 
   echo Frontend OK

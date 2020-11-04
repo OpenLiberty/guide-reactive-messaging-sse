@@ -28,9 +28,3 @@ jobs:
     - name: Post tests
       if: always()
       run: docker images
-    - name: Archive server logs if failed
-      if: failure()
-      uses: actions/upload-artifact@v2
-      with:
-        name: server-logs
-        path: finish/target/liberty/wlp/usr/servers/guideServer/logs/

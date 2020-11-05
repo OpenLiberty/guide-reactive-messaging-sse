@@ -48,7 +48,7 @@ asynchronicity of the communication and flow of data.
 === What are Server-Sent Events?
 
 Server-Sent Events is a specification introduced in HTML5 which allows
-clients to subscribe to events that are pushed from a server. Firstly, the
+clients to subscribe to events that are pushed from a server. First, the
 client needs to make a connection with the server over HTTP. The connection is
 kept-alive and the server is able to continuously push events to the client as
 long as the connection persists. This differs from traditional HTTP requests as
@@ -56,7 +56,7 @@ they use one request for one response, while SSE uses one request for a stream
 of responses. SSE also differs from Web Sockets as SSE is unidirectional from
 the server to the client and Web Sockets allow for bidirectional communication.
 
-This guide consists of a `frontend` application and 3 instances of the `system`
+This guide consists of a `frontend` application and three instances of the `system`
 service. The `system` services periodically publish messages containing their
 hostname and current system load. The `frontend` application provides a front-end
 JavaScript client and a `bff` (backend for frontend) service. The `bff` service
@@ -132,7 +132,7 @@ response header to `text/event-stream`. This indicates that client requests made
 to this endpoint are to receive Server-Sent Events. Additionally, the function's
 parameters take in an [hotspot=sseEventSinkParam file=0]`SseEventSink` and an
 [hotspot=sseParam file=0]`Sse` which are injected using the `@Context`
-annotation. Firstly, the function checks if the [hotspot=sse file=0]`sse` and
+annotation. First, the function checks if the [hotspot=sse file=0]`sse` and
 [hotspot=broadcaster file=0]`broadcaster` instance variables have been assigned.
 If not, they will be assigned. This check and assignment is done with the
 [hotspot=sse file=0]`sse` being obtained from the [hotspot=sseParam
@@ -162,9 +162,9 @@ load contained in that message are broadcasted in an event to all subscribers.
 === Broadcasting events
 
 Broadcasting events is handled in the [hotspot=broadcastData
-file=0]`broadcastData()` function. Firstly, it checks if the
+file=0]`broadcastData()` function. First, it checks if the
 [hotspot=broadcaster file=0]`broadcaster` is not [hotspot=notNull file=0]`null`.
-If it is not null, then there is at least one subscriber, otherwise there is no
+If isn't null, then there's at least one subscriber, otherwise there's no
 client to send the event to. If the `broadcaster` has been set, the
 `OutboundSseEvent` is created using the [hotspot=newEventBuilder
 file=0]`Sse.newEventBuilder()` method where the [hotspot=name file=0]`name` of the
@@ -292,7 +292,7 @@ docker build -t system:1.0-SNAPSHOT system/.
 
 Next, use the provided script to start the application in Docker containers. The
 script creates a network for the containers to communicate with each other. It
-also creates containers for Kafka, Zookeeper, the `frontend` application, and 3
+also creates containers for Kafka, Zookeeper, the `frontend` application, and three
 instances of the `system` service.
 
 include::{common-includes}/os-tabs.adoc[]
@@ -316,8 +316,8 @@ include::{common-includes}/os-tabs.adoc[]
 Once your application is up and running, open your browser and check out your
 service by visiting http://localhost:9080[http://localhost:9080]. The
 application may take some time to get ready. Note: The latest version of most
-modern web browsers should have support for Server-Sent Events, with the
-exception of Internet Explorer.
+modern web browsers should have support for Server-Sent Events, except for
+Internet Explorer.
 
 When you visit the URL, you should see webpage with a table similar to the following:
 

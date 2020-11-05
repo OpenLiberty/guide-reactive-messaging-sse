@@ -183,7 +183,7 @@ If it is not null, then there is at least one subscriber, otherwise there is no
 client to send the event to. If the `broadcaster` has been set, the
 `OutboundSseEvent` is created using the [hotspot=newEventBuilder
 file=0]`Sse.newEventBuilder()` method and the [hotspot=name file=0]`name` of the
-event and the [hotspot=data file=0]`data` it contains, and the
+event, the [hotspot=data file=0]`data` it contains, and the
 [hotspot=mediaType file=0]`media type` are set. The `OutboundSseEvent` is then
 broadcasted, or sent to all registered sinks, by invoking the
 [hotspot=broadcastEvent file=0]`SseBroadcaster.broadcast()` method.

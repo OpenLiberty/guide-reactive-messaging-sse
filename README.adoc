@@ -181,7 +181,7 @@ file=0]`broadcastData()` function. Firstly, it checks if the
 [hotspot=broadcaster file=0]`broadcaster` is not [hotspot=notNull file=0]`null`.
 If it is not null, then there is at least one subscriber, otherwise there is no
 client to send the event to. If the `broadcaster` has been set, the
-`OutboundSseEvent` is created using the hotspot=newEventBuilder
+`OutboundSseEvent` is created using the [hotspot=newEventBuilder
 file=0]`Sse.newEventBuilder()` method and the [hotspot=name file=0]`name` of the
 event and the [hotspot=data file=0]`data` it contains, and the
 [hotspot=mediaType file=0]`media type` are set. The `OutboundSseEvent` is then

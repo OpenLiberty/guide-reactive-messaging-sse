@@ -125,12 +125,12 @@ subscribers via SSE.
 === Creating the SSE API endpoint
 
 The [hotspot=subscribeToSystems file=0]`subscribeToSystem()` method allows
-clients to subscribe to events via an HTTP `GET` request to `/bff/sse/`. To
-indicate client requests to receive Server-Sent Events, this endpoint is
-annotated with [hotspot=sseMimeType
-file=0]`@Produces(MediaType.SERVER_SENT_EVENTS)` which sets the `Content-Type`
-in the response header to `text/event-stream`. Additionally, the function's
-parameters takes in an [hotspot=sseEventSinkParam file=0]`SseEventSink` and an
+clients to subscribe to events via an HTTP `GET` request to the `/bff/sse/`
+endpoint. The [hotspot=sseMimeType
+file=0]`@Produces(MediaType.SERVER_SENT_EVENTS)` sets the `Content-Type` in the
+response header to `text/event-stream`. This indicates that client requests made
+to this endpoint are to receive Server-Sent Events. Additionally, the function's
+parameters take in an [hotspot=sseEventSinkParam file=0]`SseEventSink` and an
 [hotspot=sseParam file=0]`Sse` which are injected using the `@Context`
 annotation. Firstly, the function checks if the [hotspot=sse file=0]`sse` and
 [hotspot=broadcaster file=0]`broadcaster` instance variables have been assigned.
@@ -150,7 +150,7 @@ https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent
 === Reading from the reactive messaging channel
 
 The [hotspot=getSystemLoadMessage file=0]`getSystemLoadMessage()` method
-receives the message that contain the hostname and the average system load. The
+receives the message that contains the hostname and the average system load. The
 [hotspot=systemLoad file=0]`@Incoming("systemLoad")` annotation indicates that
 the method retrieves the message by connecting to the `systemLoad` channel in
 Kafka that you will configure in the next section. 
@@ -173,9 +173,20 @@ create the `OutboundSseEvent`. Methods from the builder can be chained to set
 the [hotspot=name file=0]`name`, [hotspot=data file=0]`data`, and
 [hotspot=mediaType file=0]`media type`. Then, the [hotspot=build
 file=0]`OutboundSseEvent.Builder.build()` method is called to return the
-`OutboundSseEvent` instance. The `OutboundSseEvent` is broadcasted, or sent to
-all registered sinks, by invoking the [hotspot=broadcastEvent
-file=0]`SseBroadcaster.broadcast()` method.
+`OutboundSseEvent` instance. 
+
+
+Broadcasting events is handled in the [hotspot=broadcastData
+file=0]`broadcastData()` function. Firstly, it checks if the
+[hotspot=broadcaster file=0]`broadcaster` is not [hotspot=notNull file=0]`null`.
+If it is not null, then there is at least one subscriber, otherwise there is no
+client to send the event to. If the `broadcaster` has been set, the
+`OutboundSseEvent` is created using the hotspot=newEventBuilder
+file=0]`Sse.newEventBuilder()` method and the [hotspot=name file=0]`name` of the
+event and the [hotspot=data file=0]`data` it contains, and the
+[hotspot=mediaType file=0]`media type` are set. The `OutboundSseEvent` is then
+broadcasted, or sent to all registered sinks, by invoking the
+[hotspot=broadcastEvent file=0]`SseBroadcaster.broadcast()` method.
 
 // =================================================================================================
 // Configuring the Kafka connector for the BFF service
@@ -217,7 +228,7 @@ Kafka Consumer Configs^] documentation.
 
 
 // =================================================================================================
-// Configure the frontend client to subscribe to and consume events
+// Configuring the frontend client to subscribe to and consume events
 // =================================================================================================
 
 == Configure the frontend client to subscribe to and consume events
@@ -246,7 +257,7 @@ information received from the Server-Sent Events.
 
 The [hotspot=initSSE file=0]`initSSE()` method is called when the page first
 loads. This subscribes the client to the SSE by creating a new instance of
-[hotspot=eventSource file=0]`EventSource` and specifying `/bff/sse`
+[hotspot=eventSource file=0]`EventSource` and specifying the `/bff/sse`
 endpoint in the parameter. The [hotspot=eventSource file=0]`EventSource` will
 make a `GET` request to this endpoint with a request header of `Accept:
 text/event-stream` to connect to the server.
@@ -257,8 +268,8 @@ The [hotspot=eventListener file=0]`EventSource.addEventListener()` method is
 called to add an event listener. This event listener will listen for events with
 the name of [hotspot=systemLoad file=0]`systemLoad`. The
 [hotspot=systemLoadHandler file=0]`systemLoadHandler()` function is set as the
-handler function, and each time an event is received, it will be called.
-[hotspot=systemLoadHandler file=0]`systemLoadHandler()` will take the event
+handler function, and each time an event is received, this function will be called.
+The [hotspot=systemLoadHandler file=0]`systemLoadHandler()` function will take the event
 object and parse the event's data property from a JSON string into a JavaScript
 object. The contents of this object, the system's hostname and load, are used to
 update the table. If a system is already present in the table, the load is
@@ -327,7 +338,7 @@ You should see three rows in the table, one for each of the running system
 containers. You should also be able to see the system loads periodically
 updating. If you can see the loads updating, you know that your `BFF` service
 is successfully receiving messages and broadcasting them as SSE to the frontend client
-client to be displayed.
+to be displayed.
 
 // =================================================================================================
 // Tearing down the environment

@@ -12,14 +12,14 @@
 :page-releasedate: 2020-04-13
 :page-guide-category: microprofile
 :page-essential: false
-:page-description: Learn how to push Server-Sent Events from a reactive messaging application to a frontend application
+:page-description: Learn how to push Server-Sent Events from a reactive messaging application to a front-end application
 :guide-author: Open Liberty
 :page-tags: ['MicroProfile', 'Jakarta EE', 'Microservices']
 :page-related-guides: ['microprofile-reactive-messaging', 'microprofile-reactive-messaging-acknowledgement', 'reactive-service-testing', 'containerize']
 :page-permalink: /guides/{projectid}
 :imagesdir: /img/guide/{projectid}
 :page-seo-title: Streaming messages from a MicroProfile Reactive Messaging microservice using Server-Sent Events (SSE)
-:page-seo-description: A getting started tutorial with examples on how to stream messages as Server-Sent Events (SSE) from a MicroProfile Reactive Messaging Java application to a frontend client.
+:page-seo-description: A getting started tutorial with examples on how to stream messages as Server-Sent Events (SSE) from a MicroProfile Reactive Messaging Java application to a front-end client.
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/dev
 :source-highlighter: prettify
 = Streaming messages to a client using Server-Sent Events
@@ -28,7 +28,7 @@
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].   
 
 Learn how to stream messages from a MicroProfile Reactive Messaging service to a
-frontend client using Server-Sent Events (SSE).
+front-end client using Server-Sent Events (SSE).
 
 // =================================================================================================
 //  What you'll learn
@@ -37,7 +37,7 @@ frontend client using Server-Sent Events (SSE).
 == What you'll learn
 
 You will learn how to stream messages from a MicroProfile Reactive Messaging service to a
-frontend client using Server-Sent Events (SSE).
+front-end client using Server-Sent Events (SSE).
 
 MicroProfile Reactive Messaging provides an easy way for Java services to
 asynchronously send, receive, and process messages that are received as
@@ -165,24 +165,9 @@ Broadcasting events is handled in the [hotspot=broadcastData
 file=0]`broadcastData()` function. Firstly, it checks if the
 [hotspot=broadcaster file=0]`broadcaster` is not [hotspot=notNull file=0]`null`.
 If it is not null, then there is at least one subscriber, otherwise there is no
-client to send the event to. If the `broadcaster` has been set, an
-[hotspot=createEvent file=0]`OutboundSseEvent` needs to be created. An instance
-of the `OutboundSseEvent.Builder` is obtained by using the
-[hotspot=newEventBuilder file=0]`Sse.newEventBuilder()` method which will help
-create the `OutboundSseEvent`. Methods from the builder can be chained to set
-the [hotspot=name file=0]`name`, [hotspot=data file=0]`data`, and
-[hotspot=mediaType file=0]`media type`. Then, the [hotspot=build
-file=0]`OutboundSseEvent.Builder.build()` method is called to return the
-`OutboundSseEvent` instance. 
-
-
-Broadcasting events is handled in the [hotspot=broadcastData
-file=0]`broadcastData()` function. Firstly, it checks if the
-[hotspot=broadcaster file=0]`broadcaster` is not [hotspot=notNull file=0]`null`.
-If it is not null, then there is at least one subscriber, otherwise there is no
 client to send the event to. If the `broadcaster` has been set, the
 `OutboundSseEvent` is created using the [hotspot=newEventBuilder
-file=0]`Sse.newEventBuilder()` method and the [hotspot=name file=0]`name` of the
+file=0]`Sse.newEventBuilder()` method where the [hotspot=name file=0]`name` of the
 event, the [hotspot=data file=0]`data` it contains, and the
 [hotspot=mediaType file=0]`media type` are set. The `OutboundSseEvent` is then
 broadcasted, or sent to all registered sinks, by invoking the
@@ -228,10 +213,10 @@ Kafka Consumer Configs^] documentation.
 
 
 // =================================================================================================
-// Configuring the frontend client to subscribe to and consume events
+// Configuring the front-end client to subscribe to and consume events
 // =================================================================================================
 
-== Configuring the frontend client to subscribe to and consume events
+== Configuring the front-end client to subscribe to and consume events
 
 // File 0
 index.js
@@ -240,10 +225,10 @@ index.js
 include::finish/frontend/src/main/webapp/js/index.js[]
 ----
 
-In this section, you will configure the frontend client to subscribe to events
+In this section, you will configure the front-end client to subscribe to events
 and display their contents in a table in the UI. 
 
-The frontend UI is a table with each row containing a system's hostname and load. The HTML and styling for the UI
+The front-end UI is a table with each row containing a system's hostname and load. The HTML and styling for the UI
 has already been provided to you, however you must populate the table with
 information received from the Server-Sent Events.
 
@@ -337,7 +322,7 @@ exception of Internet Explorer.
 You should see three rows in the table, one for each of the running system
 containers. You should also be able to see the system loads periodically
 updating. If you can see the loads updating, you know that your `bff` service
-is successfully receiving messages and broadcasting them as SSE to the frontend client
+is successfully receiving messages and broadcasting them as SSE to the front-end client
 to be displayed.
 
 // =================================================================================================

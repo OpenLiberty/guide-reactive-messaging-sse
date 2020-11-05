@@ -323,7 +323,7 @@ When you visit the URL, you should see something similar to the following webpag
 
 image::webpage.png[Webpage screenshot, align="center"]
 
-There are three rows in the table, one for each of the running system
+You should see three rows in the table, one for each of the running system
 containers. You should also be able to see the system loads periodically
 updating. If you can see the loads updating, you know that your `bff` service
 is successfully receiving messages and broadcasting them as SSE to the front-end client

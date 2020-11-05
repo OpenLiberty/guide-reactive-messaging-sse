@@ -319,9 +319,9 @@ application may take some time to get ready. Note: The latest version of most
 modern web browsers should have support for Server-Sent Events, with the
 exception of Internet Explorer.
 
-When you visit the URL, you should see something similar to the following webpage:
+When you visit the URL, you should see webpage with a table similar to the following:
 
-image::webpage.png[Webpage screenshot, align="center"]
+image::system_table.png[System table, align="center"]
 
 You should see three rows in the table, one for each of the running system
 containers. You should also be able to see the system loads periodically

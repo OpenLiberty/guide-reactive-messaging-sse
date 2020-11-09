@@ -12,14 +12,14 @@
 :page-releasedate: 2020-04-13
 :page-guide-category: microprofile
 :page-essential: false
-:page-description: Learn how to push Server-Sent Events from a reactive messaging application to a frontend application
+:page-description: Learn how to push Server-Sent Events from a reactive messaging application to a front-end application
 :guide-author: Open Liberty
 :page-tags: ['MicroProfile', 'Jakarta EE', 'Microservices']
 :page-related-guides: ['microprofile-reactive-messaging', 'microprofile-reactive-messaging-acknowledgement', 'reactive-service-testing', 'containerize']
 :page-permalink: /guides/{projectid}
 :imagesdir: /img/guide/{projectid}
 :page-seo-title: Streaming messages from a MicroProfile Reactive Messaging microservice using Server-Sent Events (SSE)
-:page-seo-description: A getting started tutorial with examples on how to stream messages as Server-Sent Events (SSE) from a MicroProfile Reactive Messaging Java application to a frontend client.
+:page-seo-description: A getting started tutorial with examples on how to stream messages as Server-Sent Events (SSE) from a MicroProfile Reactive Messaging Java application to a front-end client.
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/dev
 :source-highlighter: prettify
 = Streaming messages to a client using Server-Sent Events
@@ -28,7 +28,7 @@
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].   
 
 Learn how to stream messages from a MicroProfile Reactive Messaging service to a
-frontend client using Server-Sent Events (SSE).
+front-end client using Server-Sent Events (SSE).
 
 // =================================================================================================
 //  What you'll learn
@@ -37,7 +37,7 @@ frontend client using Server-Sent Events (SSE).
 == What you'll learn
 
 You will learn how to stream messages from a MicroProfile Reactive Messaging service to a
-frontend client using Server-Sent Events (SSE).
+front-end client using Server-Sent Events (SSE).
 
 MicroProfile Reactive Messaging provides an easy way for Java services to
 asynchronously send, receive, and process messages that are received as
@@ -48,7 +48,7 @@ asynchronicity of the communication and flow of data.
 === What are Server-Sent Events?
 
 Server-Sent Events is a specification introduced in HTML5 which allows
-clients to subscribe to events that are pushed from a server. Firstly, the
+clients to subscribe to events that are pushed from a server. First, the
 client needs to make a connection with the server over HTTP. The connection is
 kept-alive and the server is able to continuously push events to the client as
 long as the connection persists. This differs from traditional HTTP requests as
@@ -56,12 +56,12 @@ they use one request for one response, while SSE uses one request for a stream
 of responses. SSE also differs from Web Sockets as SSE is unidirectional from
 the server to the client and Web Sockets allow for bidirectional communication.
 
-This guide consists of a `frontend` application and 3 instances of the `system`
+This guide consists of a `frontend` application and three instances of the `system`
 service. The `system` services periodically publish messages containing their
-hostname and current system load. The `frontend` application provides a frontend
-JavaScript client and a backend-for-frontend (`BFF`) service. The `BFF` service
+hostname and current system load. The `frontend` application provides a front-end
+JavaScript client and a `bff` (backend for frontend) service. The `bff` service
 receives the messages from the `system` services and pushes the contents as SSE
-to the frontend client that consumes the events and displays a table containing
+to the front-end client that consumes the events and displays a table containing
 each system's hostname, and its periodically updating load. The following
 diagram depicts the application that is used in this guide:
 
@@ -90,10 +90,10 @@ include::{common-includes}/gitclone.adoc[]
 
 
 // =================================================================================================
-// Setting up SSE in the BFF service
+// Setting up SSE in the bff service
 // =================================================================================================
 
-== Setting up SSE in the BFF service
+== Setting up SSE in the bff service
 
 // File 0
 BFFResource.java
@@ -111,7 +111,7 @@ include::finish/frontend/src/main/resources/META-INF/microprofile-config.propert
 
 Navigate to the `start` directory to begin.
 
-In this section, you will create a REST API for SSE in the `BFF` service
+In this section, you will create a REST API for SSE in the `bff` service
 which will allow clients to subscribe to events. Additionally, the service will
 read the messages from the incoming stream and push the contents to the
 subscribers via SSE.
@@ -125,14 +125,14 @@ subscribers via SSE.
 === Creating the SSE API endpoint
 
 The [hotspot=subscribeToSystems file=0]`subscribeToSystem()` method allows
-clients to subscribe to events via an HTTP `GET` request to `/bff/sse/`. To
-indicate client requests to receive Server-Sent Events, this endpoint is
-annotated with [hotspot=sseMimeType
-file=0]`@Produces(MediaType.SERVER_SENT_EVENTS)` which sets the `Content-Type`
-in the response header to `text/event-stream`. Additionally, the function's
-parameters takes in an [hotspot=sseEventSinkParam file=0]`SseEventSink` and an
+clients to subscribe to events via an HTTP `GET` request to the `/bff/sse/`
+endpoint. The [hotspot=sseMimeType
+file=0]`@Produces(MediaType.SERVER_SENT_EVENTS)` sets the `Content-Type` in the
+response header to `text/event-stream`. This indicates that client requests made
+to this endpoint are to receive Server-Sent Events. Additionally, the function's
+parameters take in an [hotspot=sseEventSinkParam file=0]`SseEventSink` and an
 [hotspot=sseParam file=0]`Sse` which are injected using the `@Context`
-annotation. Firstly, the function checks if the [hotspot=sse file=0]`sse` and
+annotation. First, the function checks if the [hotspot=sse file=0]`sse` and
 [hotspot=broadcaster file=0]`broadcaster` instance variables have been assigned.
 If not, they will be assigned. This check and assignment is done with the
 [hotspot=sse file=0]`sse` being obtained from the [hotspot=sseParam
@@ -150,7 +150,7 @@ https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent
 === Reading from the reactive messaging channel
 
 The [hotspot=getSystemLoadMessage file=0]`getSystemLoadMessage()` method
-receives the message that contain the hostname and the average system load. The
+receives the message that contains the hostname and the average system load. The
 [hotspot=systemLoad file=0]`@Incoming("systemLoad")` annotation indicates that
 the method retrieves the message by connecting to the `systemLoad` channel in
 Kafka that you will configure in the next section. 
@@ -162,26 +162,22 @@ load contained in that message are broadcasted in an event to all subscribers.
 === Broadcasting events
 
 Broadcasting events is handled in the [hotspot=broadcastData
-file=0]`broadcastData()` function. Firstly, it checks if the
+file=0]`broadcastData()` function. First, it checks if the
 [hotspot=broadcaster file=0]`broadcaster` is not [hotspot=notNull file=0]`null`.
-If it is not null, then there is at least one subscriber, otherwise there is no
-client to send the event to. If the `broadcaster` has been set, an
-[hotspot=createEvent file=0]`OutboundSseEvent` needs to be created. An instance
-of the `OutboundSseEvent.Builder` is obtained by using the
-[hotspot=newEventBuilder file=0]`Sse.newEventBuilder()` method which will help
-create the `OutboundSseEvent`. Methods from the builder can be chained to set
-the [hotspot=name file=0]`name`, [hotspot=data file=0]`data`, and
-[hotspot=mediaType file=0]`media type`. Then, the [hotspot=build
-file=0]`OutboundSseEvent.Builder.build()` method is called to return the
-`OutboundSseEvent` instance. The `OutboundSseEvent` is broadcasted, or sent to
-all registered sinks, by invoking the [hotspot=broadcastEvent
-file=0]`SseBroadcaster.broadcast()` method.
+If it isn't null, then there's at least one subscriber, otherwise there's no
+client to send the event to. If the `broadcaster` has been set, the
+`OutboundSseEvent` is created using the [hotspot=newEventBuilder
+file=0]`Sse.newEventBuilder()` method where the [hotspot=name file=0]`name` of the
+event, the [hotspot=data file=0]`data` it contains, and the
+[hotspot=mediaType file=0]`media type` are set. The `OutboundSseEvent` is then
+broadcasted, or sent to all registered sinks, by invoking the
+[hotspot=broadcastEvent file=0]`SseBroadcaster.broadcast()` method.
 
 // =================================================================================================
-// Configuring the Kafka connector for the BFF service
+// Configuring the Kafka connector for the bff service
 // =================================================================================================
 
-== Configuring the Kafka connector for the BFF service
+== Configuring the Kafka connector for the bff service
 
 // File 0
 microprofile-config.properties
@@ -196,7 +192,7 @@ published to the Kafka messaging system. The periodically
 published messages contain the system's hostname and a calculation of the
 average system load (its CPU usage) for the last minute.
 
-Configure the Kafka connector in the `BFF` service to receive the messages from the `system` service.
+Configure the Kafka connector in the `bff` service to receive the messages from the `system` service.
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
@@ -204,7 +200,7 @@ Configure the Kafka connector in the `BFF` service to receive the messages from 
 `frontend/src/main/resources/META-INF/microprofile-config.properties`
 ----
 
-The `BFF` service uses an incoming connector to receive messages through
+The `bff` service uses an incoming connector to receive messages through
 the [hotspot=systemLoadChannel file=0]`systemLoad` channel. The messages are
 then published by the `system` service to the [hotspot=systemLoadTopic
 file=0]`systemLoadTopic` in the Kafka message broker. The
@@ -217,10 +213,10 @@ Kafka Consumer Configs^] documentation.
 
 
 // =================================================================================================
-// Configure the frontend client to subscribe to and consume events
+// Configuring the front-end client to subscribe to and consume events
 // =================================================================================================
 
-== Configure the frontend client to subscribe to and consume events
+== Configuring the front-end client to subscribe to and consume events
 
 // File 0
 index.js
@@ -229,10 +225,10 @@ index.js
 include::finish/frontend/src/main/webapp/js/index.js[]
 ----
 
-In this section, you will configure the frontend client to subscribe to events
+In this section, you will configure the front-end client to subscribe to events
 and display their contents in a table in the UI. 
 
-The frontend UI is a table with each row containing a system's hostname and load. The HTML and styling for the UI
+The front-end UI is a table with each row containing a system's hostname and load. The HTML and styling for the UI
 has already been provided to you, however you must populate the table with
 information received from the Server-Sent Events.
 
@@ -246,7 +242,7 @@ information received from the Server-Sent Events.
 
 The [hotspot=initSSE file=0]`initSSE()` method is called when the page first
 loads. This subscribes the client to the SSE by creating a new instance of
-[hotspot=eventSource file=0]`EventSource` and specifying `/bff/sse`
+[hotspot=eventSource file=0]`EventSource` and specifying the `/bff/sse`
 endpoint in the parameter. The [hotspot=eventSource file=0]`EventSource` will
 make a `GET` request to this endpoint with a request header of `Accept:
 text/event-stream` to connect to the server.
@@ -257,8 +253,8 @@ The [hotspot=eventListener file=0]`EventSource.addEventListener()` method is
 called to add an event listener. This event listener will listen for events with
 the name of [hotspot=systemLoad file=0]`systemLoad`. The
 [hotspot=systemLoadHandler file=0]`systemLoadHandler()` function is set as the
-handler function, and each time an event is received, it will be called.
-[hotspot=systemLoadHandler file=0]`systemLoadHandler()` will take the event
+handler function, and each time an event is received, this function will be called.
+The [hotspot=systemLoadHandler file=0]`systemLoadHandler()` function will take the event
 object and parse the event's data property from a JSON string into a JavaScript
 object. The contents of this object, the system's hostname and load, are used to
 update the table. If a system is already present in the table, the load is
@@ -296,7 +292,7 @@ docker build -t system:1.0-SNAPSHOT system/.
 
 Next, use the provided script to start the application in Docker containers. The
 script creates a network for the containers to communicate with each other. It
-also creates containers for Kafka, Zookeeper, the `frontend` application, and 3
+also creates containers for Kafka, Zookeeper, the `frontend` application, and three
 instances of the `system` service.
 
 include::{common-includes}/os-tabs.adoc[]
@@ -320,14 +316,18 @@ include::{common-includes}/os-tabs.adoc[]
 Once your application is up and running, open your browser and check out your
 service by visiting http://localhost:9080[http://localhost:9080]. The
 application may take some time to get ready. Note: The latest version of most
-modern web browsers should have support for Server-Sent Events, with the
-exception of Internet Explorer.
+modern web browsers should have support for Server-Sent Events, except for
+Internet Explorer.
+
+When you visit the URL, you should see webpage with a table similar to the following:
+
+image::system_table.png[System table, align="center"]
 
 You should see three rows in the table, one for each of the running system
 containers. You should also be able to see the system loads periodically
-updating. If you can see the loads updating, you know that your `BFF` service
-is successfully receiving messages and broadcasting them as SSE to the frontend client
-client to be displayed.
+updating. If you can see the loads updating, you know that your `bff` service
+is successfully receiving messages and broadcasting them as SSE to the front-end client
+to be displayed.
 
 // =================================================================================================
 // Tearing down the environment

@@ -12,7 +12,7 @@
 // end::copyright[]
 package io.openliberty.guides.bff;
 
-import io.openliberty.guides.models.*;
+import io.openliberty.guides.models.SystemLoad;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 

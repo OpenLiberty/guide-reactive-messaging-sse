@@ -45,9 +45,9 @@ start /b docker run -d ^
   system:1.0-SNAPSHOT
 
 start /b docker run -d ^
-  -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVER ^
+  -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=%KAFKA_SERVER% ^
   -p 9080:9080 ^
-  --network=$NETWORK ^
+  --network=%NETWORK% ^
   --name=frontend ^
   --rm ^
-  gateway:1.0-SNAPSHOT
+  frontend:1.0-SNAPSHOT

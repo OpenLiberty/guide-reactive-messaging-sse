@@ -129,7 +129,7 @@ clients to subscribe to events via an HTTP `GET` request to the `/bff/sse/`
 endpoint. The [hotspot=sseMimeType
 file=0]`@Produces(MediaType.SERVER_SENT_EVENTS)` sets the `Content-Type` in the
 response header to `text/event-stream`. This indicates that client requests made
-to this endpoint are to receive Server-Sent Events. Additionally, the methods's
+to this endpoint are to receive Server-Sent Events. Additionally, the method's
 parameters take in an [hotspot=sseEventSinkParam file=0]`SseEventSink` and an
 [hotspot=sseParam file=0]`Sse` which are injected using the `@Context`
 annotation. First, the method checks if the [hotspot=sse file=0]`sse` and

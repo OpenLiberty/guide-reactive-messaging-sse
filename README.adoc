@@ -58,7 +58,7 @@ the server to the client and Web Sockets allow for bidirectional communication.
 
 This guide consists of a `frontend` application and three instances of the `system`
 service. The `system` services periodically publish messages containing their
-hostname and current system load. The `frontend` application provides a front-end
+hostname and current system load. The `frontend` application has a front-end
 JavaScript client and a `bff` (backend for frontend) service. The `bff` service
 receives the messages from the `system` services and pushes the contents as SSE
 to the front-end client that consumes the events and displays a table containing
@@ -129,10 +129,10 @@ clients to subscribe to events via an HTTP `GET` request to the `/bff/sse/`
 endpoint. The [hotspot=sseMimeType
 file=0]`@Produces(MediaType.SERVER_SENT_EVENTS)` sets the `Content-Type` in the
 response header to `text/event-stream`. This indicates that client requests made
-to this endpoint are to receive Server-Sent Events. Additionally, the function's
+to this endpoint are to receive Server-Sent Events. Additionally, the methods's
 parameters take in an [hotspot=sseEventSinkParam file=0]`SseEventSink` and an
 [hotspot=sseParam file=0]`Sse` which are injected using the `@Context`
-annotation. First, the function checks if the [hotspot=sse file=0]`sse` and
+annotation. First, the method checks if the [hotspot=sse file=0]`sse` and
 [hotspot=broadcaster file=0]`broadcaster` instance variables have been assigned.
 If not, they will be assigned. This check and assignment is done with the
 [hotspot=sse file=0]`sse` being obtained from the [hotspot=sseParam
@@ -162,7 +162,7 @@ load contained in that message are broadcasted in an event to all subscribers.
 === Broadcasting events
 
 Broadcasting events is handled in the [hotspot=broadcastData
-file=0]`broadcastData()` function. First, it checks if the
+file=0]`broadcastData()` method. First, it checks if the
 [hotspot=broadcaster file=0]`broadcaster` is not [hotspot=notNull file=0]`null`.
 If it isn't null, then there's at least one subscriber, otherwise there's no
 client to send the event to. If the `broadcaster` has been set, the
@@ -203,7 +203,7 @@ Configure the Kafka connector in the `bff` service to receive the messages from 
 The `bff` service uses an incoming connector to receive messages through
 the [hotspot=systemLoadChannel file=0]`systemLoad` channel. The messages are
 then published by the `system` service to the [hotspot=systemLoadTopic
-file=0]`systemLoadTopic` in the Kafka message broker. The
+file=0]`system.load` in the Kafka message broker. The
 [hotspot=keyDeserializer file=0]`key.deserializer` and
 [hotspot=valueDeserializer file=0]`value.deserializer` properties define how to
 deserialize the messages. The [hotspot=groupId file=0]`group.id` property

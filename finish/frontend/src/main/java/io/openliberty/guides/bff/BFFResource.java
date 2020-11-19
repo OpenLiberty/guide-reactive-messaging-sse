@@ -107,7 +107,7 @@ public class BFFResource {
     // end::systemLoad[]
     // tag::getSystemLoadMessage[]
     public void getSystemLoadMessage(SystemLoad sl)  {
-        logger.info("Message received from systemLoadTopic. " + sl.toString());
+        logger.info("Message received from system.load topic. " + sl.toString());
         // tag::broadcastCall[]
         broadcastData("systemLoad", sl);
         // end::broadcastCall[]

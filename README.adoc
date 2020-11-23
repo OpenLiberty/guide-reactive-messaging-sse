@@ -151,7 +151,7 @@ The [hotspot=getSystemLoadMessage file=0]`getSystemLoadMessage()` method
 receives the message that contains the hostname and the average system load. The
 [hotspot=systemLoad file=0]`@Incoming("systemLoad")` annotation indicates that
 the method retrieves the message by connecting to the `systemLoad` channel in
-Kafka that you will configure in the next section.
+Kafka, which you configure in the next section.
 
 Each time a message is received, the [hotspot=getSystemLoadMessage
 file=0]`getSystemLoadMessage()` method is called, and the hostname and system
@@ -160,14 +160,14 @@ load contained in that message are broadcasted in an event to all subscribers.
 === Broadcasting events
 
 Broadcasting events is handled in the [hotspot=broadcastData
-file=0]`broadcastData()` method. First, it checks if the
-[hotspot=broadcaster file=0]`broadcaster` is not [hotspot=notNull file=0]`null`.
-If it isn't null, then there's at least one subscriber, otherwise there's no
-client to send the event to. If the `broadcaster` has been set, the
-`OutboundSseEvent` is created using the [hotspot=newEventBuilder
-file=0]`Sse.newEventBuilder()` method where the [hotspot=name file=0]`name` of the
+file=0]`broadcastData()` method. First, it checks whether the
+[hotspot=broadcaster file=0]`broadcaster` value is [hotspot=notNull file=0]`null`.
+There must be at least one subscriber or there's no
+client to send the event to. If the `broadcaster` value is specified, the
+`OutboundSseEvent` interface is created by using the [hotspot=newEventBuilder
+file=0]`Sse.newEventBuilder()` method, where the [hotspot=name file=0]`name` of the
 event, the [hotspot=data file=0]`data` it contains, and the
-[hotspot=mediaType file=0]`media type` are set. The `OutboundSseEvent` is then
+[hotspot=mediaType file=0]`media type` are set. The `OutboundSseEvent` interface is then
 broadcasted, or sent to all registered sinks, by invoking the
 [hotspot=broadcastEvent file=0]`SseBroadcaster.broadcast()` method.
 
@@ -201,7 +201,7 @@ Configure the Kafka connector in the `bff` service to receive the messages from 
 The `bff` service uses an incoming connector to receive messages through
 the [hotspot=systemLoadChannel file=0]`systemLoad` channel. The messages are
 then published by the `system` service to the [hotspot=systemLoadTopic
-file=0]`system.load` in the Kafka message broker. The
+file=0]`system.load` property in the Kafka message broker. The
 [hotspot=keyDeserializer file=0]`key.deserializer` and
 [hotspot=valueDeserializer file=0]`value.deserializer` properties define how to
 deserialize the messages. The [hotspot=groupId file=0]`group.id` property
@@ -236,26 +236,26 @@ information received from the Server-Sent Events.
 `frontend/src/main/webapp/js/index.js`
 ----
 
-=== Subscribing to Server-Sent Events
+=== Subscribing to SSE
 
 The [hotspot=initSSE file=0]`initSSE()` method is called when the page first
 loads. This subscribes the client to the SSE by creating a new instance of
-[hotspot=eventSource file=0]`EventSource` and specifying the `/bff/sse`
-endpoint in the parameter. The [hotspot=eventSource file=0]`EventSource` will
-make a `GET` request to this endpoint with a request header of `Accept:
+[hotspot=eventSource file=0]`EventSource` interface and specifying the `/bff/sse`
+endpoint in the parameter. The [hotspot=eventSource file=0]`EventSource` interface
+makes a `GET` request to this endpoint with a request header of `Accept:
 text/event-stream` to connect to the server.
 
-=== Consuming the Server-Sent Events
+=== Consuming the SSE
 
 The [hotspot=eventListener file=0]`EventSource.addEventListener()` method is
-called to add an event listener. This event listener will listen for events with
+called to add an event listener. This event listener listens for events with
 the name of [hotspot=systemLoad file=0]`systemLoad`. The
 [hotspot=systemLoadHandler file=0]`systemLoadHandler()` function is set as the
-handler function, and each time an event is received, this function will be called.
+handler function, and each time an event is received, this function is called.
 The [hotspot=systemLoadHandler file=0]`systemLoadHandler()` function will take the event
 object and parse the event's data property from a JSON string into a JavaScript
-object. The contents of this object, the system's hostname and load, are used to
-update the table. If a system is already present in the table, the load is
+object. The contents of this object are used to
+update the table with the system hostname and load. If a system is already present in the table, the load is
 updated, otherwise a new row is added for the system.
 
 // =================================================================================================
@@ -264,7 +264,7 @@ updated, otherwise a new row is added for the system.
 
 == Building and running the application
 
-To build the application, run the Maven `install` and `package` goals from the command line in the `start` directory:
+To build the application, navigate to the `start` directory and run the Maven `install` and `package` goals from the command line:
 
 [role='command']
 ```
@@ -288,7 +288,7 @@ docker build -t frontend:1.0-SNAPSHOT frontend/.
 docker build -t system:1.0-SNAPSHOT system/.
 ```
 
-Next, use the provided script to start the application in Docker containers. The
+Next, use the provided `startContainers.sh` script to start the application in Docker containers. The
 script creates a network for the containers to communicate with each other. It
 also creates containers for Kafka, Zookeeper, the `frontend` application, and three
 instances of the `system` service.
@@ -313,19 +313,18 @@ include::{common-includes}/os-tabs.adoc[]
 
 Once your application is up and running, open your browser and check out your
 service by visiting http://localhost:9080[http://localhost:9080]. The
-application may take some time to get ready. Note: The latest version of most
-modern web browsers should have support for Server-Sent Events, except for
-Internet Explorer.
+application might take some time to get ready. The latest version of most
+modern web browsers support Server-Sent Events. The exception is
+Internet Explorer, which does not support SSE.
 
-When you visit the URL, you should see webpage with a table similar to the following:
+When you visit the URL, look for a table similar to the following example:
 
 image::system_table.png[System table, align="center"]
 
-You should see three rows in the table, one for each of the running system
-containers. You should also be able to see the system loads periodically
-updating. If you can see the loads updating, you know that your `bff` service
+The table contains three rows, one for each of the running system
+containers. If you can see the loads updating, you know that your `bff` service
 is successfully receiving messages and broadcasting them as SSE to the front-end client
-to be displayed.
+for display.
 
 // =================================================================================================
 // Tearing down the environment

@@ -44,9 +44,6 @@ requests to other Java services, and asynchronously receive and process the
 responses as a stream of events. SSE provides a framework to stream the data in
 these events to a browser client.
 
-SSE provides a convenient way to
-
-
 === What is SSE?
 
 Server-Sent Events is an API that allows
@@ -55,6 +52,13 @@ client makes a connection with the server over HTTP. The server continuously pus
 long as the connection persists. SSE differs from traditional HTTP requests, which
 use one request for one response. SSE also differs from Web Sockets in that SSE is unidirectional from
 the server to the client, and Web Sockets allow for bidirectional communication.
+
+An example of an application that would benefit from using SSE would be a
+real-time stock quotes provider. SSE would be an effective way to push price
+updates from the server to the browser as soon as the server receives them. In
+this circumstance, a Web Socket is unnecessary because data is only travelling one
+way, and polling the server using HTTP requests wouldn't provide real-time
+updates.
 
 This guide consists of a `frontend` application and three instances of the `system`
 service. The `system` services periodically publish messages containing their
@@ -65,7 +69,14 @@ to the front-end client that consumes them and displays a table that contains
 each system's hostname and its periodically updating load. The following
 diagram depicts the application that is used in this guide:
 
-image::SSE_Diagram.png[JWT frontend and system services, align="center"]
+image::SSE_Diagram.png[SSE Diagram, align="center"]
+
+In this guide, you will setup the `bff` service by creating an endpoint for
+clients to use to subscribe to events. You will also enable the service to read from the
+reactive messaging channel and push the contents to subscribers via SSE. After
+that, you will configure the Kafka connectors to allow the `bff` service to receive
+messages from the `system` services. Finally, you will configure the front-end
+client to subscribe to these events, consume them, and display them in the UI.
 
 To learn more about the reactive Java services that are used in this guide, check out the https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating
 reactive Java microservices^] guide.
@@ -135,7 +146,7 @@ file=0]`@Produces(MediaType.SERVER_SENT_EVENTS)` annotation sets the `Content-Ty
 response header to `text/event-stream`. This content type indicates that client requests that are made
 to this endpoint are to receive Server-Sent Events. Additionally, the method
 parameters take in an instance of the [hotspot=sseEventSinkParam file=0]`SseEventSink` class and
-the [hotspot=sseParam file=0]`Sse` class, both of which are injected by using the `@Context`
+the [hotspot=sseParam file=0]`Sse` class, both of which are injected using the `@Context`
 annotation. First, the method checks if the [hotspot=sse file=0]`sse` and
 [hotspot=broadcaster file=0]`broadcaster` instance variables are assigned.
 If these variables aren't assigned, the

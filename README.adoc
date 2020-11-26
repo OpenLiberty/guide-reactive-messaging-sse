@@ -53,7 +53,7 @@ long as the connection persists. SSE differs from traditional HTTP requests, whi
 use one request for one response. SSE also differs from Web Sockets in that SSE is unidirectional from
 the server to the client, and Web Sockets allow for bidirectional communication.
 
-An example of an application that would benefit from using SSE would be a
+An example of an application that could benefit from using SSE would be a
 real-time stock quotes provider. SSE would be an effective way to push price
 updates from the server to the browser as soon as the server receives them. In
 this circumstance, a Web Socket is unnecessary because data is only travelling one
@@ -71,7 +71,7 @@ diagram depicts the application that is used in this guide:
 
 image::SSE_Diagram.png[SSE Diagram, align="center"]
 
-In this guide, you will setup the `bff` service by creating an endpoint for
+In this guide, you will set up the `bff` service by creating an endpoint for
 clients to use to subscribe to events. You will also enable the service to read from the
 reactive messaging channel and push the contents to subscribers via SSE. After
 that, you will configure the Kafka connectors to allow the `bff` service to receive

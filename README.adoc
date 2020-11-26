@@ -189,7 +189,7 @@ broadcasted, or sent to all registered sinks, by invoking the
 [hotspot=broadcastEvent file=0]`SseBroadcaster.broadcast()` method.
 
 
-You have now set up a endpoint in the `bff` service that the front-end client
+You have now set up an endpoint in the `bff` service that the front-end client
 will use to subscribe to events. You have also enabled the service to read from
 the reactive messaging channel and broadcast the information as
 events to subscribers via SSE.

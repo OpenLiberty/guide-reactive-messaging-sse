@@ -227,7 +227,7 @@ In this section, you will configure the front-end client to subscribe to events
 and display their contents in a table in the UI.
 
 The front-end UI is a table where each row contains the hostname and load of one of the three system services.
-The HTML and styling for the UI is provided for you, however you must populate the table with
+The HTML and styling for the UI is provided for you but you must populate the table with
 information that is received from the Server-Sent Events.
 
 [role="code_command hotspot file=0", subs="quotes"]

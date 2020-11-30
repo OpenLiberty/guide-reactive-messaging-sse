@@ -53,11 +53,8 @@ long as the connection persists. SSE differs from traditional HTTP requests, whi
 use one request for one response. SSE also differs from Web Sockets in that SSE is unidirectional from
 the server to the client, and Web Sockets allow for bidirectional communication.
 
-An example of an application that could benefit from using SSE would be a
-real-time stock quotes provider. SSE would be an effective way to push price
-updates from the server to the browser as soon as the server receives them. In
-this circumstance, a Web Socket is unnecessary because data is only travelling one
-way, and polling the server using HTTP requests wouldn't provide real-time
+For example, an application that provides real-time stock quotes might use SSE to push price
+updates from the server to the browser as soon as the server receives them. Such an application wouldn't need Web Sockets because the data travels in only one direction, and polling the server by using HTTP requests wouldn't provide real-time
 updates.
 
 This guide consists of a `frontend` application and three instances of the `system`
@@ -124,7 +121,7 @@ In this section, you will create a REST API for SSE in the `bff` service. When a
 client makes a request to this endpoint, the initial connection between the
 client and server is established and the client is subscribed to receive events
 pushed from the server. Later in this guide, you will have the front-end client use this
-endpoint to subscribe to the events pushed from the `bff` service. 
+endpoint to subscribe to the events pushed from the `bff` service.
 
 Additionally, you will enable the `bff` service to read messages from the
 incoming stream and push the contents as events to subscribers via SSE.
@@ -193,7 +190,7 @@ You have now set up an endpoint in the `bff` service that the front-end client
 will use to subscribe to events. You have also enabled the service to read from
 the reactive messaging channel and broadcast the information as
 events to subscribers via SSE.
- 
+
 // =================================================================================================
 // Configuring the Kafka connector for the bff service
 // =================================================================================================

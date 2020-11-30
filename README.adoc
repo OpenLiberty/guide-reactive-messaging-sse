@@ -28,7 +28,7 @@
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
 Learn how to stream messages from a MicroProfile Reactive Messaging service to a
-front-end client using Server-Sent Events (SSE).
+front-end client by using Server-Sent Events (SSE).
 
 // =================================================================================================
 //  What you'll learn
@@ -204,7 +204,7 @@ microprofile-config.properties
 include::finish/frontend/src/main/resources/META-INF/microprofile-config.properties[]
 ----
 
-A complete `system` service has been provided to you in the `start/system`
+A complete `system` service is provided for you in the `start/system`
 directory. The `system` service is the producer of the messages that are
 published to the Kafka messaging system. The periodically
 published messages contain the system's hostname and a calculation of the
@@ -246,9 +246,9 @@ include::finish/frontend/src/main/webapp/js/index.js[]
 In this section, you will configure the front-end client to subscribe to events
 and display their contents in a table in the UI.
 
-The front-end UI is a table with each row containing a system's hostname and load. The HTML and styling for the UI
-has already been provided to you, however you must populate the table with
-information received from the Server-Sent Events.
+The front-end UI is a table where each row contains the hostname and load of one of the three system services.
+The HTML and styling for the UI is provided for you but you must populate the table with
+information that is received from the Server-Sent Events.
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
@@ -284,7 +284,7 @@ updated, otherwise a new row is added for the system.
 
 == Building and running the application
 
-To build the application, navigate to the `start` directory and run the Maven `install` and `package` goals from the command line:
+To build the application, navigate to the `start` directory and run the following Maven `install` and `package` goals from the command line:
 
 [role='command']
 ```
@@ -308,10 +308,7 @@ docker build -t frontend:1.0-SNAPSHOT frontend/.
 docker build -t system:1.0-SNAPSHOT system/.
 ```
 
-Next, use the provided `startContainers.sh` script to start the application in Docker containers. The
-script creates a network for the containers to communicate with each other. It
-also creates containers for Kafka, Zookeeper, the `frontend` application, and three
-instances of the `system` service.
+Next, use the following `startContainers.sh` script to start the application in Docker containers:
 
 include::{common-includes}/os-tabs.adoc[]
 
@@ -330,11 +327,14 @@ include::{common-includes}/os-tabs.adoc[]
 .\scripts\startContainers.bat
 ```
 --
+This script creates a network for the containers to communicate with each other. It
+also creates containers for Kafka, Zookeeper, the `frontend` application, and three
+instances of the `system` service.
 
 Once your application is up and running, open your browser and check out your
 service by visiting http://localhost:9080[http://localhost:9080]. The
 application might take some time to get ready. The latest version of most
-modern web browsers support Server-Sent Events. The exception is
+modern web browsers supports Server-Sent Events. The exception is
 Internet Explorer, which does not support SSE.
 
 When you visit the URL, look for a table similar to the following example:
@@ -377,7 +377,7 @@ include::{common-includes}/os-tabs.adoc[]
 
 == Great work! You're done!
 
-You have just developed an application using MicroProfile Reactive Messaging, Open Liberty and Kafka.
+You developed an application that subscribes to Server-Sent Events by using MicroProfile Reactive Messaging, Open Liberty, and Kafka.
 
 == Related Links
 

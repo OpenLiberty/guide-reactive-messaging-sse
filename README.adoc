@@ -12,22 +12,22 @@
 :page-releasedate: 2020-04-13
 :page-guide-category: microprofile
 :page-essential: false
-:page-description: Learn how to push Server-Sent Events from a reactive messaging application to a front-end application
+:page-description: Learn how to push Server-Sent Events from a reactive messaging application to a front-end client
 :guide-author: Open Liberty
 :page-tags: ['MicroProfile', 'Jakarta EE', 'Microservices']
 :page-related-guides: ['microprofile-reactive-messaging', 'microprofile-reactive-messaging-acknowledgement', 'reactive-service-testing', 'containerize']
 :page-permalink: /guides/{projectid}
 :imagesdir: /img/guide/{projectid}
-:page-seo-title: Streaming messages from a MicroProfile Reactive Messaging microservice using Server-Sent Events (SSE)
-:page-seo-description: A getting started tutorial with examples on how to stream messages as Server-Sent Events (SSE) from a MicroProfile Reactive Messaging Java application to a front-end client.
+:page-seo-title: Streaming updates from a MicroProfile Reactive Messaging microservice using Server-Sent Events (SSE)
+:page-seo-description: A getting started tutorial with examples on how to stream updates as Server-Sent Events (SSE) from a MicroProfile Reactive Messaging Java application to a front-end client.
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/dev
 :source-highlighter: prettify
-= Streaming messages to a client using Server-Sent Events
+= Streaming updates to a client using Server-Sent Events
 
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to stream messages from a MicroProfile Reactive Messaging service to a
+Learn how to stream updates from a MicroProfile Reactive Messaging service to a
 front-end client by using Server-Sent Events (SSE).
 
 // =================================================================================================
@@ -249,7 +249,7 @@ include::finish/frontend/src/main/webapp/js/index.js[]
 In this section, you will configure the client in the `frontend` serivce to subscribe to events
 and display their contents in a table in the UI.
 
-The front-end UI is a table where each row contains the hostname and load of one of the three system services.
+The front-end UI is a table where each row contains the hostname and load of one of the three `system` services.
 The HTML and styling for the UI is provided for you but you must populate the table with
 information that is received from the Server-Sent Events.
 
@@ -356,7 +356,7 @@ image::system_table.png[System table, align="center"]
 
 The table contains three rows, one for each of the running `system`
 containers. If you can see the loads updating, you know that your `bff` service
-is successfully receiving messages and broadcasting them as SSE to the front-end client
+is successfully receiving messages and broadcasting them as SSE to the client in the `frontend` service
 for display.
 
 // =================================================================================================

@@ -57,6 +57,7 @@ public class BFFResource {
         // end::sseParam[]
         ) {
 
+
         if (this.sse == null || this.broadcaster == null) { 
             this.sse = sse;
             // tag::newBroadcaster[]

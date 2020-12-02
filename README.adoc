@@ -263,10 +263,19 @@ information that is received from the Server-Sent Events.
 
 The [hotspot=initSSE file=0]`initSSE()` method is called when the page first
 loads. This subscribes the client to the SSE by creating a new instance of the
-[hotspot=eventSource file=0]`EventSource` interface and specifying the `http://localhost:9084/bff/sse`
-URL in the parameter. The [hotspot=eventSource file=0]`EventSource` interface
-makes a `GET` request to this endpoint with a request header of `Accept:
-text/event-stream` to connect to the server.
+[hotspot=eventSource file=0]`EventSource` interface and specifying the
+`http://localhost:9084/bff/sse` URL in the parameters. The [hotspot=eventSource
+file=0]`EventSource` interface makes a `GET` request to this endpoint with a
+request header of `Accept: text/event-stream` to connect to the server. 
+
+Because this request is coming from `localhost:9080` and being made to
+`localhost:9084` it's considered to be cross-origin and must follow the Cross-Origin
+Resource Sharing (CORS) specification in order to not be blocked by the browser. This is
+done by setting the `withCredentials` configuration element to true in the
+parameters of the [hotspot=eventSource file=0]`EventSource` interface. CORS has
+already been enabled for you in the `bff` service. You can learn more about CORS
+by checking out the https://openliberty.io/guides/cors.html[CORS guide].
+
 
 === Consuming the SSE
 

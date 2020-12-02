@@ -262,7 +262,7 @@ information that is received from the Server-Sent Events.
 === Subscribing to SSE
 
 The [hotspot=initSSE file=0]`initSSE()` method is called when the page first
-loads. This subscribes the client to the SSE by creating a new instance of
+loads. This subscribes the client to the SSE by creating a new instance of the
 [hotspot=eventSource file=0]`EventSource` interface and specifying the `http://localhost:9084/bff/sse`
 URL in the parameter. The [hotspot=eventSource file=0]`EventSource` interface
 makes a `GET` request to this endpoint with a request header of `Accept:
@@ -303,7 +303,7 @@ Open Liberty Docker image:
 docker pull openliberty/open-liberty:kernel-java8-openj9-ubi
 ```
 
-Run the following commands to containerize the `frontend` application and `system` service:
+Run the following commands to containerize the `frontend`, `bff`, and `system` services:
 
 [role='command']
 ```
@@ -345,7 +345,7 @@ When you visit the URL, look for a table similar to the following example:
 
 image::system_table.png[System table, align="center"]
 
-The table contains three rows, one for each of the running system
+The table contains three rows, one for each of the running `system`
 containers. If you can see the loads updating, you know that your `bff` service
 is successfully receiving messages and broadcasting them as SSE to the front-end client
 for display.

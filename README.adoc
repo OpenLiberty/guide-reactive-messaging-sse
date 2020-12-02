@@ -62,9 +62,10 @@ service, and three instances of the `system` service. The `system` services
 periodically publish messages containing their hostname and current system load
 and the `frontend` service consists of a front-end JavaScript client. The `bff`
 service receives the messages from the `system` services and pushes the contents
-as events to the front-end client that consumes them and displays a table that
-contains each system's hostname and its periodically updating load. The
-following diagram depicts the application that is used in this guide:
+as events to the client in the `frontend` service that consumes them and
+displays a table that contains each system's hostname and its periodically
+updating load. The following diagram depicts the application that is used in
+this guide:
 
 image::SSE_Diagram.png[SSE Diagram, align="center"]
 
@@ -108,14 +109,14 @@ include::{common-includes}/gitclone.adoc[]
 BFFResource.java
 [source, java, linenums, role='code_column hide_tags=copyright']
 ----
-include::finish/frontend/src/main/java/io/openliberty/guides/bff/BFFResource.java[]
+include::finish/bff/src/main/java/io/openliberty/guides/bff/BFFResource.java[]
 ----
 
 // File 1
 microprofile-config.properties
 [source, text, linenums, role='code_column hide_tags=copyright']
 ----
-include::finish/frontend/src/main/resources/META-INF/microprofile-config.properties[]
+include::finish/bff/src/main/resources/META-INF/microprofile-config.properties[]
 ----
 
 In this section, you will create a REST API for SSE in the `bff` service. When a
@@ -133,7 +134,7 @@ Navigate to the `start` directory to begin.
 [role="code_command hotspot file=0", subs="quotes"]
 ----
 #Create the BFFResource class.#
-`frontend/src/main/java/io/openliberty/guides/bff/BFFResource.java`
+`bff/src/main/java/io/openliberty/guides/bff/BFFResource.java`
 ----
 
 === Creating the SSE API endpoint
@@ -203,7 +204,7 @@ information as events to subscribers via SSE.
 microprofile-config.properties
 [source, text, linenums, role='code_column hide_tags=copyright']
 ----
-include::finish/frontend/src/main/resources/META-INF/microprofile-config.properties[]
+include::finish/bff/src/main/resources/META-INF/microprofile-config.properties[]
 ----
 
 A complete `system` service is provided for you in the `start/system`
@@ -217,7 +218,7 @@ Configure the Kafka connector in the `bff` service to receive the messages from 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
 #Create the microprofile-config.properties file.#
-`frontend/src/main/resources/META-INF/microprofile-config.properties`
+`bff/src/main/resources/META-INF/microprofile-config.properties`
 ----
 
 The `bff` service uses an incoming connector to receive messages through

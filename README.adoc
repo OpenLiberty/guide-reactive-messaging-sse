@@ -57,23 +57,24 @@ For example, an application that provides real-time stock quotes might use SSE t
 updates from the server to the browser as soon as the server receives them. Such an application wouldn't need Web Sockets because the data travels in only one direction, and polling the server by using HTTP requests wouldn't provide real-time
 updates.
 
-This guide consists of a `frontend` application and three instances of the `system`
-service. The `system` services periodically publish messages containing their
-hostname and current system load. The `frontend` application consists of a front-end
-JavaScript client and a `bff` (backend for frontend) service. The `bff` service
-receives the messages from the `system` services and pushes the contents as events
-to the front-end client that consumes them and displays a table that contains
-each system's hostname and its periodically updating load. The following
-diagram depicts the application that is used in this guide:
+This guide consists of the `frontend` service, the `bff` (backend for frontend)
+service, and three instances of the `system` service. The `system` services
+periodically publish messages containing their hostname and current system load
+and the `frontend` service consists of a front-end JavaScript client. The `bff`
+service receives the messages from the `system` services and pushes the contents
+as events to the front-end client that consumes them and displays a table that
+contains each system's hostname and its periodically updating load. The
+following diagram depicts the application that is used in this guide:
 
 image::SSE_Diagram.png[SSE Diagram, align="center"]
 
 In this guide, you will set up the `bff` service by creating an endpoint for
-clients to use to subscribe to events. You will also enable the service to read from the
-reactive messaging channel and push the contents to subscribers via SSE. After
-that, you will configure the Kafka connectors to allow the `bff` service to receive
-messages from the `system` services. Finally, you will configure the front-end
-client to subscribe to these events, consume them, and display them in the UI.
+clients to use to subscribe to events. You will also enable the service to read
+from the reactive messaging channel and push the contents to subscribers via
+SSE. After that, you will configure the Kafka connectors to allow the `bff`
+service to receive messages from the `system` services. Finally, you will
+configure the client in the `frontend` service to subscribe to these events,
+consume them, and display them in the UI.
 
 To learn more about the reactive Java services that are used in this guide, check out the https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating
 reactive Java microservices^] guide.
@@ -85,7 +86,7 @@ reactive Java microservices^] guide.
 
 == Additional prerequisites
 
-You will build and run the services and the front-end application in Docker containers. You can learn more about containerizing services with Docker in the https://openliberty.io/guides/containerize.html[Containerizing microservices^] guide.
+You will build and run the services in Docker containers. You can learn more about containerizing services with Docker in the https://openliberty.io/guides/containerize.html[Containerizing microservices^] guide.
 
 Install Docker and start your Docker environment by following https://docs.docker.com/engine/installation[the instructions from Docker^].
 
@@ -120,8 +121,9 @@ include::finish/frontend/src/main/resources/META-INF/microprofile-config.propert
 In this section, you will create a REST API for SSE in the `bff` service. When a
 client makes a request to this endpoint, the initial connection between the
 client and server is established and the client is subscribed to receive events
-pushed from the server. Later in this guide, you will have the front-end client use this
-endpoint to subscribe to the events pushed from the `bff` service.
+pushed from the server. Later in this guide, you will have the client in  the
+`frontend` service use this endpoint to subscribe to the events pushed from the
+`bff` service.
 
 Additionally, you will enable the `bff` service to read messages from the
 incoming stream and push the contents as events to subscribers via SSE.
@@ -186,10 +188,10 @@ broadcasted, or sent to all registered sinks, by invoking the
 [hotspot=broadcastEvent file=0]`SseBroadcaster.broadcast()` method.
 
 
-You have now set up an endpoint in the `bff` service that the front-end client
-will use to subscribe to events. You have also enabled the service to read from
-the reactive messaging channel and broadcast the information as
-events to subscribers via SSE.
+You have now set up an endpoint in the `bff` service that the client in the
+`frontend` service will use to subscribe to events. You have also enabled the
+service to read from the reactive messaging channel and broadcast the
+information as events to subscribers via SSE.
 
 // =================================================================================================
 // Configuring the Kafka connector for the bff service
@@ -231,10 +233,10 @@ Kafka Consumer Configs^] documentation.
 
 
 // =================================================================================================
-// Configuring the front-end client to subscribe to and consume events
+// Configuring the frontend service to subscribe to and consume events
 // =================================================================================================
 
-== Configuring the front-end client to subscribe to and consume events
+== Configuring the frontend service to subscribe to and consume events
 
 // File 0
 index.js
@@ -243,7 +245,7 @@ index.js
 include::finish/frontend/src/main/webapp/js/index.js[]
 ----
 
-In this section, you will configure the front-end client to subscribe to events
+In this section, you will configure the client in the `frontend` serivce to subscribe to events
 and display their contents in a table in the UI.
 
 The front-end UI is a table where each row contains the hostname and load of one of the three system services.
@@ -260,8 +262,8 @@ information that is received from the Server-Sent Events.
 
 The [hotspot=initSSE file=0]`initSSE()` method is called when the page first
 loads. This subscribes the client to the SSE by creating a new instance of
-[hotspot=eventSource file=0]`EventSource` interface and specifying the `/bff/sse`
-endpoint in the parameter. The [hotspot=eventSource file=0]`EventSource` interface
+[hotspot=eventSource file=0]`EventSource` interface and specifying the `http://localhost:9084/bff/sse`
+URL in the parameter. The [hotspot=eventSource file=0]`EventSource` interface
 makes a `GET` request to this endpoint with a request header of `Accept:
 text/event-stream` to connect to the server.
 
@@ -305,6 +307,7 @@ Run the following commands to containerize the `frontend` application and `syste
 [role='command']
 ```
 docker build -t frontend:1.0-SNAPSHOT frontend/.
+docker build -t bff:1.0-SNAPSHOT bff/.
 docker build -t system:1.0-SNAPSHOT system/.
 ```
 
@@ -328,7 +331,7 @@ include::{common-includes}/os-tabs.adoc[]
 ```
 --
 This script creates a network for the containers to communicate with each other. It
-also creates containers for Kafka, Zookeeper, the `frontend` application, and three
+also creates containers for Kafka, Zookeeper, the `frontend` service, the `bff` service , and three
 instances of the `system` service.
 
 Once your application is up and running, open your browser and check out your

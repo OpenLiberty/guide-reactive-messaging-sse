@@ -184,7 +184,7 @@ client to send the event to. If the `broadcaster` value is specified, the
 `OutboundSseEvent` interface is created by using the [hotspot=newEventBuilder
 file=0]`Sse.newEventBuilder()` method, where the [hotspot=name file=0]`name` of the
 event, the [hotspot=data file=0]`data` it contains, and the
-[hotspot=mediaType file=0]`media type` are set. The `OutboundSseEvent` interface is then
+[hotspot=mediaType file=0]`mediaType` are set. The `OutboundSseEvent` interface is then
 broadcasted, or sent to all registered sinks, by invoking the
 [hotspot=broadcastEvent file=0]`SseBroadcaster.broadcast()` method.
 

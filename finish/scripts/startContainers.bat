@@ -45,7 +45,7 @@ start /b docker run -d ^
   system:1.0-SNAPSHOT
 
 start /b docker run -d ^
-  -p 9084:9084
+  -p 9084:9084 ^
   -e MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=%KAFKA_SERVER% ^
   --network=%NETWORK% ^
   --name=bff ^

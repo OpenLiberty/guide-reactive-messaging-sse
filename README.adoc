@@ -57,20 +57,19 @@ For example, an application that provides real-time stock quotes might use SSE t
 updates from the server to the browser as soon as the server receives them. Such an application wouldn't need Web Sockets because the data travels in only one direction, and polling the server by using HTTP requests wouldn't provide real-time
 updates.
 
-This guide consists of the `frontend` service, the `bff` (backend for frontend)
-service, and three instances of the `system` service. The `system` services
-periodically publish messages containing their hostname and current system load
-and the `frontend` service consists of a front-end JavaScript client. The `bff`
-service receives the messages from the `system` services and pushes the contents
-as events to the client in the `frontend` service that consumes them and
-displays a table that contains each system's hostname and its periodically
-updating load. The following diagram depicts the application that is used in
-this guide:
+The application that you will build in this guide consists of a `frontend`
+service, a `bff` (backend for frontend) service, and three instances of a
+`system` service. The `system` services periodically publish messages that
+contain their hostname and current system load. The `bff` service receives the
+messages from the `system` services and pushes the contents as SSE to a JavaScript
+client in the `frontend` service. This client uses the events to update a table
+in the UI that displays each system's hostname and its periodically updating
+load. The following diagram depicts the application that is used in this guide:
 
 image::SSE_Diagram.png[SSE Diagram, align="center"]
 
-In this guide, you will set up the `bff` service by creating an endpoint for
-clients to use to subscribe to events. You will also enable the service to read
+In this guide, you will set up the `bff` service by creating an endpoint that
+clients can use to subscribe to events You will also enable the service to read
 from the reactive messaging channel and push the contents to subscribers via
 SSE. After that, you will configure the Kafka connectors to allow the `bff`
 service to receive messages from the `system` services. Finally, you will
@@ -122,8 +121,8 @@ include::finish/bff/src/main/resources/META-INF/microprofile-config.properties[]
 In this section, you will create a REST API for SSE in the `bff` service. When a
 client makes a request to this endpoint, the initial connection between the
 client and server is established and the client is subscribed to receive events
-pushed from the server. Later in this guide, you will have the client in  the
-`frontend` service use this endpoint to subscribe to the events pushed from the
+that are pushed from the server. Later in this guide, the client in the `frontend`
+service uses this endpoint to subscribe to the events that are pushed from the
 `bff` service.
 
 Additionally, you will enable the `bff` service to read messages from the
@@ -189,8 +188,8 @@ broadcasted, or sent to all registered sinks, by invoking the
 [hotspot=broadcastEvent file=0]`SseBroadcaster.broadcast()` method.
 
 
-You have now set up an endpoint in the `bff` service that the client in the
-`frontend` service will use to subscribe to events. You have also enabled the
+You just set up an endpoint in the `bff` service that the client in the
+`frontend` service can use to subscribe to events. You also enabled the
 service to read from the reactive messaging channel and broadcast the
 information as events to subscribers via SSE.
 
@@ -262,19 +261,19 @@ information that is received from the Server-Sent Events.
 === Subscribing to SSE
 
 The [hotspot=initSSE file=0]`initSSE()` method is called when the page first
-loads. This subscribes the client to the SSE by creating a new instance of the
+loads. This method subscribes the client to the SSE by creating a new instance of the
 [hotspot=eventSource file=0]`EventSource` interface and specifying the
 `http://localhost:9084/bff/sse` URL in the parameters. The [hotspot=eventSource
 file=0]`EventSource` interface makes a `GET` request to this endpoint with a
 request header of `Accept: text/event-stream` to connect to the server. 
 
-Because this request is coming from `localhost:9080` and being made to
-`localhost:9084` it's considered to be cross-origin and must follow the Cross-Origin
-Resource Sharing (CORS) specification in order to not be blocked by the browser. This is
-done by setting the `withCredentials` configuration element to true in the
-parameters of the [hotspot=eventSource file=0]`EventSource` interface. CORS has
-already been enabled for you in the `bff` service. You can learn more about CORS
-by checking out the https://openliberty.io/guides/cors.html[CORS guide].
+Because this request comes from `localhost:9080` and is made to
+`localhost:9084`, it must follow the Cross-Origin Resource Sharing (CORS)
+specification to avoid being blocked by the browser. To enable CORS for the
+client, set the `withCredentials` configuration element to true in the
+parameters of the [hotspot=eventSource file=0]`EventSource` interface. CORS is
+already enabled for you in the `bff` service. To learn more about CORS, check out
+the https://openliberty.io/guides/cors.html[CORS guide].
 
 
 === Consuming the SSE
@@ -356,8 +355,7 @@ image::system_table.png[System table, align="center"]
 
 The table contains three rows, one for each of the running `system`
 containers. If you can see the loads updating, you know that your `bff` service
-is successfully receiving messages and broadcasting them as SSE to the client in the `frontend` service
-for display.
+is successfully receiving messages and broadcasting them as SSE to the client in the `frontend` service.
 
 // =================================================================================================
 // Tearing down the environment

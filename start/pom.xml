@@ -12,6 +12,7 @@
     <modules>
         <module>models</module>
         <module>system</module>
+        <module>bff</module>
         <module>frontend</module>
     </modules>
 </project>

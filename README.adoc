@@ -12,22 +12,22 @@
 :page-releasedate: 2020-04-13
 :page-guide-category: microprofile
 :page-essential: false
-:page-description: Learn how to push Server-Sent Events from a reactive messaging application to a front-end application
+:page-description: Learn how to push Server-Sent Events from a reactive messaging application to a front-end client
 :guide-author: Open Liberty
 :page-tags: ['MicroProfile', 'Jakarta EE', 'Microservices']
 :page-related-guides: ['microprofile-reactive-messaging', 'microprofile-reactive-messaging-acknowledgement', 'reactive-service-testing', 'containerize']
 :page-permalink: /guides/{projectid}
 :imagesdir: /img/guide/{projectid}
-:page-seo-title: Streaming messages from a MicroProfile Reactive Messaging microservice using Server-Sent Events (SSE)
-:page-seo-description: A getting started tutorial with examples on how to stream messages as Server-Sent Events (SSE) from a MicroProfile Reactive Messaging Java application to a front-end client.
+:page-seo-title: Streaming updates from a MicroProfile Reactive Messaging microservice using Server-Sent Events (SSE)
+:page-seo-description: A getting started tutorial with examples on how to stream updates as Server-Sent Events (SSE) from a MicroProfile Reactive Messaging Java application to a front-end client.
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/dev
 :source-highlighter: prettify
-= Streaming messages to a client using Server-Sent Events
+= Streaming updates to a client using Server-Sent Events
 
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to stream messages from a MicroProfile Reactive Messaging service to a
+Learn how to stream updates from a MicroProfile Reactive Messaging service to a
 front-end client by using Server-Sent Events (SSE).
 
 // =================================================================================================
@@ -57,23 +57,24 @@ For example, an application that provides real-time stock quotes might use SSE t
 updates from the server to the browser as soon as the server receives them. Such an application wouldn't need Web Sockets because the data travels in only one direction, and polling the server by using HTTP requests wouldn't provide real-time
 updates.
 
-This guide consists of a `frontend` application and three instances of the `system`
-service. The `system` services periodically publish messages containing their
-hostname and current system load. The `frontend` application consists of a front-end
-JavaScript client and a `bff` (backend for frontend) service. The `bff` service
-receives the messages from the `system` services and pushes the contents as events
-to the front-end client that consumes them and displays a table that contains
-each system's hostname and its periodically updating load. The following
-diagram depicts the application that is used in this guide:
+The application that you will build in this guide consists of a `frontend`
+service, a `bff` (backend for frontend) service, and three instances of a
+`system` service. The `system` services periodically publish messages that
+contain their hostname and current system load. The `bff` service receives the
+messages from the `system` services and pushes the contents as SSE to a JavaScript
+client in the `frontend` service. This client uses the events to update a table
+in the UI that displays each system's hostname and its periodically updating
+load. The following diagram depicts the application that is used in this guide:
 
 image::SSE_Diagram.png[SSE Diagram, align="center"]
 
-In this guide, you will set up the `bff` service by creating an endpoint for
-clients to use to subscribe to events. You will also enable the service to read from the
-reactive messaging channel and push the contents to subscribers via SSE. After
-that, you will configure the Kafka connectors to allow the `bff` service to receive
-messages from the `system` services. Finally, you will configure the front-end
-client to subscribe to these events, consume them, and display them in the UI.
+In this guide, you will set up the `bff` service by creating an endpoint that
+clients can use to subscribe to events. You will also enable the service to read
+from the reactive messaging channel and push the contents to subscribers via
+SSE. After that, you will configure the Kafka connectors to allow the `bff`
+service to receive messages from the `system` services. Finally, you will
+configure the client in the `frontend` service to subscribe to these events,
+consume them, and display them in the UI.
 
 To learn more about the reactive Java services that are used in this guide, check out the https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating
 reactive Java microservices^] guide.
@@ -85,7 +86,7 @@ reactive Java microservices^] guide.
 
 == Additional prerequisites
 
-You will build and run the services and the front-end application in Docker containers. You can learn more about containerizing services with Docker in the https://openliberty.io/guides/containerize.html[Containerizing microservices^] guide.
+You will build and run the services in Docker containers. You can learn more about containerizing services with Docker in the https://openliberty.io/guides/containerize.html[Containerizing microservices^] guide.
 
 Install Docker and start your Docker environment by following https://docs.docker.com/engine/installation[the instructions from Docker^].
 
@@ -107,21 +108,22 @@ include::{common-includes}/gitclone.adoc[]
 BFFResource.java
 [source, java, linenums, role='code_column hide_tags=copyright']
 ----
-include::finish/frontend/src/main/java/io/openliberty/guides/bff/BFFResource.java[]
+include::finish/bff/src/main/java/io/openliberty/guides/bff/BFFResource.java[]
 ----
 
 // File 1
 microprofile-config.properties
 [source, text, linenums, role='code_column hide_tags=copyright']
 ----
-include::finish/frontend/src/main/resources/META-INF/microprofile-config.properties[]
+include::finish/bff/src/main/resources/META-INF/microprofile-config.properties[]
 ----
 
 In this section, you will create a REST API for SSE in the `bff` service. When a
 client makes a request to this endpoint, the initial connection between the
 client and server is established and the client is subscribed to receive events
-pushed from the server. Later in this guide, you will have the front-end client use this
-endpoint to subscribe to the events pushed from the `bff` service.
+that are pushed from the server. Later in this guide, the client in the `frontend`
+service uses this endpoint to subscribe to the events that are pushed from the
+`bff` service.
 
 Additionally, you will enable the `bff` service to read messages from the
 incoming stream and push the contents as events to subscribers via SSE.
@@ -131,7 +133,7 @@ Navigate to the `start` directory to begin.
 [role="code_command hotspot file=0", subs="quotes"]
 ----
 #Create the BFFResource class.#
-`frontend/src/main/java/io/openliberty/guides/bff/BFFResource.java`
+`bff/src/main/java/io/openliberty/guides/bff/BFFResource.java`
 ----
 
 === Creating the SSE API endpoint
@@ -181,15 +183,15 @@ client to send the event to. If the `broadcaster` value is specified, the
 `OutboundSseEvent` interface is created by using the [hotspot=newEventBuilder
 file=0]`Sse.newEventBuilder()` method, where the [hotspot=name file=0]`name` of the
 event, the [hotspot=data file=0]`data` it contains, and the
-[hotspot=mediaType file=0]`media type` are set. The `OutboundSseEvent` interface is then
+[hotspot=mediaType file=0]`mediaType` are set. The `OutboundSseEvent` interface is then
 broadcasted, or sent to all registered sinks, by invoking the
 [hotspot=broadcastEvent file=0]`SseBroadcaster.broadcast()` method.
 
 
-You have now set up an endpoint in the `bff` service that the front-end client
-will use to subscribe to events. You have also enabled the service to read from
-the reactive messaging channel and broadcast the information as
-events to subscribers via SSE.
+You just set up an endpoint in the `bff` service that the client in the
+`frontend` service can use to subscribe to events. You also enabled the
+service to read from the reactive messaging channel and broadcast the
+information as events to subscribers via SSE.
 
 // =================================================================================================
 // Configuring the Kafka connector for the bff service
@@ -201,7 +203,7 @@ events to subscribers via SSE.
 microprofile-config.properties
 [source, text, linenums, role='code_column hide_tags=copyright']
 ----
-include::finish/frontend/src/main/resources/META-INF/microprofile-config.properties[]
+include::finish/bff/src/main/resources/META-INF/microprofile-config.properties[]
 ----
 
 A complete `system` service is provided for you in the `start/system`
@@ -215,7 +217,7 @@ Configure the Kafka connector in the `bff` service to receive the messages from 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
 #Create the microprofile-config.properties file.#
-`frontend/src/main/resources/META-INF/microprofile-config.properties`
+`bff/src/main/resources/META-INF/microprofile-config.properties`
 ----
 
 The `bff` service uses an incoming connector to receive messages through
@@ -231,10 +233,10 @@ Kafka Consumer Configs^] documentation.
 
 
 // =================================================================================================
-// Configuring the front-end client to subscribe to and consume events
+// Configuring the frontend service to subscribe to and consume events
 // =================================================================================================
 
-== Configuring the front-end client to subscribe to and consume events
+== Configuring the frontend service to subscribe to and consume events
 
 // File 0
 index.js
@@ -243,10 +245,10 @@ index.js
 include::finish/frontend/src/main/webapp/js/index.js[]
 ----
 
-In this section, you will configure the front-end client to subscribe to events
+In this section, you will configure the client in the `frontend` serivce to subscribe to events
 and display their contents in a table in the UI.
 
-The front-end UI is a table where each row contains the hostname and load of one of the three system services.
+The front-end UI is a table where each row contains the hostname and load of one of the three `system` services.
 The HTML and styling for the UI is provided for you but you must populate the table with
 information that is received from the Server-Sent Events.
 
@@ -259,11 +261,20 @@ information that is received from the Server-Sent Events.
 === Subscribing to SSE
 
 The [hotspot=initSSE file=0]`initSSE()` method is called when the page first
-loads. This subscribes the client to the SSE by creating a new instance of
-[hotspot=eventSource file=0]`EventSource` interface and specifying the `/bff/sse`
-endpoint in the parameter. The [hotspot=eventSource file=0]`EventSource` interface
-makes a `GET` request to this endpoint with a request header of `Accept:
-text/event-stream` to connect to the server.
+loads. This method subscribes the client to the SSE by creating a new instance of the
+[hotspot=eventSource file=0]`EventSource` interface and specifying the
+`http://localhost:9084/bff/sse` URL in the parameters. The [hotspot=eventSource
+file=0]`EventSource` interface makes a `GET` request to this endpoint with a
+request header of `Accept: text/event-stream` to connect to the server. 
+
+Because this request comes from `localhost:9080` and is made to
+`localhost:9084`, it must follow the Cross-Origin Resource Sharing (CORS)
+specification to avoid being blocked by the browser. To enable CORS for the
+client, set the `withCredentials` configuration element to true in the
+parameters of the [hotspot=eventSource file=0]`EventSource` interface. CORS is
+already enabled for you in the `bff` service. To learn more about CORS, check out
+the https://openliberty.io/guides/cors.html[CORS guide].
+
 
 === Consuming the SSE
 
@@ -300,11 +311,12 @@ Open Liberty Docker image:
 docker pull openliberty/open-liberty:kernel-java8-openj9-ubi
 ```
 
-Run the following commands to containerize the `frontend` application and `system` service:
+Run the following commands to containerize the `frontend`, `bff`, and `system` services:
 
 [role='command']
 ```
 docker build -t frontend:1.0-SNAPSHOT frontend/.
+docker build -t bff:1.0-SNAPSHOT bff/.
 docker build -t system:1.0-SNAPSHOT system/.
 ```
 
@@ -328,7 +340,7 @@ include::{common-includes}/os-tabs.adoc[]
 ```
 --
 This script creates a network for the containers to communicate with each other. It
-also creates containers for Kafka, Zookeeper, the `frontend` application, and three
+also creates containers for Kafka, Zookeeper, the `frontend` service, the `bff` service , and three
 instances of the `system` service.
 
 Once your application is up and running, open your browser and check out your
@@ -341,10 +353,9 @@ When you visit the URL, look for a table similar to the following example:
 
 image::system_table.png[System table, align="center"]
 
-The table contains three rows, one for each of the running system
+The table contains three rows, one for each of the running `system`
 containers. If you can see the loads updating, you know that your `bff` service
-is successfully receiving messages and broadcasting them as SSE to the front-end client
-for display.
+is successfully receiving messages and broadcasting them as SSE to the client in the `frontend` service.
 
 // =================================================================================================
 // Tearing down the environment

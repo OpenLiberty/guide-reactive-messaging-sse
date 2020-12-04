@@ -46,7 +46,6 @@ public class SystemServiceIT {
 
         for (ConsumerRecord<String, SystemLoad> record : records) {
             SystemLoad sl = record.value();
-            System.out.println(sl);
             assertNotNull(sl.hostname);
             assertNotNull(sl.loadAverage);
         }

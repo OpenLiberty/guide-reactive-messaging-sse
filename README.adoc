@@ -69,7 +69,7 @@ load. The following diagram depicts the application that is used in this guide:
 image::SSE_Diagram.png[SSE Diagram, align="center"]
 
 In this guide, you will set up the `bff` service by creating an endpoint that
-clients can use to subscribe to events You will also enable the service to read
+clients can use to subscribe to events. You will also enable the service to read
 from the reactive messaging channel and push the contents to subscribers via
 SSE. After that, you will configure the Kafka connectors to allow the `bff`
 service to receive messages from the `system` services. Finally, you will

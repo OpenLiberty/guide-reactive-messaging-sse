@@ -9,17 +9,17 @@
 :projectid: reactive-messaging-sse
 :page-layout: guide-multipane
 :page-duration: 30 minutes
-:page-releasedate: 2020-04-13
+:page-releasedate: 2020-12-08
 :page-guide-category: microprofile
 :page-essential: false
 :page-description: Learn how to push Server-Sent Events from a reactive messaging application to a front-end client
 :guide-author: Open Liberty
-:page-tags: ['MicroProfile', 'Jakarta EE', 'Microservices']
+:page-tags: ['MicroProfile', 'Jakarta EE']
 :page-related-guides: ['microprofile-reactive-messaging', 'microprofile-reactive-messaging-acknowledgement', 'reactive-service-testing', 'containerize']
 :page-permalink: /guides/{projectid}
 :imagesdir: /img/guide/{projectid}
 :page-seo-title: Streaming updates from a MicroProfile Reactive Messaging microservice using Server-Sent Events (SSE)
-:page-seo-description: A getting started tutorial with examples on how to stream updates as Server-Sent Events (SSE) from a MicroProfile Reactive Messaging Java application to a front-end client.
+:page-seo-description: A getting started tutorial with examples on how to stream updates as Server-Sent Events (SSE) to a front-end client from a cloud-native Java application using Jakarta RESTful Web Services (JAX-RS; formerly Java API for RESTful Web Services) and MicroProfile Reactive Messaging API.
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/dev
 :source-highlighter: prettify
 = Streaming updates to a client using Server-Sent Events

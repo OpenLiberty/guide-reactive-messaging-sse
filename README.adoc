@@ -9,13 +9,13 @@
 :projectid: reactive-messaging-sse
 :page-layout: guide-multipane
 :page-duration: 30 minutes
-:page-releasedate: 2020-04-13
+:page-releasedate: 2020-12-08
 :page-guide-category: microprofile
 :page-essential: false
 :page-description: Learn how to push Server-Sent Events from a reactive messaging application to a front-end client
 :guide-author: Open Liberty
 :page-tags: ['MicroProfile', 'Jakarta EE', 'Microservices']
-:page-related-guides: ['microprofile-reactive-messaging', 'microprofile-reactive-messaging-acknowledgement', 'reactive-service-testing', 'containerize']
+:page-related-guides: ['microprofile-reactive-messaging', 'microprofile-reactive-messaging-acknowledgement', 'microprofile-reactive-messaging-rest-integration', 'reactive-service-testing', 'containerize']
 :page-permalink: /guides/{projectid}
 :imagesdir: /img/guide/{projectid}
 :page-seo-title: Streaming updates from a MicroProfile Reactive Messaging microservice using Server-Sent Events (SSE)

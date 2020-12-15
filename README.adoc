@@ -245,7 +245,7 @@ index.js
 include::finish/frontend/src/main/webapp/js/index.js[]
 ----
 
-In this section, you will configure the client in the `frontend` serivce to subscribe to events
+In this section, you will configure the client in the `frontend` service to subscribe to events
 and display their contents in a table in the UI.
 
 The front-end UI is a table where each row contains the hostname and load of one of the three `system` services.

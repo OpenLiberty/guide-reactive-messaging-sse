@@ -1,4 +1,4 @@
-//  Copyright (c) 2020 IBM Corporation and others.
+//  Copyright (c) 2020, 2021 IBM Corporation and others.
 // Licensed under Creative Commons Attribution-NoDerivatives
 // 4.0 International (CC BY-ND 4.0)
 //   https://creativecommons.org/licenses/by-nd/4.0/
@@ -20,7 +20,7 @@
 :imagesdir: /img/guide/{projectid}
 :page-seo-title: Streaming updates from a MicroProfile Reactive Messaging microservice using Server-Sent Events (SSE)
 :page-seo-description: A getting started tutorial with examples on how to stream updates as Server-Sent Events (SSE) to a front-end client from a cloud-native Java application using Jakarta RESTful Web Services (JAX-RS; formerly Java API for RESTful Web Services) and MicroProfile Reactive Messaging API.
-:common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/dev
+:common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
 :source-highlighter: prettify
 = Streaming updates to a client using Server-Sent Events
 

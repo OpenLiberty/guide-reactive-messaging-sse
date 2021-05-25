@@ -1,12 +1,11 @@
 #!/bin/bash
-while getopts t:d:b:u: flag;
-do
+while getopts t:d:b:u: flag; do
     case "${flag}" in
-        t) DATE="${OPTARG}";;
-        d) DRIVER="${OPTARG}";;
-        b) BUILD="${OPTARG}";;
-        u) DOCKER_USERNAME="${OPTARG}";;
-        *) echo "Invalid option";;
+    t) DATE="${OPTARG}" ;;
+    d) DRIVER="${OPTARG}" ;;
+    b) BUILD="${OPTARG}" ;;
+    u) DOCKER_USERNAME="${OPTARG}" ;;
+    *) echo "Invalid option" ;;
     esac
 done
 
@@ -18,6 +17,6 @@ cat system/pom.xml frontend/pom.xml
 sed -i "s;FROM openliberty/open-liberty:full-java8-openj9-ubi;FROM $DOCKER_USERNAME/olguides:$BUILD;g" system/Dockerfile frontend/Dockerfile
 cat system/Dockerfile frontend/Dockerfile
 
-docker pull $DOCKER_USERNAME"/olguides:"$BUILD
+docker pull "$DOCKER_USERNAME/olguides:$BUILD"
 
 ../scripts/testApp.sh

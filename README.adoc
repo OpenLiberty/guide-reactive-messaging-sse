@@ -343,12 +343,26 @@ This script creates a network for the containers to communicate with each other.
 also creates containers for Kafka, Zookeeper, the `frontend` service, the `bff` service , and three
 instances of the `system` service.
 
+// Static guide instruction
+ifndef::cloud-hosted[]
 Once your application is up and running, open your browser and check out your
 service by visiting http://localhost:9080[http://localhost:9080]. The
 application might take some time to get ready. The latest version of most
 modern web browsers supports Server-Sent Events. The exception is
 Internet Explorer, which does not support SSE.
+endif::[]
 
+// Cloud hosted guide instruction
+ifdef::cloud-hosted[]
+Once your application is up and running, use the following `curl` 
+to check out your service.
+```
+curl http://localhost:9080
+``` 
+The application might take some time to get ready. The latest version of most
+modern web browsers supports Server-Sent Events. The exception is
+Internet Explorer, which does not support SSE.
+endif::[]
 When you visit the URL, look for a table similar to the following example:
 
 image::system_table.png[System table, align="center"]

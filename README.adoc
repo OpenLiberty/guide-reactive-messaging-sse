@@ -263,7 +263,7 @@ information that is received from the Server-Sent Events.
 The [hotspot=initSSE file=0]`initSSE()` method is called when the page first
 loads. This method subscribes the client to the SSE by creating a new instance of the
 [hotspot=eventSource file=0]`EventSource` interface and specifying the
-`http://localhost:9084/bff/sse` URL in the parameters. The [hotspot=eventSource
+`\http://localhost:9084/bff/sse` URL in the parameters. The [hotspot=eventSource
 file=0]`EventSource` interface makes a `GET` request to this endpoint with a
 request header of `Accept: text/event-stream` to connect to the server. 
 

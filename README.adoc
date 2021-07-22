@@ -324,19 +324,20 @@ Next, use the following `startContainers.sh` script to start the application in 
 
 include::{common-includes}/os-tabs.adoc[]
 
-[.tab_content.mac_section.linux_section]
---
-[role='command']
-```
-./scripts/startContainers.sh
-```
---
 
 [.tab_content.windows_section]
 --
 [role='command']
 ```
 .\scripts\startContainers.bat
+```
+--
+
+[.tab_content.mac_section.linux_section]
+--
+[role='command']
+```
+./scripts/startContainers.sh
 ```
 --
 This script creates a network for the containers to communicate with each other. It

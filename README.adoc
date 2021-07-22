@@ -15,7 +15,7 @@
 :page-description: Learn how to push Server-Sent Events from a reactive messaging application to a front-end client
 :guide-author: Open Liberty
 :page-tags: ['MicroProfile', 'Jakarta EE']
-:page-related-guides: ['microprofile-reactive-messaging', 'microprofile-reactive-messaging-acknowledgement', 'microprofile-reactive-messaging-rest-integration', 'reactive-service-testing', 'containerize']
+:page-related-guides: ['microprofile-reactive-messaging', 'microprofile-reactive-messaging-acknowledgment', 'microprofile-reactive-messaging-rest-integration', 'reactive-service-testing', 'containerize']
 :page-permalink: /guides/{projectid}
 :imagesdir: /img/guide/{projectid}
 :page-seo-title: Streaming updates from a MicroProfile Reactive Messaging microservice using Server-Sent Events (SSE)
@@ -76,8 +76,7 @@ service to receive messages from the `system` services. Finally, you will
 configure the client in the `frontend` service to subscribe to these events,
 consume them, and display them in the UI.
 
-To learn more about the reactive Java services that are used in this guide, check out the https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating
-reactive Java microservices^] guide.
+To learn more about the reactive Java services that are used in this guide, check out the https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating reactive Java microservices^] guide.
 
 
 // =================================================================================================
@@ -228,8 +227,7 @@ file=0]`system.load` topic in the Kafka message broker. The
 [hotspot=valueDeserializer file=0]`value.deserializer` properties define how to
 deserialize the messages. The [hotspot=groupId file=0]`group.id` property
 defines a unique name for the consumer group. All of these properties are
-required by the https://kafka.apache.org/documentation/#consumerconfigs[Apache
-Kafka Consumer Configs^] documentation.
+required by the https://kafka.apache.org/documentation/#consumerconfigs[Apache Kafka Consumer Configs^] documentation.
 
 
 // =================================================================================================

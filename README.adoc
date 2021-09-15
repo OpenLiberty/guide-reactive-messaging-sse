@@ -103,13 +103,6 @@ include::{common-includes}/gitclone.adoc[]
 
 == Setting up SSE in the bff service
 
-// File 0
-BFFResource.java
-[source, java, linenums, role='code_column hide_tags=copyright']
-----
-include::finish/bff/src/main/java/io/openliberty/guides/bff/BFFResource.java[]
-----
-
 // File 1
 microprofile-config.properties
 [source, text, linenums, role='code_column hide_tags=copyright']
@@ -131,8 +124,14 @@ Navigate to the `start` directory to begin.
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
-#Create the BFFResource class.#
+#Create the `BFFResource` class.#
 `bff/src/main/java/io/openliberty/guides/bff/BFFResource.java`
+----
+// File 0
+BFFResource.java
+[source, java, linenums, role='code_column hide_tags=copyright']
+----
+include::finish/bff/src/main/java/io/openliberty/guides/bff/BFFResource.java[]
 ----
 
 === Creating the SSE API endpoint
@@ -198,13 +197,6 @@ information as events to subscribers via SSE.
 
 == Configuring the Kafka connector for the bff service
 
-// File 0
-microprofile-config.properties
-[source, text, linenums, role='code_column hide_tags=copyright']
-----
-include::finish/bff/src/main/resources/META-INF/microprofile-config.properties[]
-----
-
 A complete `system` service is provided for you in the `start/system`
 directory. The `system` service is the producer of the messages that are
 published to the Kafka messaging system. The periodically
@@ -215,8 +207,14 @@ Configure the Kafka connector in the `bff` service to receive the messages from 
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
-#Create the microprofile-config.properties file.#
+#Create the `microprofile-config.properties` file.#
 `bff/src/main/resources/META-INF/microprofile-config.properties`
+----
+// File 0
+microprofile-config.properties
+[source, text, linenums, role='code_column hide_tags=copyright']
+----
+include::finish/bff/src/main/resources/META-INF/microprofile-config.properties[]
 ----
 
 The `bff` service uses an incoming connector to receive messages through
@@ -236,13 +234,6 @@ required by the https://kafka.apache.org/documentation/#consumerconfigs[Apache K
 
 == Configuring the frontend service to subscribe to and consume events
 
-// File 0
-index.js
-[source, javascript, linenums, role='code_column hide_tags=copyright']
-----
-include::finish/frontend/src/main/webapp/js/index.js[]
-----
-
 In this section, you will configure the client in the `frontend` service to subscribe to events
 and display their contents in a table in the UI.
 
@@ -252,8 +243,14 @@ information that is received from the Server-Sent Events.
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
-#Create the index.js file.#
+#Create the `index.js` file.#
 `frontend/src/main/webapp/js/index.js`
+----
+// File 0
+index.js
+[source, javascript, linenums, role='code_column hide_tags=copyright']
+----
+include::finish/frontend/src/main/webapp/js/index.js[]
 ----
 
 === Subscribing to SSE

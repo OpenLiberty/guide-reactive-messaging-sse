@@ -36,7 +36,7 @@ front-end client by using Server-Sent Events (SSE).
 
 == What you'll learn
 
-You will learn how to stream messages from a MicroProfile Reactive Messaging service to afront-end client by using Server-Sent Events (SSE).
+You will learn how to stream messages from a MicroProfile Reactive Messaging service to a front-end client by using Server-Sent Events (SSE).
 
 MicroProfile Reactive Messaging provides an easy way for Java services to send
 requests to other Java services, and asynchronously receive and process the

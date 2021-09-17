@@ -265,7 +265,7 @@ specification to avoid being blocked by the browser. To enable CORS for the
 client, set the `withCredentials` configuration element to true in the
 parameters of the [hotspot=eventSource file=0]`EventSource` interface. CORS is
 already enabled for you in the `bff` service. To learn more about CORS, check out
-the https://openliberty.io/guides/cors.html[CORS guide].
+the https://openliberty.io/guides/cors.html[CORS guide^].
 
 
 === Consuming the SSE

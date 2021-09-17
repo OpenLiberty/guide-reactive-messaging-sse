@@ -137,8 +137,7 @@ Navigate to the `start` directory to begin.
 
 The [hotspot=subscribeToSystems file=0]`subscribeToSystem()` method allows
 clients to subscribe to events via an HTTP `GET` request to the `/bff/sse/`
-endpoint. The [hotspot=sseMimeType
-file=0]`@Produces(MediaType.SERVER_SENT_EVENTS)` annotation sets the `Content-Type` in the
+endpoint. The [hotspot=sseMimeType file=0]`@Produces(MediaType.SERVER_SENT_EVENTS)` annotation sets the `Content-Type` in the
 response header to `text/event-stream`. This content type indicates that client requests that are made
 to this endpoint are to receive Server-Sent Events. Additionally, the method
 parameters take in an instance of the [hotspot=sseEventSinkParam file=0]`SseEventSink` class and
@@ -146,8 +145,8 @@ the [hotspot=sseParam file=0]`Sse` class, both of which are injected using the `
 annotation. First, the method checks if the [hotspot=sse file=0]`sse` and
 [hotspot=broadcaster file=0]`broadcaster` instance variables are assigned.
 If these variables aren't assigned, the
-[hotspot=sse file=0]`sse` variable is obtained from the [hotspot=sseParam
-file=0]`@Context` injection and the [hotspot=broadcaster file=0]`broadcaster` variable
+[hotspot=sse file=0]`sse` variable is obtained from the [hotspot=sseParam file=0]`@Context` 
+injection and the [hotspot=broadcaster file=0]`broadcaster` variable
 is obtained by using the [hotspot=newBroadcaster file=0]`Sse.newBroadcaster()`
 method. Then, the [hotspot=registerSink file=0]`register()` method is called to
 register the [hotspot=sseEventSinkParam file=0]`SseEventSink` instance to the
@@ -166,8 +165,8 @@ receives the message that contains the hostname and the average system load. The
 the method retrieves the message by connecting to the `systemLoad` channel in
 Kafka, which you configure in the next section.
 
-Each time a message is received, the [hotspot=getSystemLoadMessage
-file=0]`getSystemLoadMessage()` method is called, and the hostname and system
+Each time a message is received, the [hotspot=getSystemLoadMessage file=0]`getSystemLoadMessage()` 
+method is called, and the hostname and system
 load contained in that message are broadcasted in an event to all subscribers.
 
 === Broadcasting events
@@ -219,9 +218,8 @@ Configure the Kafka connector in the `bff` service to receive the messages from 
 
 The `bff` service uses an incoming connector to receive messages through
 the [hotspot=systemLoadChannel file=0]`systemLoad` channel. The messages are
-then published by the `system` service to the [hotspot=systemLoadTopic
-file=0]`system.load` topic in the Kafka message broker. The
-[hotspot=keyDeserializer file=0]`key.deserializer` and
+then published by the `system` service to the [hotspot=systemLoadTopic file=0]`system.load` 
+topic in the Kafka message broker. The [hotspot=keyDeserializer file=0]`key.deserializer` and
 [hotspot=valueDeserializer file=0]`value.deserializer` properties define how to
 deserialize the messages. The [hotspot=groupId file=0]`group.id` property
 defines a unique name for the consumer group. All of these properties are
@@ -259,8 +257,8 @@ information that is received from the Server-Sent Events.
 The [hotspot=initSSE file=0]`initSSE()` method is called when the page first
 loads. This method subscribes the client to the SSE by creating a new instance of the
 [hotspot=eventSource file=0]`EventSource` interface and specifying the
-`\http://localhost:9084/bff/sse` URL in the parameters. The [hotspot=eventSource
-file=0]`EventSource` interface makes a `GET` request to this endpoint with a
+`\http://localhost:9084/bff/sse` URL in the parameters. The [hotspot=eventSource file=0]`EventSource` 
+interface makes a `GET` request to this endpoint with a
 request header of `Accept: text/event-stream` to connect to the server. 
 
 Because this request comes from `localhost:9080` and is made to

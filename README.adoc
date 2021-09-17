@@ -27,8 +27,7 @@
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to stream updates from a MicroProfile Reactive Messaging service to a
-front-end client by using Server-Sent Events (SSE).
+Learn how to stream updates from a MicroProfile Reactive Messaging service to a front-end client by using Server-Sent Events (SSE).
 
 // =================================================================================================
 //  What you'll learn

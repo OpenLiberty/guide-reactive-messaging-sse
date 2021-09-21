@@ -364,8 +364,8 @@ curl http://localhost:9084/health
 ```
 {: codeblock}
 
-Once your application is up and running, use the following command to get the url and 
-visit it by your browser and check out your service.
+Once your application is up and running, use the following command to get the url.
+Open your browser and check out your service by visiting the url. 
 ```
 echo http://${USERNAME}-9080.$(echo $TOOL_DOMAIN | sed 's/\.labs\./.proxy./g')
 ```

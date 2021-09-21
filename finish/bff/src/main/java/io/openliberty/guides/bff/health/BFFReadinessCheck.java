@@ -33,15 +33,15 @@ import org.eclipse.microprofile.health.Readiness;
 public class BFFReadinessCheck implements HealthCheck {
 
     private static Logger logger = Logger.getLogger(BFFReadinessCheck.class.getName());
-    
+
     @Inject
     @ConfigProperty(name = "mp.messaging.connector.liberty-kafka.bootstrap.servers")
     String kafkaServer;
-    
+
     @Inject
     @ConfigProperty(name = "mp.messaging.incoming.systemLoad.group.id")
     String groupId;
-    
+
     @Override
     public HealthCheckResponse call() {
         boolean up = isReady();
@@ -52,14 +52,14 @@ public class BFFReadinessCheck implements HealthCheck {
         AdminClient adminClient = createAdminClient();
         return checkIfBarConsumerGroupRegistered(adminClient);
     }
-    
+
     private AdminClient createAdminClient() {
         Properties connectionProperties = new Properties();
         connectionProperties.put("bootstrap.servers", kafkaServer);
         AdminClient adminClient = AdminClient.create(connectionProperties);
         return adminClient;
     }
-    
+
     private boolean checkIfBarConsumerGroupRegistered(AdminClient adminClient) {
         ListConsumerGroupsResult groupsResult = adminClient.listConsumerGroups();
         KafkaFuture<Collection<ConsumerGroupListing>> consumerGroupsFuture = groupsResult.valid();

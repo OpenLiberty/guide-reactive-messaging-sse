@@ -17,14 +17,14 @@ import org.eclipse.microprofile.health.HealthCheckResponse;
 
 public class BFFLivenessCheck implements HealthCheck  {
 
-    private boolean isAlive() {
-        return true;
-    }
+  private boolean isAlive() {
+    return true;
+  }
 
-    @Override
-    public HealthCheckResponse call() {
-        boolean up = isAlive();
-        return HealthCheckResponse.named(this.getClass().getSimpleName()).state(up).build();
-    }
+  @Override
+  public HealthCheckResponse call() {
+    boolean up = isAlive();
+    return HealthCheckResponse.named(this.getClass().getSimpleName()).state(up).build();
+  }
 
 }

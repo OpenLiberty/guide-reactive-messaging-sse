@@ -62,7 +62,7 @@ public class BFFReadinessCheck implements HealthCheck {
 
   private boolean checkIfBarConsumerGroupRegistered(final AdminClient adminClient) {
     ListConsumerGroupsResult groupsResult = adminClient.listConsumerGroups();
-    KafkaFuture<Collection<ConsumerGroupListing>> consumerGroupsFuture = 
+    KafkaFuture<Collection<ConsumerGroupListing>> consumerGroupsFuture =
       groupsResult.valid();
     try {
       Collection<ConsumerGroupListing> consumerGroups = consumerGroupsFuture.get();

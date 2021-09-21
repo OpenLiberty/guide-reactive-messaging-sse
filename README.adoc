@@ -303,6 +303,16 @@ Open Liberty Docker image:
 docker pull openliberty/open-liberty:full-java11-openj9-ubi
 ```
 
+// Cloud hosted guide instruction
+ifdef::cloud-hosted[]
+In this IBM cloud environment, you need to run the following command to update the **index.js** file:
+[role='command']
+```
+BFF_URL=http://${USERNAME}-9084.$(echo $TOOL_DOMAIN | sed 's/\.labs\./.proxy./g')
+sed -i 's=localhost:9084=$BFF_URL=g' frontend/src/main/webapp/js/index.js
+```
+endif::[]
+
 Run the following commands to containerize the `frontend`, `bff`, and `system` services:
 
 [role='command']
@@ -338,24 +348,32 @@ instances of the `system` service.
 
 // Static guide instruction
 ifndef::cloud-hosted[]
+The application might take some time to get ready.
+Visit the http://localhost:9084/health[^] URL to confirm that the `bff` microservice is up and running.
+
 Once your application is up and running, open your browser and check out your
-service by visiting http://localhost:9080[http://localhost:9080]. The
-application might take some time to get ready. The latest version of most
-modern web browsers supports Server-Sent Events. The exception is
-Internet Explorer, which does not support SSE.
+service by visiting http://localhost:9080[http://localhost:9080]. 
 endif::[]
 
 // Cloud hosted guide instruction
 ifdef::cloud-hosted[]
-Once your application is up and running, use the following `curl` 
-to check out your service.
+The application might take some time to get ready.
+Run the following command to confirm that the **bff** microservice is up and running:
+[role='command']
 ```
-curl http://localhost:9080
+curl http://localhost:9084/health
 ``` 
-The application might take some time to get ready. The latest version of most
-modern web browsers supports Server-Sent Events. The exception is
-Internet Explorer, which does not support SSE.
+
+Once your application is up and running, use the following command to get the url and 
+visit it by your browser and check out your service.
+[role='command']
+```
+echo http://${USERNAME}-9080.$(echo $TOOL_DOMAIN | sed 's/\.labs\./.proxy./g')
+``` 
 endif::[]
+
+The latest version of most modern web browsers supports Server-Sent Events.
+The exception is Internet Explorer, which does not support SSE. 
 When you visit the URL, look for a table similar to the following example:
 
 image::system_table.png[System table, align="center"]

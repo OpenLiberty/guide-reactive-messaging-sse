@@ -361,7 +361,7 @@ ifdef::cloud-hosted[]
 The application might take some time to get ready.
 Run the following command to confirm that the **bff** microservice is up and running:
 ```
-curl http://localhost:9084/health
+curl http://localhost:9084/health | jq
 ```
 {: codeblock}
 

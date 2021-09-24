@@ -15,7 +15,7 @@
 :page-description: Learn how to push Server-Sent Events from a reactive messaging application to a front-end client
 :guide-author: Open Liberty
 :page-tags: ['MicroProfile', 'Jakarta EE']
-:page-related-guides: ['microprofile-reactive-messaging', 'microprofile-reactive-messaging-acknowledgement', 'microprofile-reactive-messaging-rest-integration', 'reactive-service-testing', 'containerize']
+:page-related-guides: ['microprofile-reactive-messaging', 'microprofile-reactive-messaging-acknowledgment', 'microprofile-reactive-messaging-rest-integration', 'reactive-service-testing', 'containerize']
 :page-permalink: /guides/{projectid}
 :imagesdir: /img/guide/{projectid}
 :page-seo-title: Streaming updates from a MicroProfile Reactive Messaging microservice using Server-Sent Events (SSE)
@@ -27,8 +27,7 @@
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to stream updates from a MicroProfile Reactive Messaging service to a
-front-end client by using Server-Sent Events (SSE).
+Learn how to stream updates from a MicroProfile Reactive Messaging service to a front-end client by using Server-Sent Events (SSE).
 
 // =================================================================================================
 //  What you'll learn
@@ -36,8 +35,7 @@ front-end client by using Server-Sent Events (SSE).
 
 == What you'll learn
 
-You will learn how to stream messages from a MicroProfile Reactive Messaging service to a
-front-end client by using Server-Sent Events (SSE).
+You will learn how to stream messages from a MicroProfile Reactive Messaging service to a front-end client by using Server-Sent Events (SSE).
 
 MicroProfile Reactive Messaging provides an easy way for Java services to send
 requests to other Java services, and asynchronously receive and process the
@@ -76,8 +74,7 @@ service to receive messages from the `system` services. Finally, you will
 configure the client in the `frontend` service to subscribe to these events,
 consume them, and display them in the UI.
 
-To learn more about the reactive Java services that are used in this guide, check out the https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating
-reactive Java microservices^] guide.
+To learn more about the reactive Java services that are used in this guide, check out the https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating reactive Java microservices^] guide.
 
 
 // =================================================================================================
@@ -140,8 +137,7 @@ Navigate to the `start` directory to begin.
 
 The [hotspot=subscribeToSystems file=0]`subscribeToSystem()` method allows
 clients to subscribe to events via an HTTP `GET` request to the `/bff/sse/`
-endpoint. The [hotspot=sseMimeType
-file=0]`@Produces(MediaType.SERVER_SENT_EVENTS)` annotation sets the `Content-Type` in the
+endpoint. The [hotspot=sseMimeType file=0]`@Produces(MediaType.SERVER_SENT_EVENTS)` annotation sets the `Content-Type` in the
 response header to `text/event-stream`. This content type indicates that client requests that are made
 to this endpoint are to receive Server-Sent Events. Additionally, the method
 parameters take in an instance of the [hotspot=sseEventSinkParam file=0]`SseEventSink` class and
@@ -149,8 +145,8 @@ the [hotspot=sseParam file=0]`Sse` class, both of which are injected using the `
 annotation. First, the method checks if the [hotspot=sse file=0]`sse` and
 [hotspot=broadcaster file=0]`broadcaster` instance variables are assigned.
 If these variables aren't assigned, the
-[hotspot=sse file=0]`sse` variable is obtained from the [hotspot=sseParam
-file=0]`@Context` injection and the [hotspot=broadcaster file=0]`broadcaster` variable
+[hotspot=sse file=0]`sse` variable is obtained from the [hotspot=sseParam file=0]`@Context` 
+injection and the [hotspot=broadcaster file=0]`broadcaster` variable
 is obtained by using the [hotspot=newBroadcaster file=0]`Sse.newBroadcaster()`
 method. Then, the [hotspot=registerSink file=0]`register()` method is called to
 register the [hotspot=sseEventSinkParam file=0]`SseEventSink` instance to the
@@ -169,20 +165,18 @@ receives the message that contains the hostname and the average system load. The
 the method retrieves the message by connecting to the `systemLoad` channel in
 Kafka, which you configure in the next section.
 
-Each time a message is received, the [hotspot=getSystemLoadMessage
-file=0]`getSystemLoadMessage()` method is called, and the hostname and system
+Each time a message is received, the [hotspot=getSystemLoadMessage file=0]`getSystemLoadMessage()` 
+method is called, and the hostname and system
 load contained in that message are broadcasted in an event to all subscribers.
 
 === Broadcasting events
 
-Broadcasting events is handled in the [hotspot=broadcastData
-file=0]`broadcastData()` method. First, it checks whether the
-[hotspot=broadcaster file=0]`broadcaster` value is [hotspot=notNull file=0]`null`.
-There must be at least one subscriber or there's no
-client to send the event to. If the `broadcaster` value is specified, the
-`OutboundSseEvent` interface is created by using the [hotspot=newEventBuilder
-file=0]`Sse.newEventBuilder()` method, where the [hotspot=name file=0]`name` of the
-event, the [hotspot=data file=0]`data` it contains, and the
+Broadcasting events is handled in the [hotspot=broadcastData file=0]`broadcastData()` method.
+First, it checks whether the [hotspot=broadcaster file=0]`broadcaster` value is [hotspot=notNull file=0]`null`.
+The `broadcaster` value must include at least one subscriber or there's no client to send the event to.
+If the `broadcaster` value is specified, the `OutboundSseEvent` interface is created 
+by using the [hotspot=newEventBuilder file=0]`Sse.newEventBuilder()` method, 
+where the [hotspot=name file=0]`name` of the event, the [hotspot=data file=0]`data` it contains, and the
 [hotspot=mediaType file=0]`mediaType` are set. The `OutboundSseEvent` interface is then
 broadcasted, or sent to all registered sinks, by invoking the
 [hotspot=broadcastEvent file=0]`SseBroadcaster.broadcast()` method.
@@ -222,14 +216,12 @@ Configure the Kafka connector in the `bff` service to receive the messages from 
 
 The `bff` service uses an incoming connector to receive messages through
 the [hotspot=systemLoadChannel file=0]`systemLoad` channel. The messages are
-then published by the `system` service to the [hotspot=systemLoadTopic
-file=0]`system.load` topic in the Kafka message broker. The
-[hotspot=keyDeserializer file=0]`key.deserializer` and
+then published by the `system` service to the [hotspot=systemLoadTopic file=0]`system.load` 
+topic in the Kafka message broker. The [hotspot=keyDeserializer file=0]`key.deserializer` and
 [hotspot=valueDeserializer file=0]`value.deserializer` properties define how to
 deserialize the messages. The [hotspot=groupId file=0]`group.id` property
 defines a unique name for the consumer group. All of these properties are
-required by the https://kafka.apache.org/documentation/#consumerconfigs[Apache
-Kafka Consumer Configs^] documentation.
+required by the https://kafka.apache.org/documentation/#consumerconfigs[Apache Kafka Consumer Configs^] documentation.
 
 
 // =================================================================================================
@@ -263,9 +255,20 @@ information that is received from the Server-Sent Events.
 The [hotspot=initSSE file=0]`initSSE()` method is called when the page first
 loads. This method subscribes the client to the SSE by creating a new instance of the
 [hotspot=eventSource file=0]`EventSource` interface and specifying the
-`http://localhost:9084/bff/sse` URL in the parameters. The [hotspot=eventSource
-file=0]`EventSource` interface makes a `GET` request to this endpoint with a
-request header of `Accept: text/event-stream` to connect to the server. 
+`\http://localhost:9084/bff/sse` URL in the parameters. 
+To connect to the server, the [hotspot=eventSource file=0]`EventSource` interface
+makes a `GET` request to this endpoint with a request header of `Accept: text/event-stream`.
+
+// Cloud hosted guide instruction
+ifdef::cloud-hosted[]
+In this IBM cloud environment, you need to update the **EventSource** URL with the **bff** service domain
+instead of **localhost**. Run the following command:
+```
+BFF_DOMAIN=${USERNAME}-9084.$(echo $TOOL_DOMAIN | sed 's/\.labs\./.proxy./g')
+sed -i 's=localhost:9084='"$BFF_DOMAIN"'=g' frontend/src/main/webapp/js/index.js
+```
+{: codeblock}
+endif::[]
 
 Because this request comes from `localhost:9080` and is made to
 `localhost:9084`, it must follow the Cross-Origin Resource Sharing (CORS)
@@ -273,7 +276,7 @@ specification to avoid being blocked by the browser. To enable CORS for the
 client, set the `withCredentials` configuration element to true in the
 parameters of the [hotspot=eventSource file=0]`EventSource` interface. CORS is
 already enabled for you in the `bff` service. To learn more about CORS, check out
-the https://openliberty.io/guides/cors.html[CORS guide].
+the https://openliberty.io/guides/cors.html[CORS guide^].
 
 
 === Consuming the SSE
@@ -324,13 +327,6 @@ Next, use the following `startContainers.sh` script to start the application in 
 
 include::{common-includes}/os-tabs.adoc[]
 
-[.tab_content.mac_section.linux_section]
---
-[role='command']
-```
-./scripts/startContainers.sh
-```
---
 
 [.tab_content.windows_section]
 --
@@ -339,16 +335,46 @@ include::{common-includes}/os-tabs.adoc[]
 .\scripts\startContainers.bat
 ```
 --
+
+[.tab_content.mac_section.linux_section]
+--
+[role='command']
+```
+./scripts/startContainers.sh
+```
+--
 This script creates a network for the containers to communicate with each other. It
 also creates containers for Kafka, Zookeeper, the `frontend` service, the `bff` service , and three
 instances of the `system` service.
 
-Once your application is up and running, open your browser and check out your
-service by visiting http://localhost:9080[http://localhost:9080]. The
-application might take some time to get ready. The latest version of most
-modern web browsers supports Server-Sent Events. The exception is
-Internet Explorer, which does not support SSE.
+// Static guide instruction
+ifndef::cloud-hosted[]
+The application might take some time to get ready.
+See the http://localhost:9084/health[^] URL to confirm that the `bff` microservice is up and running.
 
+Once your application is up and running, open your browser and check out your
+service by going to http://localhost:9080[http://localhost:9080]. 
+endif::[]
+
+// Cloud hosted guide instruction
+ifdef::cloud-hosted[]
+The application might take some time to get ready.
+Run the following command to confirm that the **bff** microservice is up and running:
+```
+curl http://localhost:9084/health
+```
+{: codeblock}
+
+Once your application is up and running, use the following command to get the URL.
+Open your browser and check out your service by going to the URL that the command returns.
+```
+echo http://${USERNAME}-9080.$(echo $TOOL_DOMAIN | sed 's/\.labs\./.proxy./g')
+```
+{: codeblock} 
+endif::[]
+
+The latest version of most modern web browsers supports Server-Sent Events.
+The exception is Internet Explorer, which does not support SSE. 
 When you visit the URL, look for a table similar to the following example:
 
 image::system_table.png[System table, align="center"]
@@ -367,19 +393,19 @@ Run the following script to stop the application:
 
 include::{common-includes}/os-tabs.adoc[]
 
-[.tab_content.mac_section.linux_section]
---
-[role='command']
-```
-./scripts/stopContainers.sh
-```
---
-
 [.tab_content.windows_section]
 --
 [role='command']
 ```
 .\scripts\stopContainers.bat
+```
+--
+
+[.tab_content.mac_section.linux_section]
+--
+[role='command']
+```
+./scripts/stopContainers.sh
 ```
 --
 // =================================================================================================

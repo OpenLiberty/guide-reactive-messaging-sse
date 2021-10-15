@@ -127,6 +127,14 @@ incoming stream and push the contents as events to subscribers via SSE.
 
 Navigate to the `start` directory to begin.
 
+// cloud-hosted guide instructions:
+ifdef::cloud-hosted[]
+```
+cd /home/project/guide-reactive-messaging-sse/start
+```
+{: codeblock}
+endif::[]
+
 [role="code_command hotspot file=0", subs="quotes"]
 ----
 #Create the BFFResource class.#

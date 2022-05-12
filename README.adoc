@@ -174,7 +174,7 @@ ifdef::cloud-hosted[]
 In this IBM cloud environment, you need to update the ***EventSource*** URL with the ***bff*** service domain instead of ***localhost***. Run the following command:
 ```bash
 BFF_DOMAIN=${USERNAME}-9084.$(echo $TOOL_DOMAIN | sed 's/\.labs\./.proxy./g')
-sed -i 's=localhost:9084='"$BFF_DOMAIN"'=g' frontend/src/main/webapp/js/index.js
+sed -i 's=localhost:9084='"$BFF_DOMAIN"'=g' /home/project/guide-reactive-messaging-sse/frontend/src/main/webapp/js/index.js
 ```
 endif::[]
 

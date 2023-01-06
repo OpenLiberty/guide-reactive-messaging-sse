@@ -1,13 +1,13 @@
 #!/bin/bash
 set -euxo pipefail
 
-mvn -pl models clean install
-mvn -Dhttp.keepAlive=false \
+mvn -ntp -pl models clean install
+mvn -ntp -Dhttp.keepAlive=false \
     -Dmaven.wagon.http.pool=false \
     -Dmaven.wagon.httpconnectionManager.ttlSeconds=120 \
     -q clean package
 
-mvn -pl system verify
+mvn -ntp -pl system verify
 
 ./scripts/buildImages.sh
 ./scripts/startContainers.sh

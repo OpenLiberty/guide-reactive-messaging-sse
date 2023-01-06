@@ -17,6 +17,6 @@ cat system/pom.xml frontend/pom.xml
 sed -i "s;FROM icr.io/appcafe/open-liberty:full-java11-openj9-ubi;FROM $DOCKER_USERNAME/olguides:$BUILD;g" system/Dockerfile frontend/Dockerfile
 cat system/Dockerfile frontend/Dockerfile
 
-docker pull "$DOCKER_USERNAME/olguides:$BUILD"
+docker pull -q "$DOCKER_USERNAME/olguides:$BUILD"
 
 ../scripts/testApp.sh

@@ -1,4 +1,4 @@
-//  Copyright (c) 2020, 2022 IBM Corporation and others.
+//  Copyright (c) 2020, 2023 IBM Corporation and others.
 // Licensed under Creative Commons Attribution-NoDerivatives
 // 4.0 International (CC BY-ND 4.0)
 //   https://creativecommons.org/licenses/by-nd/4.0/
@@ -210,13 +210,6 @@ mvn package
 ```
 endif::[]
 
-Run the following command to download or update to the latest
-Open Liberty Docker image:
-
-[role='command']
-```
-docker pull icr.io/appcafe/open-liberty:full-java11-openj9-ubi
-```
 
 Run the following commands to containerize the `frontend`, `bff`, and `system` services:
 

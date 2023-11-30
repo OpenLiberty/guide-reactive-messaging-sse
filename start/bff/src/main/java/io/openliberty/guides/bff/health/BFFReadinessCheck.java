@@ -45,7 +45,7 @@ public class BFFReadinessCheck implements HealthCheck {
   @Override
   public HealthCheckResponse call() {
     boolean up = isReady();
-    return HealthCheckResponse.named(this.getClass().getSimpleName()).state(up).build();
+    return HealthCheckResponse.named(this.getClass().getSimpleName()).(up).build();
   }
 
   private boolean isReady() {

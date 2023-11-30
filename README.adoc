@@ -167,18 +167,18 @@ include::finish/frontend/src/main/webapp/js/index.js[]
 
 === Subscribing to SSE
 
-The [hotspot=initSSE file=0]`initSSE()` method is called when the page first loads. This method subscribes the client to the SSE by creating a new instance of the [hotspot=eventSource file=0]`EventSource` interface and specifying the `\http://localhost:9084/bff/sse` URL in the parameters. To connect to the server, the [hotspot=eventSource file=0]`EventSource` interface makes a `GET` request to this endpoint with a request header of `Accept: text/event-stream`.
+The [hotspot=initSSE file=0]`initSSE()` method is called when the page first loads. This method subscribes the client to the SSE by creating a new instance of the [hotspot=eventSource file=0]`EventSource` interface and specifying the `\http://localhost:9094/bff/sse` URL in the parameters. To connect to the server, the [hotspot=eventSource file=0]`EventSource` interface makes a `GET` request to this endpoint with a request header of `Accept: text/event-stream`.
 
 // Cloud hosted guide instruction
 ifdef::cloud-hosted[]
 In this IBM cloud environment, you need to update the ***EventSource*** URL with the ***bff*** service domain instead of ***localhost***. Run the following command:
 ```bash
-BFF_DOMAIN=${USERNAME}-9084.$(echo $TOOL_DOMAIN | sed 's/\.labs\./.proxy./g')
-sed -i 's=localhost:9084='"$BFF_DOMAIN"'=g' /home/project/guide-reactive-messaging-sse/start/frontend/src/main/webapp/js/index.js
+BFF_DOMAIN=${USERNAME}-9094.$(echo $TOOL_DOMAIN | sed 's/\.labs\./.proxy./g')
+sed -i 's=localhost:9094='"$BFF_DOMAIN"'=g' /home/project/guide-reactive-messaging-sse/start/frontend/src/main/webapp/js/index.js
 ```
 endif::[]
 
-Because this request comes from `localhost:9080` and is made to `localhost:9084`, it must follow the Cross-Origin Resource Sharing (CORS) specification to avoid being blocked by the browser. To enable CORS for the client, set the `withCredentials` configuration element to true in the parameters of the [hotspot=eventSource file=0]`EventSource` interface. CORS is already enabled for you in the `bff` service. To learn more about CORS, check out the https://openliberty.io/guides/cors.html[CORS guide^].
+Because this request comes from `localhost:9090` and is made to `localhost:9094`, it must follow the Cross-Origin Resource Sharing (CORS) specification to avoid being blocked by the browser. To enable CORS for the client, set the `withCredentials` configuration element to true in the parameters of the [hotspot=eventSource file=0]`EventSource` interface. CORS is already enabled for you in the `bff` service. To learn more about CORS, check out the https://openliberty.io/guides/cors.html[CORS guide^].
 
 
 === Consuming the SSE
@@ -244,21 +244,21 @@ This script creates a network for the containers to communicate with each other.
 
 // Static guide instruction
 ifndef::cloud-hosted[]
-The application might take some time to get ready. See the http://localhost:9084/health[^] URL to confirm that the `bff` microservice is up and running.
+The application might take some time to get ready. See the http://localhost:9094/health[^] URL to confirm that the `bff` microservice is up and running.
 
-Once your application is up and running, open your browser and check out your `frontend` service by going to http://localhost:9080[http://localhost:9080]. 
+Once your application is up and running, open your browser and check out your `frontend` service by going to http://localhost:9090[http://localhost:9090]. 
 endif::[]
 
 // Cloud hosted guide instruction
 ifdef::cloud-hosted[]
 The application might take some time to get ready. Run the following command to confirm that the ***bff*** microservice is up and running:
 ```bash
-curl -s http://localhost:9084/health | jq
+curl -s http://localhost:9094/health | jq
 ```
 
 Once your application is up and running, use the following command to get the URL. Open your browser and check out your ***front*** service by going to the URL that the command returns.
 ```bash
-echo http://${USERNAME}-9080.$(echo $TOOL_DOMAIN | sed 's/\.labs\./.proxy./g')
+echo http://${USERNAME}-9090.$(echo $TOOL_DOMAIN | sed 's/\.labs\./.proxy./g')
 ```
 endif::[]
 

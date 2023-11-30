@@ -14,8 +14,8 @@
     <!-- end::featureMP[] -->
   </featureManager>
 
-  <variable name="http.port" defaultValue="9084"/>
-  <variable name="https.port" defaultValue="9444"/>
+  <variable name="http.port" defaultValue="9094"/>
+  <variable name="https.port" defaultValue="9454"/>
 
   <httpEndpoint
     host="*"

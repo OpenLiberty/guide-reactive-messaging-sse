@@ -20,7 +20,7 @@ COPY --chown=1001:0 src/main/liberty/config /config/
 RUN features.sh
 COPY --chown=1001:0 target/bff.war /config/apps
 
-EXPOSE 9084 9444
+EXPOSE 9094 9454
 
 # It is recommended to run the configure.sh when build image for production.
 RUN configure.sh

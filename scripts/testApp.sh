@@ -14,7 +14,7 @@ mvn -ntp -pl system verify
 
 sleep 180
 
-frontendStatus="$(curl --write-out "%{http_code}" --silent --output /dev/null "http://localhost:9080")"
+frontendStatus="$(curl --write-out "%{http_code}" --silent --output /dev/null "http://localhost:9090")"
 
 docker exec system1 cat /logs/messages.log | grep product
 docker exec system1 cat /logs/messages.log | grep java

@@ -31,7 +31,7 @@ public class AppContainerConfig implements SharedContainerConfiguration {
     @Container
     public static ApplicationContainer app = new ApplicationContainer()
                     .withAppContextRoot("/")
-                    .withExposedPorts(9083)
+                    .withExposedPorts(9093)
                     .withReadinessPath("/health/ready")
                     .withNetwork(network)
                     .withStartupTimeout(Duration.ofMinutes(3))

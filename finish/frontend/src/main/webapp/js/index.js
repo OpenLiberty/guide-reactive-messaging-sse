@@ -1,7 +1,7 @@
 // tag::initSSE[]
 function initSSE() {
     // tag::eventSource[]
-    var source = new EventSource('http://localhost:9094/bff/sse', { withCredentials: true });
+    var source = new EventSource('http://localhost:9084/bff/sse', { withCredentials: true });
     // end::eventSource[]
     // tag::eventListener[]
     source.addEventListener(

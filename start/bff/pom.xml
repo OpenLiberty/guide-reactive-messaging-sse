@@ -13,8 +13,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Liberty configuration -->
-        <liberty.var.http.port>9094</liberty.var.http.port>
-        <liberty.var.https.port>9454</liberty.var.https.port>
+        <liberty.var.http.port>9084</liberty.var.http.port>
+        <liberty.var.https.port>9444</liberty.var.https.port>
     </properties>
 
     <dependencies>

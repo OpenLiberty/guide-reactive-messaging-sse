@@ -31,10 +31,10 @@ import io.reactivex.rxjava3.core.Flowable;
 public class SystemService {
 
     @Inject
-    @ConfigProperty(name="UPDATE_INTERVAL", defaultValue="5")
+    @ConfigProperty(name = "UPDATE_INTERVAL", defaultValue = "5")
     private long updateInterval;
 
-    private static final OperatingSystemMXBean osMean = 
+    private static final OperatingSystemMXBean OS_MEAN = 
             ManagementFactory.getOperatingSystemMXBean();
 
     private static String hostname = null;
@@ -54,6 +54,6 @@ public class SystemService {
     public Publisher<SystemLoad> sendSystemLoad() {
         return Flowable.interval(updateInterval, TimeUnit.SECONDS)
                        .map((interval -> new SystemLoad(getHostname(),
-                           Double.valueOf(osMean.getSystemLoadAverage()))));
+                           Double.valueOf(OS_MEAN.getSystemLoadAverage()))));
     }
 }

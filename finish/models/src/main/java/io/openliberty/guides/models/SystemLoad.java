@@ -21,7 +21,7 @@ import org.apache.kafka.common.serialization.Serializer;
 
 public class SystemLoad {
 
-    private static final Jsonb jsonb = JsonbBuilder.create();
+    private static final Jsonb JSONB = JsonbBuilder.create();
 
     public String hostname;
     public Double loadAverage;
@@ -54,13 +54,13 @@ public class SystemLoad {
 
     @Override
     public String toString() {
-        return "CpuLoadAverage: " + jsonb.toJson(this);
+        return "CpuLoadAverage: " + JSONB.toJson(this);
     }
 
     public static class SystemLoadSerializer implements Serializer<Object> {
         @Override
         public byte[] serialize(String topic, Object data) {
-          return jsonb.toJson(data).getBytes();
+          return JSONB.toJson(data).getBytes();
         }
     }
 
@@ -70,7 +70,7 @@ public class SystemLoad {
             if (data == null) {
                 return null;
             }
-            return jsonb.fromJson(new String(data), SystemLoad.class);
+            return JSONB.fromJson(new String(data), SystemLoad.class);
         }
     }
 }

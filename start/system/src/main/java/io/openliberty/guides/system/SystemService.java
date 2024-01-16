@@ -34,7 +34,7 @@ public class SystemService {
     @ConfigProperty(name = "UPDATE_INTERVAL", defaultValue = "5")
     private long updateInterval;
 
-    private static final OperatingSystemMXBean OS_MEAN = 
+    private static final OperatingSystemMXBean OS_MEAN =
             ManagementFactory.getOperatingSystemMXBean();
 
     private static String hostname = null;

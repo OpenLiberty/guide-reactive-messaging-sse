@@ -107,7 +107,7 @@ public class SystemServiceIT {
             ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
                 kafkaContainer.getBootstrapServers());
         }
-        
+
         consumerProps.put(
             ConsumerConfig.GROUP_ID_CONFIG,
                 "system-load-status");
@@ -138,7 +138,7 @@ public class SystemServiceIT {
         consumer.close();
     }
 
-    
+
     @Test
     public void testCpuStatus() {
         ConsumerRecords<String, SystemLoad> records =

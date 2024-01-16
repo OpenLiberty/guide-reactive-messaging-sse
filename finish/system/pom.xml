@@ -58,16 +58,21 @@
             <version>3.1.8</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.9</version>
+        </dependency>
+
         <!-- For tests -->
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>kafka</artifactId>
-            <version>1.19.3</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
             <version>1.19.3</version>
             <scope>test</scope>
         </dependency>
@@ -78,14 +83,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>2.0.9</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>2.0.9</version>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>1.19.3</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -106,6 +107,14 @@
                 <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
                 <version>3.10</version>
+                <configuration>
+                    <!-- devc config -->
+                    <containerRunOpts>
+                                    -e WLP_LOGGING_CONSOLE_LOGLEVEL=info 
+                                    -p 9085:9085
+                                    --network=reactive-app
+                    </containerRunOpts>
+                </configuration>
             </plugin>
 
             <!-- Plugin to run unit tests -->

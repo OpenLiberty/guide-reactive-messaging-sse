@@ -1,13 +1,12 @@
 // tag::copyright[]
 /*******************************************************************************
- * Copyright (c) 2020 IBM Corporation and others.
+ * Copyright (c) 2020, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-2.0/
  *
- * Contributors:
- *     IBM Corporation - Initial implementation
+ * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 // end::copyright[]
 package io.openliberty.guides.bff;
@@ -57,16 +56,16 @@ public class BFFResource {
         // end::sseParam[]
         ) {
 
-        if (this.sse == null || this.broadcaster == null) { 
+        if (this.sse == null || this.broadcaster == null) {
             this.sse = sse;
             // tag::newBroadcaster[]
             this.broadcaster = sse.newBroadcaster();
             // end::newBroadcaster[]
         }
-        
+
         // tag::registerSink[]
         this.broadcaster.register(sink);
-        // end::registerSink[]     
+        // end::registerSink[]
         logger.info("New sink registered to broadcaster.");
     }
     // end::subscribeToSystems
@@ -93,7 +92,7 @@ public class BFFResource {
                                         .build();
                                         // end::build[]
             // end::createEvent[]
-            // tag::broadcastEvent[]        
+            // tag::broadcastEvent[]
             broadcaster.broadcast(event);
             // end::broadcastEvent[]
         } else {

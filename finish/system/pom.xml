@@ -111,7 +111,7 @@
                     <!-- devc config -->
                     <containerRunOpts>
                         -e WLP_LOGGING_CONSOLE_LOGLEVEL=info 
-                        -p 9085:9085
+                        -p 9083:9083
                         --network=reactive-app
                     </containerRunOpts>
                 </configuration>

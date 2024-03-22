@@ -11,11 +11,11 @@
 // end::copyright[]
 package it.io.openliberty.guides.system;
 
+import java.net.Socket;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
 import java.nio.file.Paths;
-import java.net.Socket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,18 +109,14 @@ public class SystemServiceIT {
                 kafkaContainer.getBootstrapServers());
         }
 
-        consumerProps.put(
-            ConsumerConfig.GROUP_ID_CONFIG,
-            "system-load-status");
+        consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, "system-load-status");
         consumerProps.put(
             ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
             StringDeserializer.class.getName());
         consumerProps.put(
             ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
             SystemLoadDeserializer.class.getName());
-        consumerProps.put(
-            ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,
-            "earliest");
+        consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         consumer = new KafkaConsumer<String, SystemLoad>(consumerProps);
         consumer.subscribe(Collections.singletonList("system.load"));

@@ -1,13 +1,12 @@
 // tag::copyright[]
 /*******************************************************************************
- * Copyright (c) 2020 IBM Corporation and others.
+ * Copyright (c) 2020, 2024 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-2.0/
  *
- * Contributors:
- *     IBM Corporation - Initial implementation
+ * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 // end::copyright[]
 package io.openliberty.guides.bff;
@@ -16,16 +15,16 @@ import io.openliberty.guides.models.SystemLoad;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.sse.OutboundSseEvent;
-import javax.ws.rs.sse.Sse;
-import javax.ws.rs.sse.SseBroadcaster;
-import javax.ws.rs.sse.SseEventSink;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.sse.OutboundSseEvent;
+import jakarta.ws.rs.sse.Sse;
+import jakarta.ws.rs.sse.SseBroadcaster;
+import jakarta.ws.rs.sse.SseEventSink;
 import java.util.logging.Logger;
 
 @ApplicationScoped
@@ -57,16 +56,16 @@ public class BFFResource {
         // end::sseParam[]
         ) {
 
-        if (this.sse == null || this.broadcaster == null) { 
+        if (this.sse == null || this.broadcaster == null) {
             this.sse = sse;
             // tag::newBroadcaster[]
             this.broadcaster = sse.newBroadcaster();
             // end::newBroadcaster[]
         }
-        
+
         // tag::registerSink[]
         this.broadcaster.register(sink);
-        // end::registerSink[]     
+        // end::registerSink[]
         logger.info("New sink registered to broadcaster.");
     }
     // end::subscribeToSystems
@@ -93,7 +92,7 @@ public class BFFResource {
                                         .build();
                                         // end::build[]
             // end::createEvent[]
-            // tag::broadcastEvent[]        
+            // tag::broadcastEvent[]
             broadcaster.broadcast(event);
             // end::broadcastEvent[]
         } else {

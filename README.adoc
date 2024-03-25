@@ -1,4 +1,4 @@
-//  Copyright (c) 2020, 2023 IBM Corporation and others.
+//  Copyright (c) 2020, 2024 IBM Corporation and others.
 // Licensed under Creative Commons Attribution-NoDerivatives
 // 4.0 International (CC BY-ND 4.0)
 //   https://creativecommons.org/licenses/by-nd/4.0/
@@ -10,11 +10,12 @@
 :page-layout: guide-multipane
 :page-duration: 30 minutes
 :page-releasedate: 2020-12-08
+:page-majorupdateddate: 2024-04-30
 :page-guide-category: microprofile
 :page-essential: false
 :page-description: Learn how to push Server-Sent Events from a reactive messaging application to a front-end client
 :guide-author: Open Liberty
-:page-tags: ['MicroProfile', 'Jakarta EE']
+:page-tags: ['microprofile', 'jakarta-ee']
 :page-related-guides: ['microprofile-reactive-messaging', 'microprofile-reactive-messaging-acknowledgment', 'microprofile-reactive-messaging-rest-integration', 'reactive-service-testing', 'containerize']
 :page-permalink: /guides/{projectid}
 :imagesdir: /img/guide/{projectid}
@@ -174,7 +175,7 @@ ifdef::cloud-hosted[]
 In this IBM cloud environment, you need to update the ***EventSource*** URL with the ***bff*** service domain instead of ***localhost***. Run the following command:
 ```bash
 BFF_DOMAIN=${USERNAME}-9084.$(echo $TOOL_DOMAIN | sed 's/\.labs\./.proxy./g')
-sed -i 's=localhost:9084='"$BFF_DOMAIN"'=g' /home/project/guide-reactive-messaging-sse/start/frontend/src/main/webapp/js/index.js
+sed -i 's=http://localhost:9084='"https://$BFF_DOMAIN"'=g' /home/project/guide-reactive-messaging-sse/start/frontend/src/main/webapp/js/index.js
 ```
 endif::[]
 
@@ -240,7 +241,7 @@ include::{common-includes}/os-tabs.adoc[]
 ./scripts/startContainers.sh
 ```
 --
-This script creates a network for the containers to communicate with each other. It also creates containers for Kafka, Zookeeper, the `frontend` service, the `bff` service , and three instances of the `system` service.
+This script creates a network for the containers to communicate with each other. It also creates containers for Kafka, the `frontend` service, the `bff` service , and three instances of the `system` service.
 
 // Static guide instruction
 ifndef::cloud-hosted[]
@@ -258,7 +259,7 @@ curl -s http://localhost:9084/health | jq
 
 Once your application is up and running, use the following command to get the URL. Open your browser and check out your ***front*** service by going to the URL that the command returns.
 ```bash
-echo http://${USERNAME}-9080.$(echo $TOOL_DOMAIN | sed 's/\.labs\./.proxy./g')
+echo https://${USERNAME}-9080.$(echo $TOOL_DOMAIN | sed 's/\.labs\./.proxy./g')
 ```
 endif::[]
 

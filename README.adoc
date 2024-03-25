@@ -241,7 +241,7 @@ include::{common-includes}/os-tabs.adoc[]
 ./scripts/startContainers.sh
 ```
 --
-This script creates a network for the containers to communicate with each other. It also creates containers for Kafka, Zookeeper, the `frontend` service, the `bff` service , and three instances of the `system` service.
+This script creates a network for the containers to communicate with each other. It also creates containers for Kafka, the `frontend` service, the `bff` service , and three instances of the `system` service.
 
 // Static guide instruction
 ifndef::cloud-hosted[]

@@ -10,7 +10,7 @@
 :page-layout: guide-multipane
 :page-duration: 30 minutes
 :page-releasedate: 2020-12-08
-:page-majorupdateddate: 2024-04-30
+:page-majorupdateddate: 2024-04-04
 :page-guide-category: microprofile
 :page-essential: false
 :page-description: Learn how to push Server-Sent Events from a reactive messaging application to a front-end client

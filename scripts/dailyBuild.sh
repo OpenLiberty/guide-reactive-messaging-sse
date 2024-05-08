@@ -15,10 +15,10 @@ sed -i "\#</containerRunOpts>#a<install><runtimeUrl>https://public.dhe.ibm.com/i
 sed -i "\#<artifactId>liberty-maven-plugin</artifactId>#a<configuration><install><runtimeUrl>https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/nightly/$DATE/$DRIVER</runtimeUrl></install></configuration>" bff/pom.xml frontend/pom.xml
 cat system/pom.xml bff/pom.xml frontend/pom.xml
 
-sed -i "s;FROM icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi;FROM $DOCKER_USERNAME/olguides:$BUILD;g" system/Dockerfile bff/Dockerfile frontend/Dockerfile
-sed -i "s;RUN features.sh;#RUN features.sh;g" system/Dockerfile bff/Dockerfile frontend/Dockerfile
-cat system/Dockerfile bff/Dockerfile frontend/Dockerfile
-
-docker pull -q "$DOCKER_USERNAME/olguides:$BUILD"
+if [[ "$DOCKER_USERNAME" != "" ]]; then
+    sed -i "s;FROM icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi;FROM $DOCKER_USERNAME/olguides:$BUILD;g" system/Dockerfile bff/Dockerfile frontend/Dockerfile
+    sed -i "s;RUN features.sh;#RUN features.sh;g" system/Dockerfile bff/Dockerfile frontend/Dockerfile
+    cat system/Dockerfile bff/Dockerfile frontend/Dockerfile
+fi
 
 ../scripts/testApp.sh

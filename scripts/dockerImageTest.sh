@@ -1,8 +1,9 @@
 #!/bin/bash
-while getopts t:d: flag; do
+while getopts t:d:v: flag; do
     case "${flag}" in
     t) DATE="${OPTARG}" ;;
     d) DRIVER="${OPTARG}" ;;
+    v) OL_LEVEL="${OPTARG}";;
     *) echo "Invalid option" ;;
     esac
 done
@@ -13,12 +14,21 @@ sed -i "\#</containerRunOpts>#a<install><runtimeUrl>https://public.dhe.ibm.com/i
 sed -i "\#<artifactId>liberty-maven-plugin</artifactId>#a<configuration><install><runtimeUrl>https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/nightly/$DATE/$DRIVER</runtimeUrl></install></configuration>" bff/pom.xml frontend/pom.xml
 cat system/pom.xml bff/pom.xml frontend/pom.xml
 
-sed -i "s;FROM icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi;FROM cp.stg.icr.io/cp/olc/open-liberty-daily:full-java11-openj9-ubi;g" system/Dockerfile bff/Dockerfile frontend/Dockerfile
+if [[ "$OL_LEVEL" != "" ]]; then
+  sed -i "s;FROM icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi;FROM cp.stg.icr.io/cp/olc/open-liberty-vnext:$OL_LEVEL-full-java11-openj9-ubi;g" system/Dockerfile bff/Dockerfile frontend/Dockerfile
+else
+  sed -i "s;FROM icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi;FROM cp.stg.icr.io/cp/olc/open-liberty-daily:full-java11-openj9-ubi;g" system/Dockerfile bff/Dockerfile frontend/Dockerfile
+fi
 sed -i "s;RUN features.sh;#RUN features.sh;g" system/Dockerfile bff/Dockerfile frontend/Dockerfile
 cat system/Dockerfile bff/Dockerfile frontend/Dockerfile
 
 echo "$DOCKER_PASSWORD" | sudo docker login -u "$DOCKER_USERNAME" --password-stdin cp.stg.icr.io
-sudo docker pull -q "cp.stg.icr.io/cp/olc/open-liberty-daily:full-java11-openj9-ubi"
-sudo echo "build level:"; docker inspect --format "{{ index .Config.Labels \"org.opencontainers.image.revision\"}}" cp.stg.icr.io/cp/olc/open-liberty-daily:full-java11-openj9-ubi
+if [[ "$OL_LEVEL" != "" ]]; then
+  sudo docker pull -q "cp.stg.icr.io/cp/olc/open-liberty-vnext:$OL_LEVEL-full-java11-openj9-ubi"
+  sudo echo "build level:"; docker inspect --format "{{ index .Config.Labels \"org.opencontainers.image.revision\"}}" "cp.stg.icr.io/cp/olc/open-liberty-vnext:$OL_LEVEL-full-java11-openj9-ubi"
+else
+  sudo docker pull -q "cp.stg.icr.io/cp/olc/open-liberty-daily:full-java11-openj9-ubi"
+  sudo echo "build level:"; docker inspect --format "{{ index .Config.Labels \"org.opencontainers.image.revision\"}}" "cp.stg.icr.io/cp/olc/open-liberty-daily:full-java11-openj9-ubi"
+fi
 
 sudo ../scripts/testApp.sh

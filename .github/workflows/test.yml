@@ -56,4 +56,7 @@ jobs:
       run: ../scripts/testApp.sh
     - name: Post tests
       if: always()
-      run: docker images
+      run: |
+        sudo docker images
+        echo bitnami/kafka:latest version:
+        sudo docker inspect --format "{{ index .Config.Labels \"org.opencontainers.image.version\"}}" bitnami/kafka:latest

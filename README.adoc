@@ -234,13 +234,22 @@ include::{common-includes}/os-tabs.adoc[]
 ```
 --
 
-[.tab_content.mac_section.linux_section]
+[.tab_content.mac_section]
 --
 [role='command']
 ```
 ./scripts/startContainers.sh
 ```
 --
+
+[.tab_content.linux_section]
+--
+[role='command']
+```
+./scripts/startContainers.sh
+```
+--
+
 This script creates a network for the containers to communicate with each other. It also creates containers for Kafka, the `frontend` service, the `bff` service , and three instances of the `system` service.
 
 // Static guide instruction
@@ -287,7 +296,15 @@ include::{common-includes}/os-tabs.adoc[]
 ```
 --
 
-[.tab_content.mac_section.linux_section]
+[.tab_content.mac_section]
+--
+[role='command']
+```
+./scripts/stopContainers.sh
+```
+--
+
+[.tab_content.linux_section]
 --
 [role='command']
 ```

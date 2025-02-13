@@ -1,4 +1,4 @@
-//  Copyright (c) 2020, 2024 IBM Corporation and others.
+//  Copyright (c) 2020, 2025 IBM Corporation and others.
 // Licensed under Creative Commons Attribution-NoDerivatives
 // 4.0 International (CC BY-ND 4.0)
 //   https://creativecommons.org/licenses/by-nd/4.0/
@@ -102,7 +102,7 @@ include::finish/bff/src/main/java/io/openliberty/guides/bff/BFFResource.java[]
 
 The [hotspot=subscribeToSystems file=0]`subscribeToSystem()` method allows clients to subscribe to events via an HTTP `GET` request to the `/bff/sse/` endpoint. The [hotspot=sseMimeType file=0]`@Produces(MediaType.SERVER_SENT_EVENTS)` annotation sets the `Content-Type` in the response header to `text/event-stream`. This content type indicates that client requests that are made to this endpoint are to receive Server-Sent Events. Additionally, the method parameters take in an instance of the [hotspot=sseEventSinkParam file=0]`SseEventSink` class and the [hotspot=sseParam file=0]`Sse` class, both of which are injected using the `@Context` annotation. First, the method checks if the [hotspot=sse file=0]`sse` and [hotspot=broadcaster file=0]`broadcaster` instance variables are assigned. If these variables aren't assigned, the [hotspot=sse file=0]`sse` variable is obtained from the [hotspot=sseParam file=0]`@Context` injection and the [hotspot=broadcaster file=0]`broadcaster` variable is obtained by using the [hotspot=newBroadcaster file=0]`Sse.newBroadcaster()` method. Then, the [hotspot=registerSink file=0]`register()` method is called to register the [hotspot=sseEventSinkParam file=0]`SseEventSink` instance to the [hotspot=broadcaster file=0]`SseBroadcaster` instance to subscribe to events.
 
-For more information about these interfaces, see the Javadocs for https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent.html&package=allclasses-frame.html[OutboundSseEvent^] and https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent.Builder.html&package=allclasses-frame.html[OutboundSseEvent.Builder^].
+For more information about these interfaces, see the Javadocs for https://openliberty.io/docs/latest/reference/javadoc/liberty-jakartaee10-javadoc.html?path=liberty-jakartaee10-javadoc/jakarta/ws/rs/sse/OutboundSseEvent.html[OutboundSseEvent^] and https://openliberty.io/docs/latest/reference/javadoc/liberty-jakartaee10-javadoc.html?path=liberty-jakartaee10-javadoc/jakarta/ws/rs/sse/OutboundSseEvent.Builder.html[OutboundSseEvent.Builder^].
 
 === Reading from the reactive messaging channel
 
@@ -234,13 +234,22 @@ include::{common-includes}/os-tabs.adoc[]
 ```
 --
 
-[.tab_content.mac_section.linux_section]
+[.tab_content.mac_section]
 --
 [role='command']
 ```
 ./scripts/startContainers.sh
 ```
 --
+
+[.tab_content.linux_section]
+--
+[role='command']
+```
+./scripts/startContainers.sh
+```
+--
+
 This script creates a network for the containers to communicate with each other. It also creates containers for Kafka, the `frontend` service, the `bff` service , and three instances of the `system` service.
 
 // Static guide instruction
@@ -287,7 +296,15 @@ include::{common-includes}/os-tabs.adoc[]
 ```
 --
 
-[.tab_content.mac_section.linux_section]
+[.tab_content.mac_section]
+--
+[role='command']
+```
+./scripts/stopContainers.sh
+```
+--
+
+[.tab_content.linux_section]
 --
 [role='command']
 ```

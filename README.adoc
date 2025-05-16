@@ -196,18 +196,41 @@ To build the application, navigate to the `start` directory and run the followin
 
 // static guide instructions:
 ifndef::cloud-hosted[]
+include::{common-includes}/os-tabs.adoc[]
+
+[.tab_content.windows_section]
+--
 [role='command']
 ```
-mvn -pl models install
-mvn package
+mvnw.cmd -pl models install
+mvnw.cmd package
 ```
+--
+
+[.tab_content.mac_section]
+--
+[role='command']
+```
+./mvnw -pl models install
+./mvnw package
+```
+--
+
+[.tab_content.linux_section]
+--
+[role='command']
+```
+./mvnw -pl models install
+./mvnw package
+```
+--
 endif::[]
 // cloud-hosted guide instructions:
 ifdef::cloud-hosted[]
 ```bash
 cd /home/project/guide-reactive-messaging-sse/start
-mvn -pl models install
-mvn package
+./mvnw -pl models install
+./mvnw package
 ```
 endif::[]
 

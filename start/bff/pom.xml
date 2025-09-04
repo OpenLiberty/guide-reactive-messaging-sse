@@ -60,7 +60,7 @@
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
-            <version>3.9.0</version>
+            <version>4.1.0</version>
         </dependency>
     </dependencies>
 
@@ -80,7 +80,7 @@
             <plugin>
                 <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
-                <version>3.11.4</version>
+                <version>3.11.5</version>
             </plugin>
         </plugins>
     </build>

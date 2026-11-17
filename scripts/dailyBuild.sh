@@ -16,7 +16,7 @@ sed -i "\#<artifactId>liberty-maven-plugin</artifactId>#a<configuration><install
 cat system/pom.xml bff/pom.xml frontend/pom.xml
 
 if [[ "$DOCKER_USERNAME" != "" ]]; then
-    sed -i "s;FROM icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi;FROM $DOCKER_USERNAME/olguides:$BUILD;g" system/Dockerfile bff/Dockerfile frontend/Dockerfile
+    sed -i "s;FROM icr.io/appcafe/open-liberty:kernel-slim-java25-openj9-ubi-minimal;FROM $DOCKER_USERNAME/olguides:$BUILD;g" system/Dockerfile bff/Dockerfile frontend/Dockerfile
     sed -i "s;RUN features.sh;#RUN features.sh;g" system/Dockerfile bff/Dockerfile frontend/Dockerfile
     cat system/Dockerfile bff/Dockerfile frontend/Dockerfile
 fi
